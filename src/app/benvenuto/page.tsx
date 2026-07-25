@@ -32,7 +32,7 @@ export default function BenvenutoPage() {
             {LEVELS.map((level, i) => (
               <div
                 key={level.id}
-                className="flex items-center gap-3 rounded-3xl bg-white/70 p-3.5"
+                className="flex items-center gap-3 rounded-3xl bg-surface-muted p-3.5"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
                   {i + 1}

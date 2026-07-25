@@ -45,7 +45,7 @@ export default async function OggiPage() {
         </div>
         <Link
           href="/profilo"
-          className="flex shrink-0 items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm"
+          className="flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-2 text-xs font-bold"
         >
           <span aria-hidden="true">🔥</span>
           {streak}

@@ -320,7 +320,7 @@ export function ExerciseRunner({
           </button>
           <Link
             href={`/percorso/${moduleId}`}
-            className="rounded-full bg-white px-6 py-3.5 text-sm font-bold shadow-sm"
+            className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-sm font-bold"
           >
             Torna a {moduleTitle}
           </Link>
@@ -601,7 +601,7 @@ export function ExerciseRunner({
 
       {!(exercise.type === "brief" && briefStage === "write") ? (
         <div className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
-          <div className="flex items-center gap-3 rounded-full bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_16px_32px_-20px_rgba(15,17,23,0.6)]">
+          <div className="flex items-center gap-3 rounded-full border border-black/10 bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_18px_36px_-20px_rgba(15,17,23,0.65)]">
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-semibold">
                 {statusLabel(exercise, choices, selected, selfScores)}
