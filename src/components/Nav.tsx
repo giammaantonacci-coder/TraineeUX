@@ -14,31 +14,39 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav
-      aria-label="Navigazione principale"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-black/5 bg-white/85 backdrop-blur-lg md:hidden"
-    >
-      <ul className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
-        {ITEMS.map((item) => {
-          const active = pathname.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <li key={item.href} className="flex-1">
-              <Link
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition-colors ${
-                  active ? "bg-ink text-white" : "text-ink-muted hover:text-ink"
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+    <>
+      {/* Sfumatura che dissolve il contenuto prima che raggiunga la barra:
+          senza, il testo scorre visibile sotto e la nav diventa illeggibile. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-16 bg-gradient-to-t from-canvas to-transparent md:hidden"
+      />
+      <nav
+        aria-label="Navigazione principale"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white shadow-[0_-8px_24px_-20px_rgba(15,17,23,0.5)] md:hidden"
+      >
+        <ul className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
+          {ITEMS.map((item) => {
+            const active = pathname.startsWith(item.href);
+            const Icon = item.icon;
+            return (
+              <li key={item.href} className="flex-1">
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition-colors ${
+                    active ? "bg-ink text-white" : "text-ink-muted hover:text-ink"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }
 

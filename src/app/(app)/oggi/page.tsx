@@ -69,7 +69,7 @@ export default async function OggiPage() {
           </p>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-4">
           <ProgressBar value={rank.progress} tone="light" />
           <p className="mt-2 text-xs font-medium text-white/60">
             {rank.next
@@ -78,10 +78,22 @@ export default async function OggiPage() {
           </p>
         </div>
 
-        <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
-          <MiniStat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi" />
-          <MiniStat value={`${masteredCount}/${MODULES.length}`} label="moduli padroneggiati" />
-          <MiniStat value={`${profile?.longest_streak ?? 0}`} label="serie record" />
+        <dl className="mt-4 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
+          <MiniStat
+            value={`${doneCount}/${TOTAL_EXERCISES}`}
+            label="esercizi"
+            full="esercizi svolti"
+          />
+          <MiniStat
+            value={`${masteredCount}/${MODULES.length}`}
+            label="moduli"
+            full="moduli padroneggiati"
+          />
+          <MiniStat
+            value={`${profile?.longest_streak ?? 0}`}
+            label="record"
+            full="serie record"
+          />
         </dl>
       </section>
 
@@ -145,12 +157,20 @@ export default async function OggiPage() {
   );
 }
 
-function MiniStat({ value, label }: { value: string; label: string }) {
+function MiniStat({
+  value,
+  label,
+  full,
+}: {
+  value: string;
+  label: string;
+  full: string;
+}) {
   return (
     <div>
-      <dt className="sr-only">{label}</dt>
+      <dt className="sr-only">{full}</dt>
       <dd>
-        <span className="block text-lg font-extrabold">{value}</span>
+        <span className="block text-lg font-extrabold leading-tight">{value}</span>
         <span className="text-[11px] font-semibold leading-tight text-white/50">
           {label}
         </span>

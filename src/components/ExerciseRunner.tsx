@@ -46,7 +46,10 @@ export function ExerciseRunner({
 
   useEffect(() => {
     if (phase === "done" && resultRef.current) {
-      resultRef.current.focus();
+      // Il punteggio è in cima al risultato: senza riportare lo scroll a zero
+      // si atterra a metà pagina e non si vede mai come è andata.
+      window.scrollTo({ top: 0 });
+      resultRef.current.focus({ preventScroll: true });
     }
   }, [phase]);
 
@@ -163,20 +166,22 @@ export function ExerciseRunner({
     return (
       <div ref={resultRef} tabIndex={-1} className="outline-none">
         <div className="card-dark p-6 md:p-8">
-          <div className="flex items-start justify-between gap-5">
-            <div>
+          <div className="flex items-center justify-between gap-5">
+            <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
                 {v.title}
               </p>
               <p className="mt-1 text-2xl font-extrabold">
                 {grade.score} / {grade.maxScore} punti
               </p>
-              <p className="mt-2 max-w-md text-[15px] leading-relaxed text-white/70">
-                {v.body}
-              </p>
             </div>
             <ScoreRing value={grade.scorePct} size={76} />
           </div>
+          {/* A tutta larghezza: accanto all'anello, su telefono, si riduceva a
+              una colonna da sette righe. */}
+          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
+            {v.body}
+          </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
             <Pill tone="mint">+{result.xpAwarded} XP</Pill>
@@ -595,24 +600,24 @@ export function ExerciseRunner({
       ) : null}
 
       {!(exercise.type === "brief" && briefStage === "write") ? (
-        <div className="sticky bottom-24 z-30 mt-6 md:bottom-6">
-          <div className="card-light flex items-center gap-4 p-4">
+        <div className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
+          <div className="flex items-center gap-3 rounded-full bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_16px_32px_-20px_rgba(15,17,23,0.6)]">
             <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-semibold text-ink-muted">
-                {complete
-                  ? "Tutto compilato. La correzione è definitiva."
-                  : "Completa tutte le risposte per consegnare."}
+              <p className="truncate text-[13px] font-semibold">
+                {statusLabel(exercise, choices, selected, selfScores)}
               </p>
-              <ProgressBar
-                className="mt-2"
-                value={progressOf(exercise, choices, selfScores)}
-              />
+              {exercise.type !== "critique" ? (
+                <ProgressBar
+                  className="mt-1.5"
+                  value={progressOf(exercise, choices, selfScores)}
+                />
+              ) : null}
             </div>
             <button
               type="button"
               onClick={send}
               disabled={!complete || pending}
-              className="shrink-0 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white disabled:opacity-40"
+              className="shrink-0 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white disabled:opacity-40"
             >
               {pending ? "Correggo…" : "Consegna"}
             </button>
@@ -621,6 +626,33 @@ export function ExerciseRunner({
       ) : null}
     </div>
   );
+}
+
+/** Stato compatto per la barra di consegna: una riga, e dice qualcosa di vero. */
+function statusLabel(
+  exercise: PublicExercise,
+  choices: Record<string, string>,
+  selected: string[],
+  selfScores: Record<string, number>,
+): string {
+  switch (exercise.type) {
+    case "quiz": {
+      const done = exercise.questions.filter((q) => choices[q.id]).length;
+      return `${done} di ${exercise.questions.length} risposte`;
+    }
+    case "scenario": {
+      const done = exercise.steps.filter((s) => choices[s.id]).length;
+      return `${done} di ${exercise.steps.length} decisioni`;
+    }
+    case "brief": {
+      const done = exercise.rubric.filter((r) => selfScores[r.id] !== undefined).length;
+      return `${done} di ${exercise.rubric.length} criteri valutati`;
+    }
+    case "critique":
+      return selected.length === 0
+        ? "Nessun difetto segnalato"
+        : `${selected.length} ${selected.length === 1 ? "difetto segnalato" : "difetti segnalati"}`;
+  }
 }
 
 function progressOf(
