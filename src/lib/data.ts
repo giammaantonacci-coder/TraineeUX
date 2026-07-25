@@ -18,9 +18,16 @@ export interface UserData {
 
 export async function getUserData(): Promise<UserData | null> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  // Se Supabase è irraggiungibile o la sessione è illeggibile, la pagina non
+  // deve restituire 500: si comporta come utente non autenticato.
+  let user;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    return null;
+  }
   if (!user) return null;
 
   const [profileRes, progressRes, attemptsRes, badgesRes] = await Promise.all([
