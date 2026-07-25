@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLayoutEffect, useRef, useState } from "react";
 
 const ITEMS = [
   { href: "/oggi", label: "Oggi", icon: HomeIcon },
@@ -12,40 +13,91 @@ const ITEMS = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const activeIndex = Math.max(
+    0,
+    ITEMS.findIndex((item) => pathname.startsWith(item.href)),
+  );
+
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+
+  // L'indicatore insegue la voce attiva: la posizione va misurata dopo il
+  // render, perché la voce attiva mostra anche l'etichetta ed è più larga.
+  useLayoutEffect(() => {
+    function measure() {
+      const el = itemRefs.current[activeIndex];
+      if (!el) return;
+      setPill({ left: el.offsetLeft, width: el.offsetWidth });
+    }
+    measure();
+    // Un secondo passaggio a transizione dell'etichetta conclusa.
+    const t = setTimeout(measure, 320);
+    window.addEventListener("resize", measure);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("resize", measure);
+    };
+  }, [activeIndex]);
 
   return (
     <>
-      {/* Sfumatura che dissolve il contenuto prima che raggiunga la barra:
-          senza, il testo scorre visibile sotto e la nav diventa illeggibile. */}
+      {/* Dissolve il contenuto sotto la barra invece di lasciarlo scorrere
+          leggibile a filo delle etichette. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-16 bg-gradient-to-t from-canvas to-transparent md:hidden"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-canvas via-canvas/85 to-transparent md:hidden"
       />
-      <nav
-        aria-label="Navigazione principale"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white shadow-[0_-8px_24px_-20px_rgba(15,17,23,0.5)] md:hidden"
-      >
-        <ul className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
-          {ITEMS.map((item) => {
-            const active = pathname.startsWith(item.href);
-            const Icon = item.icon;
-            return (
-              <li key={item.href} className="flex-1">
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition-colors ${
-                    active ? "bg-ink text-white" : "text-ink-muted hover:text-ink"
-                  }`}
+      <div className="fixed inset-x-0 bottom-0 z-40 px-5 pb-[max(1.15rem,env(safe-area-inset-bottom))] md:hidden">
+        <nav aria-label="Navigazione principale" className="mx-auto max-w-sm">
+          <ul className="relative flex items-center justify-between gap-1 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
+            {/* La pillola scura scorre da una voce all'altra */}
+            <li
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-1.5 left-0 rounded-full bg-ink transition-[transform,width] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={
+                pill
+                  ? { transform: `translateX(${pill.left}px)`, width: pill.width }
+                  : { opacity: 0 }
+              }
+            />
+
+            {ITEMS.map((item, i) => {
+              const active = i === activeIndex;
+              const Icon = item.icon;
+              return (
+                <li
+                  key={item.href}
+                  ref={(el) => {
+                    itemRefs.current[i] = el;
+                  }}
+                  className="relative z-10"
                 >
-                  <Icon className="h-5 w-5" />
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex items-center rounded-full px-3.5 py-3 text-[13px] font-bold transition-colors duration-300 ${
+                      active ? "text-white" : "text-ink-muted active:text-ink"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-[22px] w-[22px] shrink-0 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        active ? "scale-110" : "scale-100"
+                      }`}
+                    />
+                    <span
+                      className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-out ${
+                        active ? "ml-2 max-w-[6rem] opacity-100" : "max-w-0 opacity-0"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
     </>
   );
 }
@@ -58,8 +110,8 @@ export function SideNav() {
       aria-label="Navigazione principale"
       className="hidden md:sticky md:top-6 md:block md:h-fit md:w-56 md:shrink-0"
     >
-      <div className="card-light p-3">
-        <ul className="space-y-1">
+      <div className="card-light p-2.5">
+        <ul className="space-y-1.5">
           {ITEMS.map((item) => {
             const active = pathname.startsWith(item.href);
             const Icon = item.icon;
@@ -68,8 +120,10 @@ export function SideNav() {
                 <Link
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors ${
-                    active ? "bg-ink text-white" : "text-ink-muted hover:bg-black/5 hover:text-ink"
+                  className={`flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold transition-all duration-300 ${
+                    active
+                      ? "bg-ink text-white"
+                      : "text-ink-muted hover:bg-black/[0.04] hover:text-ink"
                   }`}
                 >
                   <Icon className="h-5 w-5" />

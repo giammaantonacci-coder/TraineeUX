@@ -600,7 +600,7 @@ export function ExerciseRunner({
       ) : null}
 
       {!(exercise.type === "brief" && briefStage === "write") ? (
-        <div className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
+        <div className="sticky bottom-[calc(6.25rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
           <div className="flex items-center gap-3 rounded-full border border-black/10 bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_18px_36px_-20px_rgba(15,17,23,0.65)]">
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-semibold">
