@@ -289,7 +289,10 @@ Database → Advisors → Security: deve essere vuoto.
   riesco a entrare". Il codice gestisce comunque entrambi i casi — se la
   sessione arriva subito entra, altrimenti mostra il messaggio di conferma.
 
-**Chiavi da recuperare** (Project Settings → API):
+**Progetto attuale**: `traineeux-prod` (`rzrkeiudlivliapqykle`), eu-central-1.
+Le chiavi sono gia' nel codice in `src/lib/supabase/config.ts`.
+
+**Chiavi da recuperare** se ricrei il progetto (Project Settings → API):
 - Project URL
 - Publishable key (`sb_publishable_...`)
 

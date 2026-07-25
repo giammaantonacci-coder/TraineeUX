@@ -5,8 +5,8 @@
  * Le env var, se presenti, hanno la precedenza (utile per ambienti separati).
  */
 export const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://cjtvynnvpfkwbakyipkr.supabase.co";
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://rzrkeiudlivliapqykle.supabase.co";
 
 export const SUPABASE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-  "sb_publishable_WxOWDSUeyd2ZlHWHfRlUZA_cNFOikXE";
+  "sb_publishable_D0uiyltV8w1eofHAHqE5Pw_f5lIp3G3";
