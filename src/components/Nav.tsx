@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ITEMS = [
   { href: "/oggi", label: "Oggi", icon: HomeIcon },
@@ -11,33 +11,31 @@ const ITEMS = [
   { href: "/profilo", label: "Profilo", icon: ProfileIcon },
 ];
 
-export function BottomNav() {
+function indexOfPath(pathname: string): number {
+  return Math.max(0, ITEMS.findIndex((item) => pathname.startsWith(item.href)));
+}
+
+/**
+ * Voce da evidenziare adesso.
+ *
+ * usePathname cambia solo a navigazione conclusa: legandoci l'indicatore, il
+ * tocco restava senza risposta per tutto il tempo del viaggio al server. Qui
+ * l'indice viene fissato al tocco e il percorso reale lo raggiunge dopo,
+ * riallineando anche i casi in cui la rotta cambia senza un tocco: indietro,
+ * avanti, un redirect.
+ */
+function useActiveIndex(): [number, number, (i: number) => void] {
   const pathname = usePathname();
-  const activeIndex = Math.max(
-    0,
-    ITEMS.findIndex((item) => pathname.startsWith(item.href)),
-  );
+  const reale = indexOfPath(pathname);
+  const [atteso, setAtteso] = useState<number | null>(null);
 
-  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  useEffect(() => setAtteso(null), [pathname]);
 
-  // L'indicatore insegue la voce attiva: la posizione va misurata dopo il
-  // render, perché la voce attiva mostra anche l'etichetta ed è più larga.
-  useLayoutEffect(() => {
-    function measure() {
-      const el = itemRefs.current[activeIndex];
-      if (!el) return;
-      setPill({ left: el.offsetLeft, width: el.offsetWidth });
-    }
-    measure();
-    // Un secondo passaggio a transizione dell'etichetta conclusa.
-    const t = setTimeout(measure, 320);
-    window.addEventListener("resize", measure);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", measure);
-    };
-  }, [activeIndex]);
+  return [atteso ?? reale, reale, setAtteso];
+}
+
+export function BottomNav() {
+  const [attivo, reale, prevedi] = useActiveIndex();
 
   return (
     <>
@@ -49,58 +47,49 @@ export function BottomNav() {
       />
       <div className="fixed inset-x-0 bottom-0 z-40 px-5 pb-[max(1.15rem,env(safe-area-inset-bottom))] md:hidden">
         <nav aria-label="Navigazione principale" className="mx-auto max-w-sm">
-          <ul className="relative flex items-center justify-between gap-1 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
-            {/* La pillola scura scorre da una voce all'altra */}
+          {/* Quattro colonne uguali. Prima l'etichetta compariva solo sulla voce
+              attiva, quindi le larghezze cambiavano a ogni passaggio: la pillola
+              andava misurata dopo il render e di nuovo a transizione conclusa, e
+              quei due passaggi erano il "si sposta e poi si riempie". Con le
+              colonne fisse la geometria si ricava dall'indice, la pillola deve
+              solo traslare, e il movimento è uno solo. */}
+          <ul className="relative grid grid-cols-4 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
+            {/* La pillola scura scorre da una colonna all'altra. La larghezza
+                toglie il padding del contenitore, così un passo di traslazione
+                è esattamente una colonna. */}
             <li
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-1.5 left-0 rounded-full bg-ink transition-[transform,width] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={
-                pill
-                  ? { transform: `translateX(${pill.left}px)`, width: pill.width }
-                  : { opacity: 0 }
-              }
+              className="pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{ transform: `translateX(${attivo * 100}%)` }}
             />
 
             {ITEMS.map((item, i) => {
-              const active = i === activeIndex;
               const Icon = item.icon;
               return (
-                <li
-                  key={item.href}
-                  ref={(el) => {
-                    itemRefs.current[i] = el;
-                  }}
-                  className="relative z-10"
-                >
+                <li key={item.href} className="relative z-10">
                   <Link
                     href={item.href}
                     /* Scarica in anticipo la schermata intera, non solo lo
                        scheletro: sono quattro rotte e si passa la vita fra
                        quelle. */
                     prefetch
-                    aria-current={active ? "page" : undefined}
-                    /* Il nome accessibile non puo' dipendere dall'animazione:
-                       sulle voci inattive l'etichetta ha larghezza zero e
-                       spariva dall'albero di accessibilita', lasciando il link
-                       senza nome. L'aria-label lo rende stabile. */
-                    aria-label={item.label}
-                    className={`tappable flex items-center rounded-full px-3.5 py-3 text-[13px] font-bold ${
-                      active ? "text-white" : "text-ink-muted active:text-ink"
+                    /* aria-current segue il percorso vero, non quello previsto:
+                       l'indicatore può anticipare, l'annuncio "pagina corrente"
+                       no, o direbbe il falso finché la pagina non è arrivata. */
+                    aria-current={i === reale ? "page" : undefined}
+                    onClick={() => prevedi(i)}
+                    className={`tappable flex flex-col items-center gap-1 rounded-full py-2 transition-colors duration-[300ms] ${
+                      i === attivo ? "text-white" : "text-ink-muted"
                     }`}
                   >
                     <Icon
-                      className={`h-[22px] w-[22px] shrink-0 transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        active ? "scale-110" : "scale-100"
+                      className={`h-[22px] w-[22px] shrink-0 transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        i === attivo ? "scale-110" : "scale-100"
                       }`}
                     />
-                    {/* Duplicato visivo del nome accessibile: nascosto agli
-                        screen reader per non farlo annunciare due volte. */}
-                    <span
-                      aria-hidden="true"
-                      className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-out ${
-                        active ? "ml-2 max-w-[6rem] opacity-100" : "max-w-0 opacity-0"
-                      }`}
-                    >
+                    {/* Sempre visibile: con le colonne fisse c'è lo spazio, e
+                        un'icona con il suo nome accanto non va indovinata. */}
+                    <span className="text-[11px] font-bold leading-none">
                       {item.label}
                     </span>
                   </Link>
@@ -115,7 +104,7 @@ export function BottomNav() {
 }
 
 export function SideNav() {
-  const pathname = usePathname();
+  const [attivo, reale, prevedi] = useActiveIndex();
 
   return (
     <nav
@@ -124,17 +113,17 @@ export function SideNav() {
     >
       <div className="card-light p-2.5">
         <ul className="space-y-1.5">
-          {ITEMS.map((item) => {
-            const active = pathname.startsWith(item.href);
+          {ITEMS.map((item, i) => {
             const Icon = item.icon;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   prefetch
-                  aria-current={active ? "page" : undefined}
-                  className={`tappable flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold ${
-                    active
+                  aria-current={i === reale ? "page" : undefined}
+                  onClick={() => prevedi(i)}
+                  className={`tappable flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold transition-colors duration-200 ${
+                    i === attivo
                       ? "bg-ink text-white"
                       : "text-ink-muted hover:bg-black/[0.04] hover:text-ink"
                   }`}
