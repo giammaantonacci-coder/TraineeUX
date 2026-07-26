@@ -12,10 +12,31 @@ export const metadata: Metadata = {
   title: "TraineeUX — Allenamento UX e Product Design",
   description:
     "Percorso di allenamento in UX e product design dal livello intermedio all'expert: esercizi, progressi, premi e news di settore.",
+  applicationName: "TraineeUX",
+  // Tiene l'app autonoma quando è aggiunta alla schermata home di iOS:
+  // senza questo, ogni link apre Safari e si esce dall'app.
+  appleWebApp: {
+    capable: true,
+    title: "TraineeUX",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f1117",
+  themeColor: "#ffffff",
+  // Serve perché env(safe-area-inset-bottom) abbia un valore reale:
+  // è quello che tiene la nav flottante sopra la barra home dell'iPhone.
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
