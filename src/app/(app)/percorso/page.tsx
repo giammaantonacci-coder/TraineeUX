@@ -1,9 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MODULES } from "@/content";
 import { getUserData } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
 import { ACCENT_BG, PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+
+export const metadata: Metadata = { title: "Percorso" };
 
 export default async function PercorsoPage() {
   const data = await getUserData();
@@ -64,7 +67,7 @@ export default async function PercorsoPage() {
                     <li key={module.id}>
                       <Link
                         href={`/percorso/${module.id}`}
-                        className="card-light flex h-full flex-col p-5 transition-transform hover:-translate-y-0.5"
+                        className="card-light tappable flex h-full flex-col p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">

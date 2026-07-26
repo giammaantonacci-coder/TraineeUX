@@ -8,7 +8,15 @@ import type { ReactNode } from "react";
 
 function Frame({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-black/10 bg-white">
+    /* È un'illustrazione, non un'interfaccia: i pulsanti finti non sono
+       pulsanti. Dichiararlo evita che uno screen reader annunci controlli
+       inesistenti come se fossero utilizzabili. */
+    <figure className="m-0 overflow-hidden rounded-3xl border border-black/10 bg-white">
+      <figcaption className="sr-only">
+        Simulazione statica di uno schermo da esaminare. Gli elementi non sono
+        interattivi: fanno parte dell&apos;esercizio.
+      </figcaption>
+      <div>
       <div className="flex items-center gap-2 border-b border-black/10 bg-[#f3f4f6] px-4 py-2.5">
         <span aria-hidden="true" className="flex gap-1.5">
           <i className="block h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
@@ -22,7 +30,8 @@ function Frame({ title, children }: { title: string; children: ReactNode }) {
       <div className="overflow-x-auto">
         <div className="min-w-[320px] p-5 text-neutral-900">{children}</div>
       </div>
-    </div>
+      </div>
+    </figure>
   );
 }
 

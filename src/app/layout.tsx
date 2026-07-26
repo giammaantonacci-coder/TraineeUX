@@ -9,7 +9,13 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "TraineeUX — Allenamento UX e Product Design",
+  // Ogni schermata ha il suo titolo: è il criterio WCAG 2.4.2 e, in una
+  // app a navigazione client, è anche ciò che Next annuncia agli screen
+  // reader al cambio di rotta. Senza, il cambio pagina è silenzioso.
+  title: {
+    default: "TraineeUX — Allenamento UX e Product Design",
+    template: "%s · TraineeUX",
+  },
   description:
     "Percorso di allenamento in UX e product design dal livello intermedio all'expert: esercizi, progressi, premi e news di settore.",
   applicationName: "TraineeUX",

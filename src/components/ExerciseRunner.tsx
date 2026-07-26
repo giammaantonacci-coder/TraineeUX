@@ -44,6 +44,30 @@ export function ExerciseRunner({
   const [selfScores, setSelfScores] = useState<Record<string, number>>({});
   const [briefStage, setBriefStage] = useState<"write" | "assess">("write");
 
+  // Prevenzione degli errori, non messaggistica: un brief e' venti minuti di
+  // scrittura, e un tocco sbagliato non deve buttarli. La bozza sopravvive a
+  // navigazione e ricarica, e viene cancellata solo dopo la consegna.
+  const draftKey = `traineeux:bozza:${moduleId}/${exercise.id}`;
+
+  useEffect(() => {
+    if (exercise.type !== "brief") return;
+    try {
+      const saved = window.sessionStorage.getItem(draftKey);
+      if (saved) setText(saved);
+    } catch {
+      /* sessionStorage non disponibile: si procede senza bozza */
+    }
+  }, [draftKey, exercise.type]);
+
+  useEffect(() => {
+    if (exercise.type !== "brief") return;
+    try {
+      if (text.trim()) window.sessionStorage.setItem(draftKey, text);
+    } catch {
+      /* quota piena o storage bloccato: la bozza non e' critica */
+    }
+  }, [text, draftKey, exercise.type]);
+
   useEffect(() => {
     if (phase === "done" && resultRef.current) {
       // Il punteggio è in cima al risultato: senza riportare lo scroll a zero
@@ -96,6 +120,11 @@ export function ExerciseRunner({
         setError(res.error ?? "Qualcosa è andato storto. Riprova.");
         return;
       }
+      try {
+        window.sessionStorage.removeItem(draftKey);
+      } catch {
+        /* niente da pulire */
+      }
       setResult(res);
       setPhase("done");
     });
@@ -145,7 +174,7 @@ export function ExerciseRunner({
           <button
             type="button"
             onClick={begin}
-            className="mt-5 w-full rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white sm:w-auto"
+            className="tappable mt-5 w-full rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white sm:w-auto"
           >
             Inizia l&apos;esercizio
           </button>
@@ -314,13 +343,13 @@ export function ExerciseRunner({
           <button
             type="button"
             onClick={retry}
-            className="rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white"
+            className="tappable rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white"
           >
             Rifai l&apos;esercizio
           </button>
           <Link
             href={`/percorso/${moduleId}`}
-            className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-sm font-bold"
+            className="tappable rounded-full border border-black/10 bg-white px-6 py-3.5 text-sm font-bold"
           >
             Torna a {moduleTitle}
           </Link>
@@ -527,7 +556,7 @@ export function ExerciseRunner({
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 disabled={text.trim().length < 20}
-                className="mt-4 rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white disabled:opacity-40"
+                className="tappable mt-4 rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white disabled:opacity-40"
               >
                 Ho finito, passa alla rubrica
               </button>
@@ -568,7 +597,7 @@ export function ExerciseRunner({
                           onClick={() =>
                             setSelfScores((s) => ({ ...s, [r.id]: opt.v }))
                           }
-                          className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
+                          className={`tappable rounded-full px-4 py-2.5 text-[13px] font-semibold ${
                             selfScores[r.id] === opt.v
                               ? "bg-ink text-white"
                               : "bg-black/5 text-ink-muted hover:bg-black/10"
@@ -603,7 +632,12 @@ export function ExerciseRunner({
         <div className="sticky bottom-[calc(6.25rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
           <div className="flex items-center gap-3 rounded-full border border-black/10 bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_18px_36px_-20px_rgba(15,17,23,0.65)]">
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold">
+              {/* Il conteggio cambia a ogni risposta: senza regione live, chi
+                  usa uno screen reader non sa di aver completato. */}
+              <p
+                aria-live="polite"
+                className="truncate text-[13px] font-semibold"
+              >
                 {statusLabel(exercise, choices, selected, selfScores)}
               </p>
               {exercise.type !== "critique" ? (
@@ -617,7 +651,8 @@ export function ExerciseRunner({
               type="button"
               onClick={send}
               disabled={!complete || pending}
-              className="shrink-0 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white disabled:opacity-40"
+              aria-busy={pending}
+              className="tappable shrink-0 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white disabled:opacity-40"
             >
               {pending ? "Correggo…" : "Consegna"}
             </button>
@@ -695,7 +730,7 @@ function Choice({
 }) {
   return (
     <label
-      className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-3.5 text-[15px] leading-relaxed transition-colors ${
+      className={`tappable flex cursor-pointer items-start gap-3 rounded-2xl border p-3.5 text-[15px] leading-relaxed ${
         checked ? "border-ink bg-ink/5" : "border-black/10 hover:border-black/25"
       }`}
     >

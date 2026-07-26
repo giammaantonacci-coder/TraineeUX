@@ -26,6 +26,11 @@
   color-scheme: light;
 }
 
+html {
+  /* Gli ancoraggi interni (i livelli in /percorso) scorrono morbidi. */
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background: var(--color-canvas);
@@ -80,7 +85,7 @@ body {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -88,6 +93,35 @@ body {
   }
 }
 
+/* 180ms invece di 350: dopo l'attesa del server, un'animazione lunga somma
+   ritardo percepito invece di mascherarlo. Deve solo ammorbidire lo stacco
+   tra scheletro e contenuto. */
 .animate-rise {
-  animation: rise 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: rise 0.18s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* Feedback immediato al tocco: su telefono :hover non esiste, quindi senza
+   questo il tocco resta senza risposta fino al cambio pagina. */
+.tappable {
+  transition:
+    transform 0.14s ease-out,
+    background-color 0.14s ease-out,
+    box-shadow 0.14s ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+.tappable:active {
+  transform: scale(0.985);
+}
+
+/* Collegamento per saltare la navigazione, visibile solo da tastiera. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 60;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease-out;
+}
+.skip-link:focus-visible {
+  transform: none;
 }

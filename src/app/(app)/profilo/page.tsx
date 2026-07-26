@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/actions";
 import { EXERCISE_TYPE_LABEL, MODULES, TOTAL_EXERCISES } from "@/content";
@@ -7,6 +8,8 @@ import { getUserData } from "@/lib/data";
 import { MASTERY_THRESHOLD, RANKS, levelMeta, rankForXp } from "@/lib/progression";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 import type { ExerciseType } from "@/lib/types";
+
+export const metadata: Metadata = { title: "Profilo" };
 
 export default async function ProfiloPage() {
   const data = await getUserData();
@@ -197,7 +200,7 @@ export default async function ProfiloPage() {
                 <li key={m.id}>
                   <Link
                     href={`/percorso/${m.id}`}
-                    className="card-light flex items-center gap-4 p-4"
+                    className="card-light tappable flex items-center gap-4 p-4 active:bg-black/[0.02]"
                   >
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-bold">{m.title}</span>

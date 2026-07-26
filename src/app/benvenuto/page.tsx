@@ -1,6 +1,9 @@
 import { AuthPanel } from "@/components/AuthPanel";
+import type { Metadata } from "next";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
+
+export const metadata: Metadata = { title: "Benvenuto" };
 
 export default function BenvenutoPage() {
   return (

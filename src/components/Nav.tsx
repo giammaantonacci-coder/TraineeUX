@@ -75,7 +75,12 @@ export function BottomNav() {
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center rounded-full px-3.5 py-3 text-[13px] font-bold transition-colors duration-300 ${
+                    /* Il nome accessibile non puo' dipendere dall'animazione:
+                       sulle voci inattive l'etichetta ha larghezza zero e
+                       spariva dall'albero di accessibilita', lasciando il link
+                       senza nome. L'aria-label lo rende stabile. */
+                    aria-label={item.label}
+                    className={`tappable flex items-center rounded-full px-3.5 py-3 text-[13px] font-bold ${
                       active ? "text-white" : "text-ink-muted active:text-ink"
                     }`}
                   >
@@ -84,7 +89,10 @@ export function BottomNav() {
                         active ? "scale-110" : "scale-100"
                       }`}
                     />
+                    {/* Duplicato visivo del nome accessibile: nascosto agli
+                        screen reader per non farlo annunciare due volte. */}
                     <span
+                      aria-hidden="true"
                       className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-out ${
                         active ? "ml-2 max-w-[6rem] opacity-100" : "max-w-0 opacity-0"
                       }`}
@@ -120,7 +128,7 @@ export function SideNav() {
                 <Link
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold transition-all duration-300 ${
+                  className={`tappable flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold ${
                     active
                       ? "bg-ink text-white"
                       : "text-ink-muted hover:bg-black/[0.04] hover:text-ink"

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
@@ -9,6 +10,16 @@ import {
 import { bestPctPerExercise, getUserData } from "@/lib/data";
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ moduleId: string }>;
+}): Promise<Metadata> {
+  const { moduleId } = await params;
+  const mod = getModule(moduleId);
+  return { title: mod?.title ?? "Modulo" };
+}
 
 export function generateStaticParams() {
   return MODULES.map((m) => ({ moduleId: m.id }));
@@ -36,7 +47,7 @@ export default async function ModulePage({
     <div className="animate-rise">
       <Link
         href="/percorso"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-muted hover:text-ink"
+        className="tappable -ml-2 mb-3 inline-flex items-center gap-1.5 rounded-full px-2 py-2 text-sm font-semibold text-ink-muted hover:text-ink active:bg-black/5"
       >
         ‹ Percorso
       </Link>
@@ -154,7 +165,7 @@ export default async function ModulePage({
               <li key={exercise.id}>
                 <Link
                   href={`/allenamento/${mod.id}/${exercise.id}`}
-                  className="card-light flex items-center gap-4 p-5 transition-transform hover:-translate-y-0.5"
+                  className="card-light tappable flex items-center gap-4 p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">

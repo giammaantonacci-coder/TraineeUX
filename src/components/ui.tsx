@@ -130,12 +130,14 @@ export function SectionTitle({
   action?: { href: string; label: string };
 }) {
   return (
-    <div className="mb-3 flex items-baseline justify-between gap-4">
+    <div className="mb-3 flex items-center justify-between gap-4">
       <h2 className="text-lg font-bold tracking-tight">{children}</h2>
       {action ? (
+        /* -mr-2 recupera il padding: serve a portare il bersaglio tattile
+           sopra i 24px richiesti da WCAG 2.5.8 senza spostare il testo. */
         <Link
           href={action.href}
-          className="shrink-0 text-sm font-semibold text-ink-muted hover:text-ink"
+          className="-mr-2 shrink-0 rounded-full px-2 py-2 text-sm font-semibold text-ink-muted transition-colors hover:text-ink active:bg-black/5"
         >
           {action.label} ›
         </Link>
@@ -211,4 +213,47 @@ export function renderInline(text: string): ReactNode[] {
     }
     return <span key={i}>{part}</span>;
   });
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Scheletri di caricamento                                            */
+/*                                                                     */
+/* Ogni schermata interroga Supabase: senza uno stato di attesa il      */
+/* tocco non produce nulla per qualche centinaio di millisecondi. Lo    */
+/* scheletro riproduce la forma della pagina, così l'arrivo dei dati    */
+/* non sposta il layout.                                               */
+/* ------------------------------------------------------------------ */
+
+export function Skeleton({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded-full bg-black/[0.07] ${className}`}
+    />
+  );
+}
+
+export function SkeletonCard({ lines = 3 }: { lines?: number }) {
+  return (
+    <div className="card-light p-5">
+      <Skeleton className="h-3 w-24" />
+      <Skeleton className="mt-4 h-5 w-3/4 rounded-lg" />
+      <div className="mt-3 space-y-2">
+        {Array.from({ length: lines }).map((_, i) => (
+          <Skeleton key={i} className={`h-3 ${i === lines - 1 ? "w-1/2" : "w-full"}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Involucro con l'annuncio di caricamento per chi usa uno screen reader. */
+export function LoadingShell({ children }: { children: ReactNode }) {
+  return (
+    <div role="status" aria-busy="true" aria-live="polite">
+      <span className="sr-only">Caricamento in corso</span>
+      {children}
+    </div>
+  );
 }

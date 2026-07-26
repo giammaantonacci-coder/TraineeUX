@@ -1,13 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { COMPANIES } from "@/content/companies";
 import { PageHeader, Pill } from "@/components/ui";
+
+export const metadata: Metadata = { title: "Aziende" };
 
 export default function AziendePage() {
   return (
     <div className="animate-rise">
       <Link
         href="/news"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-muted hover:text-ink"
+        className="tappable -ml-2 mb-3 inline-flex items-center gap-1.5 rounded-full px-2 py-2 text-sm font-semibold text-ink-muted hover:text-ink active:bg-black/5"
       >
         ‹ News
       </Link>
@@ -47,18 +50,19 @@ export default function AziendePage() {
                 href={company.site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-ink px-4 py-2 text-white"
+                className="tappable rounded-full bg-ink px-4 py-2 text-white"
               >
-                Sito ↗
+                Sito ↗<span className="sr-only"> — si apre in una nuova finestra</span>
               </a>
               {company.blog ? (
                 <a
                   href={company.blog.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-black/5 px-4 py-2"
+                  className="tappable rounded-full bg-black/5 px-4 py-2"
                 >
                   {company.blog.label} ↗
+                  <span className="sr-only"> — si apre in una nuova finestra</span>
                 </a>
               ) : null}
             </div>

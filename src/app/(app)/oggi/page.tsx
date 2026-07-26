@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
   EXERCISE_TYPE_DESCRIPTION,
@@ -10,6 +11,8 @@ import { bestPctPerExercise, getUserData } from "@/lib/data";
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import type { Exercise, Module } from "@/lib/types";
+
+export const metadata: Metadata = { title: "Oggi" };
 
 export default async function OggiPage() {
   const data = await getUserData();
@@ -45,10 +48,14 @@ export default async function OggiPage() {
         </div>
         <Link
           href="/profilo"
-          className="flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-2 text-xs font-bold"
+          className="tappable flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-2 text-xs font-bold active:bg-black/5"
         >
           <span aria-hidden="true">🔥</span>
-          {streak}
+          <span aria-hidden="true">{streak}</span>
+          {/* Senza questo il nome accessibile del link era il solo numero. */}
+          <span className="sr-only">
+            Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
+          </span>
         </Link>
       </header>
 
@@ -136,7 +143,7 @@ export default async function OggiPage() {
               <Link
                 key={levelId}
                 href={`/percorso#${levelId}`}
-                className="card-light block p-4 transition-transform hover:-translate-y-0.5"
+                className="card-light tappable block p-4 hover:-translate-y-0.5 active:bg-black/[0.02]"
               >
                 <div className="flex items-baseline justify-between gap-3">
                   <p className="font-bold">{meta.name}</p>
@@ -243,7 +250,7 @@ function SuggestionCard({
     return (
       <Link
         href={href}
-        className={`block rounded-[28px] ${ACCENT_BG[mod.accent]} p-5 transition-transform hover:-translate-y-0.5 md:p-6`}
+        className={`block rounded-[28px] ${ACCENT_BG[mod.accent]} tappable p-5 hover:-translate-y-0.5 md:p-6`}
       >
         <div className="flex flex-wrap items-center gap-2">
           <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
@@ -267,7 +274,7 @@ function SuggestionCard({
   return (
     <Link
       href={href}
-      className="card-light flex items-center gap-4 p-4 transition-transform hover:-translate-y-0.5"
+      className="card-light tappable flex items-center gap-4 p-4 hover:-translate-y-0.5 active:bg-black/[0.02]"
     >
       <span
         aria-hidden="true"

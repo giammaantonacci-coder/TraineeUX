@@ -1,6 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { FEED_SOURCES, TOPIC_LABEL, fetchNews, formatDate } from "@/lib/news";
 import { PageHeader, Pill } from "@/components/ui";
+
+export const metadata: Metadata = { title: "News" };
 
 export const revalidate = 3600;
 
@@ -63,7 +66,7 @@ export default async function NewsPage({
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card-light block p-5 transition-transform hover:-translate-y-0.5"
+                className="card-light tappable block p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
               >
                 <div className="mb-2 flex flex-wrap items-center gap-2">
                   <Pill tone="dark">{item.sourceName}</Pill>
@@ -82,6 +85,7 @@ export default async function NewsPage({
                 ) : null}
                 <p className="mt-3 text-[13px] font-semibold text-ink-muted">
                   Apri su {new URL(item.link).hostname.replace("www.", "")} ↗
+                  <span className="sr-only"> — si apre in una nuova finestra</span>
                 </p>
               </a>
             </li>
@@ -113,7 +117,7 @@ function FilterLink({
       href={href}
       aria-current={active ? "true" : undefined}
       className={`inline-block whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-        active ? "bg-ink text-white" : "border border-black/10 bg-white text-ink-muted hover:text-ink"
+        active ? "bg-ink text-white" : "border border-black/10 bg-white text-ink-muted hover:text-ink active:bg-black/5"
       }`}
     >
       {label}
