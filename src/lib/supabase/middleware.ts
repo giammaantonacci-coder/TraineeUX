@@ -32,19 +32,31 @@ export async function updateSession(request: NextRequest) {
   // asimmetriche, togliendo una chiamata di rete al server di autenticazione
   // da OGNI navigazione. Con le chiavi simmetriche ricade su una verifica
   // remota, quindi non è mai peggio di getUser.
-  // Se Supabase è irraggiungibile il sito non deve cadere: si degrada a
-  // "non autenticato" e le pagine pubbliche continuano a funzionare.
   let user: { id: string } | null = null;
+  // Distinguere "non ha una sessione" da "non sono riuscito a chiederlo" è
+  // quello che evita di buttare fuori chi è dentro. Prima erano lo stesso
+  // caso, quindi un singolo errore di rete verso Supabase mandava un utente
+  // autenticato sulla pagina di accesso a metà navigazione.
+  let verificaRiuscita = true;
   try {
     const { data } = await supabase.auth.getClaims();
     const sub = data?.claims?.sub;
     if (sub) user = { id: sub };
   } catch {
-    user = null;
+    verificaRiuscita = false;
   }
 
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
+
+  // Con la verifica fallita si lascia passare invece di rimbalzare: non è un
+  // varco, perché la pagina rifà il controllo per conto suo e i dati restano
+  // protetti dalle policy dentro Postgres, che il token lo valuta da sé.
+  // Qui si decide solo dove mandare qualcuno, e sbagliare verso l'uscita
+  // costa più che sbagliare verso l'interno.
+  if (!user && !verificaRiuscita && !isPublic) {
+    return supabaseResponse;
+  }
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
