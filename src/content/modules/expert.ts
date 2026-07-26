@@ -85,93 +85,133 @@ export const expertModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il team crescita propone di mostrare 'Altre 12 persone stanno guardando questo articolo' usando un numero generato casualmente tra 5 e 20. Cosa dici?",
+              "Il team crescita propone di mostrare 'Altre 12 persone stanno guardando questo articolo' con un numero casuale fra 5 e 20. Cosa dici?",
             options: [
-              { id: "a", label: "Va bene se il numero è plausibile e aiuta la conversione" },
+              {
+                id: "a",
+                label: "Va bene se il numero è plausibile e non è verificabile da fuori",
+              },
               {
                 id: "b",
-                label:
-                  "È una pratica commerciale ingannevole ai sensi della normativa UE: un'affermazione fattuale falsa su cui l'utente basa una decisione d'acquisto. Se il dato reale esiste, si mostra quello; se non esiste, non si mostra",
+                label: "È un'affermazione falsa su cui si basa una decisione d'acquisto",
               },
-              { id: "c", label: "Va bene se aggiungiamo una nota nei termini di servizio" },
-              { id: "d", label: "Va bene se il numero è basato su una media storica" },
+              {
+                id: "c",
+                label: "Va bene se la pratica è dichiarata nei termini di servizio",
+              },
+              {
+                id: "d",
+                label: "Va bene se il numero deriva da una media storica reale",
+              },
             ],
             correctId: "b",
             explanation:
-              "Non è una zona grigia: è un'affermazione di fatto falsa che influenza una decisione economica, e ricade nella direttiva sulle pratiche commerciali sleali oltre che nel DSA per le piattaforme. Nasconderlo nei termini di servizio (c) non sana nulla — l'inganno avviene nell'interfaccia. La variante 'media storica' (d) è più sottile e altrettanto problematica: la frase è al presente e afferma un fatto sul momento attuale. Se il dato reale c'è, mostrarlo è anche più efficace, perché a volte è più alto.",
+              "Non è una zona grigia: è un'affermazione di fatto falsa che influenza una decisione economica, e ricade nella direttiva sulle pratiche commerciali sleali oltre che nell'articolo 25 del DSA per le piattaforme. La (d) è la variante più sottile e altrettanto problematica: la frase è al presente e afferma un fatto sul momento attuale, non una media. La (c) non sana nulla, perché l'inganno avviene nell'interfaccia. Se il dato reale esiste, mostrarlo è anche più efficace: a volte è più alto.",
           },
           {
             id: "q2",
             prompt:
               "Stai progettando un assistente AI che riassume documenti legali. Qual è la decisione di design più importante?",
             options: [
-              { id: "a", label: "La qualità della scrittura del riassunto" },
+              {
+                id: "a",
+                label: "La qualità della scrittura del riassunto, che deve essere impeccabile",
+              },
               {
                 id: "b",
-                label:
-                  "Rendere la verifica più economica della lettura integrale: ogni affermazione del riassunto collegata al passaggio d'origine, con evidenza esplicita di ciò che è stato omesso o su cui il sistema è meno sicuro",
+                label: "Rendere la verifica più economica della lettura integrale",
               },
-              { id: "c", label: "La velocità di generazione" },
-              { id: "d", label: "Un avviso che l'output può contenere errori" },
+              {
+                id: "c",
+                label: "La velocità di generazione, perché il tempo è il valore promesso",
+              },
+              {
+                id: "d",
+                label: "Un avviso che segnala che l'output può contenere errori",
+              },
             ],
             correctId: "b",
             explanation:
-              "In un dominio ad alto costo dell'errore, un riassunto non verificabile è inutilizzabile: un professionista non può assumersene la responsabilità e dovrà leggere comunque. L'ancoraggio alla fonte è ciò che rende il risparmio di tempo reale. Attenzione al punto controintuitivo: una scrittura eccellente (a) senza verificabilità aumenta il rischio, perché la fluidità alimenta l'automation bias. L'avviso generico (d) è teatro di conformità: nessuno lo legge e non cambia il comportamento.",
+              "In un dominio ad alto costo dell'errore un riassunto non verificabile è inutilizzabile: un professionista non può assumersene la responsabilità e leggerà comunque tutto. L'ancoraggio di ogni affermazione al passaggio d'origine è ciò che rende reale il risparmio di tempo. La (a) è il punto controintuitivo: una scrittura eccellente senza verificabilità aumenta il rischio, perché la fluidità alimenta l'automation bias. La (d) è teatro di conformità — nessuno la legge e non cambia il comportamento.",
           },
           {
             id: "q3",
             prompt:
-              "Un sistema di suggerimento candidati per le assunzioni ha un'accuratezza dell'87% complessiva, ma il 91% sui candidati uomini e il 78% sulle candidate donne. Il team dice che 87% è comunque meglio del recruiter medio. Cosa segnali?",
+              "Un sistema di selezione candidati ha accuratezza 87% complessiva, 91% sugli uomini e 78% sulle donne. Il team dice che 87% batte il recruiter medio. Cosa segnali?",
             options: [
-              { id: "a", label: "Che serve un modello più accurato" },
+              {
+                id: "a",
+                label: "Che serve un modello più accurato prima di andare in produzione",
+              },
               {
                 id: "b",
-                label:
-                  "Che la performance aggregata nasconde un danno concentrato: il sistema sbaglia sistematicamente di più su un gruppo protetto, il che è una discriminazione indiretta a prescindere dalla media, e la selezione del personale rientra tra i sistemi ad alto rischio dell'AI Act",
+                label: "Che la media nasconde un danno concentrato su un gruppo protetto",
               },
-              { id: "c", label: "Che serve avvisare i candidati dell'uso dell'AI" },
-              { id: "d", label: "Che serve un umano che validi i suggerimenti" },
+              {
+                id: "c",
+                label: "Che va comunicato ai candidati l'uso di un sistema automatico",
+              },
+              {
+                id: "d",
+                label: "Che serve un umano a validare ogni suggerimento prima dell'invio",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il confronto con il recruiter medio è un argomento che sembra ragionevole e non regge: un sistema applica il proprio errore in modo uniforme e su scala, mentre gli errori umani sono eterogenei e non producono lo stesso effetto sistematico. Le opzioni C e D sono necessarie ma insufficienti — la supervisione umana su un sistema con questo divario tende a ratificarlo, per automation bias. Il divario di performance tra gruppi va misurato, dichiarato e chiuso prima del rilascio, ed è esattamente ciò che l'AI Act richiede per i sistemi di selezione del personale.",
+              "Il confronto col recruiter medio sembra ragionevole e non regge: un sistema applica il proprio errore in modo uniforme e su scala, mentre gli errori umani sono eterogenei e non producono lo stesso effetto sistematico. La (c) e la (d) sono necessarie e insufficienti, e la (d) in particolare è la più pericolosa perché rassicura: la supervisione umana su un sistema con questo divario tende a ratificarlo, per automation bias. La (a) tratta come problema di qualità ciò che è una discriminazione indiretta.",
           },
           {
             id: "q4",
             prompt:
               "L'azienda vuole ridurre le disdette degli abbonamenti. Quale intervento è legittimo?",
             options: [
-              { id: "a", label: "Rendere la disdetta disponibile solo via telefono" },
-              { id: "b", label: "Aggiungere tre schermate di conferma con offerte di sconto" },
+              {
+                id: "a",
+                label: "Rendere la disdetta disponibile soltanto tramite telefono",
+              },
+              {
+                id: "b",
+                label: "Mostrare cosa si perde e le alternative, in una schermata sola",
+              },
               {
                 id: "c",
-                label:
-                  "Mostrare, al momento della disdetta, cosa la persona perde in termini di dati e funzioni che sta usando davvero, e offrire alternative concrete (sospensione, piano inferiore) in un'unica schermata, con la disdetta sempre visibile e a un click",
+                label: "Aggiungere tre schermate di conferma con offerte di sconto",
               },
-              { id: "d", label: "Richiedere la compilazione di un questionario sui motivi" },
+              {
+                id: "d",
+                label: "Richiedere un questionario sui motivi prima di procedere",
+              },
             ],
-            correctId: "c",
+            correctId: "b",
             explanation:
-              "La differenza tra informare e ostacolare sta nel numero di passaggi e nella disponibilità dell'uscita. C dà informazioni utili e alternative reali senza aumentare l'attrito: chi vuole andarsene lo fa in un click. A è il caso più sanzionato dalle autorità in tutta la UE. B e D aggiungono attrito senza aggiungere valore per l'utente — e il questionario obbligatorio è particolarmente indifendibile, perché chiede all'utente di lavorare per te nel momento in cui ti sta lasciando.",
+              "La differenza fra informare e ostacolare sta nel numero di passaggi e nella disponibilità dell'uscita: nella (b) chi vuole andarsene lo fa in un click, e le alternative sono reali, non sconti. La (a) è il caso più sanzionato dalle autorità europee. La (c) aggiunge attrito e lo traveste da offerta. La (d) è particolarmente indifendibile e passa spesso inosservata: chiede all'utente di lavorare per te nel momento esatto in cui ti sta lasciando, e lo fa sembrare un passaggio necessario.",
           },
           {
             id: "q5",
             prompt:
-              "Un prodotto per la salute mentale vuole usare notifiche personalizzate in base ai momenti di maggiore vulnerabilità rilevati dai dati d'uso. È efficace nei test. Come ti poni?",
+              "Un prodotto per la salute mentale vuole notifiche personalizzate sui momenti di vulnerabilità rilevati dai dati d'uso. Nei test è efficace. Come ti poni?",
             options: [
-              { id: "a", label: "Procedi: l'efficacia è dimostrata e l'obiettivo è benefico" },
+              {
+                id: "a",
+                label: "Procedi: l'efficacia è dimostrata e l'obiettivo è benefico",
+              },
               {
                 id: "b",
-                label:
-                  "Sollevi il fatto che sfruttare la vulnerabilità rilevata è manipolativo indipendentemente dall'intenzione benefica; proponi che la personalizzazione sia dichiarata, controllabile dall'utente e progettata con clinici, e che il consenso sia specifico e revocabile",
+                label: "Sfruttare la vulnerabilità è manipolativo anche con buone intenzioni",
               },
-              { id: "c", label: "Proponi di testare l'efficacia su un campione più ampio" },
-              { id: "d", label: "Proponi di limitare la frequenza delle notifiche" },
+              {
+                id: "c",
+                label: "Proponi di verificare l'efficacia su un campione più ampio",
+              },
+              {
+                id: "d",
+                label: "Proponi di limitare la frequenza massima delle notifiche",
+              },
             ],
             correctId: "b",
             explanation:
-              "È il caso più difficile del set proprio perché l'intenzione è buona e i risultati sono positivi. Ma una tecnica che agisce sui momenti di vulnerabilità senza che la persona lo sappia e possa controllarlo è manipolativa per struttura, e in un contesto di salute mentale il potenziale di danno è concreto — l'AI Act tratta esplicitamente lo sfruttamento delle vulnerabilità tra le pratiche vietate. La correzione non è rinunciare: è rendere il meccanismo trasparente, controllabile e progettato con competenza clinica. Un intervento efficace e dichiarato resta efficace; se smette di funzionare quando è dichiarato, funzionava perché era nascosto.",
-          },
+              "È il caso più difficile del set proprio perché l'intenzione è buona e i risultati positivi. Una tecnica che agisce sui momenti di vulnerabilità senza che la persona lo sappia e possa controllarlo è manipolativa per struttura, e l'AI Act tratta esplicitamente lo sfruttamento delle vulnerabilità fra le pratiche vietate. La (c) e la (d) sono mitigazioni che lasciano intatto il meccanismo: misurano meglio, o dosano, ciò che non dovrebbe essere nascosto. La correzione non è rinunciare: è renderlo dichiarato, controllabile e progettato con clinici. Se smette di funzionare quando è dichiarato, funzionava perché era nascosto.",
+          }
         ],
       },
       {

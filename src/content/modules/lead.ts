@@ -83,93 +83,133 @@ export const leadModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Sei il primo design lead di una startup da 30 persone. Il design è chiamato a valle, a cose decise. La tua prima mossa dovrebbe essere:",
+              "Sei il primo design lead di una startup da 30 persone e il design viene chiamato a cose decise. Da cosa parti?",
             options: [
-              { id: "a", label: "Introdurre un processo di design con fasi e consegne" },
+              {
+                id: "a",
+                label: "Introduci un processo con fasi, consegne e criteri di passaggio",
+              },
               {
                 id: "b",
-                label:
-                  "Scegliere un problema visibile e importante per l'azienda, risolverlo bene con evidenza misurabile, e usare quel credito per ottenere accesso alle decisioni precoci",
+                label: "Risolvi bene un problema visibile e usi quel credito per entrare prima",
               },
-              { id: "c", label: "Assumere due designer per aumentare la capacità" },
-              { id: "d", label: "Costruire un design system per dare coerenza" },
+              {
+                id: "c",
+                label: "Assumi due designer, per aumentare subito la capacità del team",
+              },
+              {
+                id: "d",
+                label: "Costruisci il design system, per dare coerenza a ciò che esiste",
+              },
             ],
             correctId: "b",
             explanation:
-              "In fase 1 il vincolo è la credibilità, non la capacità né la coerenza. Un processo introdotto prima di aver guadagnato fiducia viene percepito come burocrazia e aggirato. Assumere (c) moltiplica designer che vengono chiamati tardi, cioè moltiplica il problema. Un design system (d) a 30 persone risolve un problema che non hai ancora. Il credito si guadagna su un risultato che qualcun altro voleva ottenere.",
+              "In questa fase il vincolo è la credibilità, non la capacità né la coerenza. La (a) è la mossa che sembra più professionale e viene percepita come burocrazia da chi non ti ha ancora dato fiducia: verrà aggirata. La (c) moltiplica designer che vengono chiamati tardi, cioè moltiplica il problema invece di risolverlo. La (d) risolve a trenta persone un problema che non hai ancora. Il credito si guadagna su un risultato che qualcun altro voleva ottenere, e apre l'accesso alle decisioni precoci.",
           },
           {
             id: "q2",
             prompt:
-              "Un tuo senior designer è tecnicamente eccellente ma le sue decisioni richiedono sempre la tua approvazione, e lui la cerca. Come intervieni?",
+              "Un tuo senior è tecnicamente eccellente ma cerca sempre la tua approvazione prima di decidere. Come intervieni?",
             options: [
-              { id: "a", label: "Gli dici di decidere da solo" },
+              {
+                id: "a",
+                label: "Gli dici di decidere da solo: ha l'esperienza per farlo",
+              },
               {
                 id: "b",
-                label:
-                  "Rendi espliciti i criteri con cui tu decidi, gli assegni un ambito con autonomia dichiarata, e cambi il tuo ruolo da approvatore a interlocutore che chiede il ragionamento invece di dare il verdetto",
+                label: "Espliciti i criteri, dichiari il perimetro, cambi il tuo ruolo",
               },
-              { id: "c", label: "Riduci la frequenza dei vostri incontri" },
-              { id: "d", label: "Gli assegni progetti meno critici per fargli fare pratica" },
+              {
+                id: "c",
+                label: "Riduci la frequenza degli incontri, così deve decidere lui",
+              },
+              {
+                id: "d",
+                label: "Gli assegni progetti meno critici, per fargli fare pratica",
+              },
             ],
             correctId: "b",
             explanation:
-              "La ricerca di approvazione è quasi sempre razionale: se storicamente le decisioni sono state ribaltate senza criteri visibili, chiedere prima è la strategia ottimale. Dire di decidere da solo (a) senza rendere prevedibile il giudizio aumenta l'ansia. Assegnare progetti minori (d) comunica una retrocessione. La leva vera è esplicitare i criteri e dichiarare il perimetro di autonomia — 'in quest'area decidi tu, mi informi dopo'.",
+              "La ricerca di approvazione è quasi sempre razionale: se storicamente le decisioni sono state ribaltate senza criteri visibili, chiedere prima è la strategia ottimale. La (a) e la (c) togliono la rete senza rendere prevedibile il giudizio, e l'ansia aumenta invece di scendere — la (c) in più lo fa senza dirglielo. La (d) comunica una retrocessione a chi è tecnicamente eccellente. La leva è rendere prevedibile il tuo giudizio e dichiarare dove decide lui: 'in quest'area decidi tu, mi informi dopo'.",
           },
           {
             id: "q3",
             prompt:
-              "L'azienda ha 5 team di prodotto con un designer ciascuno. I prodotti stanno divergendo visivamente e concettualmente. Il CPO propone di centralizzare tutti i designer in un unico team che serve i prodotti su richiesta. Cosa segnali?",
+              "Cinque team con un designer ciascuno, prodotti che divergono. Il CPO propone di centralizzare i designer in un team che serve i prodotti su richiesta. Cosa segnali?",
             options: [
-              { id: "a", label: "È la soluzione corretta: garantisce coerenza" },
+              {
+                id: "a",
+                label: "È la soluzione corretta, perché garantisce coerenza fra i prodotti",
+              },
               {
                 id: "b",
-                label:
-                  "Che la centralizzazione risolve la coerenza e reintroduce il design come servizio, perdendo il contesto di dominio. Il modello che tiene entrambe le cose è designer incorporati nei team più un nucleo condiviso (sistema, ricerca, rituali di allineamento)",
+                label: "Risolve la coerenza e riporta il design a essere un servizio",
               },
-              { id: "c", label: "Che serve prima un design system" },
-              { id: "d", label: "Che il problema è di assunzione: servono designer più senior" },
+              {
+                id: "c",
+                label: "Serve prima il design system, poi si valuta il modello organizzativo",
+              },
+              {
+                id: "d",
+                label: "È un problema di assunzioni: servono designer più esperti nei team",
+              },
             ],
             correctId: "b",
             explanation:
-              "È un classico pendolo organizzativo: si centralizza per la coerenza, si perde il contesto, si decentralizza per il contesto, si perde la coerenza, e si riorganizza ogni 18 mesi. Il modello ibrido — incorporati più nucleo — esiste proprio per questo, e non è un compromesso debole: assegna a livelli diversi problemi di natura diversa. Il design system (c) è parte della soluzione ma da solo non produce coerenza concettuale, solo visiva.",
+              "È il pendolo organizzativo classico: si centralizza per la coerenza, si perde il contesto di dominio, si decentralizza per il contesto, si perde la coerenza, e si riorganizza ogni diciotto mesi. La (c) è il distrattore più forte perché il design system è parte della soluzione: da solo produce coerenza visiva, non concettuale, e non dice a chi appartengono le decisioni che attraversano i prodotti. Il modello che tiene entrambe le cose è designer incorporati nei team più un nucleo condiviso.",
           },
           {
             id: "q4",
             prompt:
-              "Devi dire a un designer con 7 anni di esperienza che non sarà promosso a principal quest'anno. Le sue esecuzioni sono ottime, ma il suo impatto resta dentro il suo team. Come imposti la conversazione?",
+              "Devi dire a un designer con 7 anni di esperienza che non sarà promosso a principal: esecuzioni ottime, impatto tutto dentro il suo team. Come imposti la conversazione?",
             options: [
-              { id: "a", label: "Spieghi che la promozione dipende da fattori di budget" },
+              {
+                id: "a",
+                label: "Spieghi che dipende dal budget, quest'anno più stretto del solito",
+              },
               {
                 id: "b",
-                label:
-                  "Sei esplicito sul divario in termini di ambito e leva, con esempi concreti di cosa fa un principal in azienda, e definisci insieme due occasioni reali nei prossimi sei mesi in cui potrà dimostrarlo",
+                label: "Sei esplicito sull'ambito, con esempi, e definite due occasioni",
               },
-              { id: "c", label: "Gli dici che è vicino e che serve solo un po' più di tempo" },
-              { id: "d", label: "Gli chiedi cosa pensa che gli manchi" },
+              {
+                id: "c",
+                label: "Gli dici che è vicino e che serve solo un altro po' di tempo",
+              },
+              {
+                id: "d",
+                label: "Gli chiedi cosa pensa che gli manchi per arrivare a quel livello",
+              },
             ],
             correctId: "b",
             explanation:
-              "Le due risposte gentili (a e c) sono le più dannose: la prima gli fa credere che il criterio non dipenda da lui, la seconda costruisce un'aspettativa che tra un anno diventerà rabbia legittima. Chiedere cosa pensa (d) è un buon complemento ma non può sostituire il fatto che il giudizio è tuo e va comunicato. L'unica versione rispettosa è quella specifica, con esempi e con occasioni concrete: il divario deve essere colmabile e osservabile, altrimenti è una condanna travestita da feedback.",
+              "La (a) e la (c) sono le versioni gentili e le più dannose: la prima gli dice che il criterio non dipende da lui, la seconda costruisce un'aspettativa che fra un anno diventerà rabbia legittima. La (d) è il distrattore interessante perché è un buon complemento e un cattivo sostituto: il giudizio è tuo, e chiedere la diagnosi alla persona giudicata è evitamento travestito da coaching. L'unica versione rispettosa è specifica, con esempi di cosa fa un principal in azienda, e con occasioni reali per dimostrarlo.",
           },
           {
             id: "q5",
             prompt:
-              "Il tuo calendario è pieno di revisioni di design. La qualità è alta, il team consegna lentamente e nessuno decide senza di te. Qual è l'intervento più efficace?",
+              "Il tuo calendario è pieno di revisioni di design: la qualità è alta, il team consegna lentamente, nessuno decide senza di te. Intervento più efficace?",
             options: [
-              { id: "a", label: "Delegare le revisioni ai due senior" },
+              {
+                id: "a",
+                label: "Deleghi le revisioni ai due senior, distribuendo il carico",
+              },
               {
                 id: "b",
-                label:
-                  "Passare dalla revisione delle esecuzioni alla revisione delle decisioni, rendere pubblici i criteri, e introdurre un formato in cui chi progetta scrive il ragionamento prima di mostrare le schermate",
+                label: "Passi dalle esecuzioni alle decisioni, e rendi pubblici i criteri",
               },
-              { id: "c", label: "Ridurre a metà il numero di revisioni" },
-              { id: "d", label: "Assumere un design manager" },
+              {
+                id: "c",
+                label: "Dimezzi il numero di revisioni, tenendo solo quelle critiche",
+              },
+              {
+                id: "d",
+                label: "Assumi un design manager, per dividere il lavoro di revisione",
+              },
             ],
             correctId: "b",
             explanation:
-              "Delegare (a) sposta il collo di bottiglia su due persone e replica il problema. Ridurre le revisioni (c) senza cambiarne la natura abbassa la qualità senza aumentare l'autonomia. Assumere un manager (d) aggiunge un livello a un problema di metodo. La leva è cambiare l'oggetto della revisione: se si discutono i criteri invece dei pixel, il team li interiorizza e inizia ad applicarli da solo — che è l'unico modo in cui la qualità scala.",
-          },
+              "La (a) sposta il collo di bottiglia su due persone e lo replica identico. La (c) abbassa la qualità senza aumentare l'autonomia: meno controlli sullo stesso team che non ha imparato a giudicare. La (d) aggiunge un livello gerarchico a un problema di metodo, e costa mesi. La leva è cambiare l'oggetto della revisione: se si discutono i criteri invece dei margini, il team li interiorizza e inizia ad applicarli da solo — che è l'unico modo in cui la qualità scala oltre le tue ore.",
+          }
         ],
       },
       {
@@ -189,21 +229,21 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Definire i livelli di carriera e le aspettative per ruolo, e farci sopra un ciclo di valutazione onesto",
+                  "Definire i livelli di carriera e le aspettative per ruolo",
                 score: 3,
                 outcome:
                   "È il vincolo che blocca tutto il resto: senza aspettative esplicite non puoi delegare (non sai a chi), non puoi assumere (non sai cosa cerchi), non puoi far crescere nessuno. Tre mesi dopo hai due senior con perimetri di autonomia dichiarati e il tuo calendario inizia a liberarsi.",
               },
               {
                 id: "b",
-                label: "Costruire il design system per fermare la divergenza",
+                label: "Costruire il design system, per fermare la divergenza",
                 score: 2,
                 outcome:
                   "Interviene sul sintomo più visibile e serve davvero, ma senza qualcuno a cui affidarlo diventa un tuo progetto in più. La divergenza rallenta, il tuo carico aumenta.",
               },
               {
                 id: "c",
-                label: "Assumere un design manager per gestire le persone",
+                label: "Assumere un design manager, per gestire le persone",
                 score: 2,
                 outcome:
                   "Sensato a 11 designer, ma assumere un manager prima di aver definito le aspettative significa chiedergli di valutare persone rispetto a criteri che non esistono. Funzionerà solo se li scrive lui, il che sposta il problema di tre mesi.",
@@ -229,7 +269,7 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Chiedi di capire quale problema il CEO vede che tu non stai risolvendo, prima di reagire alla proposta",
+                  "Capire quale problema il CEO vede e tu non risolvi",
                 score: 3,
                 outcome:
                   "Emerge che il CEO ha bisogno di qualcuno che porti il design nelle conversazioni con gli investitori e nella strategia a tre anni, un ambito che tu non hai mai coperto perché eri sommerso dall'operativo. Non è un giudizio sul tuo lavoro: è un buco reale. Ora la conversazione è su chi lo copre e come, e sei tu a condurla.",
@@ -250,7 +290,7 @@ export const leadModules: Module[] = [
               },
               {
                 id: "d",
-                label: "Chiedi di essere promosso tu a VP",
+                label: "Chiedi di essere promosso tu al ruolo di VP",
                 score: 1,
                 outcome:
                   "Rivendicare il titolo senza aver dimostrato l'ambito che il titolo richiede sposta la conversazione sulla tua carriera invece che sul bisogno dell'azienda. È anche il modo più rapido di trasformare un'opportunità in un negoziato.",
@@ -268,21 +308,21 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Gli chiedi cosa significa crescere per lui in concreto, e verifichi onestamente se quello spazio esiste qui — dicendolo se non esiste",
+                  "Gli chiedi cosa significa crescere, in concreto, per lui",
                 score: 3,
                 outcome:
                   "Scopri che vuole lavorare su problemi a orizzonte pluriennale e influenzare la strategia di piattaforma, ambito che l'azienda avrà tra un anno ma non ora. Gli dici la verità e costruite insieme un percorso di 12 mesi con un'occasione concreta. Resta, e sa che non gli hai raccontato una storia.",
               },
               {
                 id: "b",
-                label: "Gli fai una controproposta economica",
+                label: "Gli fai una controproposta economica migliorativa",
                 score: 0,
                 outcome:
                   "Il denaro non risolve un problema di ambito. Nella maggior parte dei casi accetta, resta sei mesi, e se ne va comunque — con in più il precedente che per ottenere un aumento serve un'offerta esterna.",
               },
               {
                 id: "c",
-                label: "Gli offri un ruolo manageriale",
+                label: "Gli offri un ruolo di gestione delle persone",
                 score: 0,
                 outcome:
                   "L'errore classico: offrire l'unico percorso di crescita visibile invece di quello che la persona vuole. Perdi un principal eccellente e guadagni un manager riluttante.",
@@ -456,94 +496,133 @@ export const leadModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Tre prodotti hanno tre flussi di onboarding diversi. Il CTO propone di unificarli in uno solo per ridurre la manutenzione. Cosa verifichi prima?",
+              "Tre prodotti hanno tre onboarding diversi e il CTO propone di unificarli per ridurre la manutenzione. Cosa verifichi prima?",
             options: [
-              { id: "a", label: "Quale dei tre è il migliore, per usarlo come base" },
+              {
+                id: "a",
+                label: "Quale dei tre funziona meglio, per usarlo come base comune",
+              },
               {
                 id: "b",
-                label:
-                  "Se i tre onboarding servono lo stesso compito con gli stessi vincoli. Se un prodotto è B2C con autoregistrazione e un altro è enterprise con provisioning dell'IT, non sono lo stesso flusso e unificarli produce un componente pieno di eccezioni",
+                label: "Se i tre servono lo stesso compito con gli stessi vincoli",
               },
-              { id: "c", label: "Quanto costerebbe la migrazione" },
-              { id: "d", label: "Se i team sono d'accordo" },
+              {
+                id: "c",
+                label: "Quanto costa la migrazione dei tre prodotti al flusso unico",
+              },
+              {
+                id: "d",
+                label: "Se i tre team sono d'accordo sull'unificazione e sui tempi",
+              },
             ],
             correctId: "b",
             explanation:
-              "L'unificazione ha senso se il problema è lo stesso, non se le schermate si assomigliano. Un onboarding B2C ottimizza la conversione individuale; uno enterprise ottimizza il provisioning di 500 account e la conformità. Unificarli produce un flusso con rami condizionali che costa più delle tre versioni separate e serve peggio entrambi i casi. La domanda sul costo (c) viene dopo: un costo basso su una cosa sbagliata resta uno spreco.",
+              "L'unificazione ha senso se il problema è lo stesso, non se le schermate si assomigliano: un onboarding B2C ottimizza la conversione individuale, uno enterprise il provisioning di cinquecento account e la conformità. Unirli produce un flusso con rami condizionali che costa più delle tre versioni separate. La (a) presuppone già la risposta e cerca solo la base di partenza. La (c) viene dopo: un costo basso su una cosa sbagliata resta uno spreco. La (d) raccoglie consenso su una premessa non verificata.",
           },
           {
             id: "q2",
             prompt:
-              "Una migrazione a un nuovo design system è ferma al 60% da otto mesi. I team dicono che completeranno 'quando ci sarà tempo'. Cosa fai?",
+              "Una migrazione al nuovo design system è ferma al 60% da otto mesi e i team dicono che finiranno 'quando ci sarà tempo'. Cosa fai?",
             options: [
-              { id: "a", label: "Chiedi ai team di allocare tempo nel prossimo trimestre" },
+              {
+                id: "a",
+                label: "Chiedi ai team di allocare tempo dedicato nel prossimo trimestre",
+              },
               {
                 id: "b",
-                label:
-                  "Riduci il costo della migrazione con strumenti automatici sui casi più frequenti, fissi una data di rimozione del vecchio sistema concordata con i lead, e rendi visibile lo stato per team",
-
+                label: "Abbassi il costo, fissi la data di rimozione, rendi visibile lo stato",
               },
-              { id: "c", label: "Accetti la convivenza permanente e la documenti" },
-              { id: "d", label: "Completi la migrazione con il tuo team" },
+              {
+                id: "c",
+                label: "Accetti la convivenza permanente dei due sistemi e la documenti",
+              },
+              {
+                id: "d",
+                label: "Completi tu la migrazione col tuo team, per sbloccare la situazione",
+              },
             ],
             correctId: "b",
             explanation:
-              "'Quando ci sarà tempo' significa mai: la migrazione compete con lavoro che ha un committente e perde sempre. Le tre leve che funzionano insieme sono abbassare il costo (automazione), creare una scadenza reale (rimozione del vecchio, che trasforma il rinvio in un rischio), e rendere visibile lo stato (la pressione tra pari è più efficace di qualsiasi richiesta gerarchica). Farla tu (d) sembra generoso e insegna che i costi delle scelte dei team li paga qualcun altro.",
+              "'Quando ci sarà tempo' significa mai: la migrazione compete con lavoro che ha un committente e perde sempre. Le tre leve funzionano insieme — automazione per abbassare il costo, rimozione del vecchio per creare una scadenza reale, visibilità per attivare la pressione fra pari, che è più efficace di qualsiasi richiesta gerarchica. La (a) è ciò che è già stato chiesto implicitamente per otto mesi. La (d) sembra generosa e insegna che i costi delle scelte dei team li paga qualcun altro.",
           },
           {
             id: "q3",
             prompt:
-              "Dopo il rilascio di un redesign, gli utenti esperti protestano rumorosamente. I dati mostrano che le metriche generali sono stabili o in leggero miglioramento. Come procedi?",
+              "Dopo un redesign gli utenti esperti protestano rumorosamente, ma le metriche generali sono stabili o in leggero miglioramento. Come procedi?",
             options: [
-              { id: "a", label: "I dati generali prevalgono: è resistenza al cambiamento" },
+              {
+                id: "a",
+                label: "I dati generali prevalgono: è resistenza al cambiamento",
+              },
               {
                 id: "b",
-                label:
-                  "Segmenti: guardi le metriche della coorte degli utenti esperti separatamente e verifichi il numero di azioni necessarie per i loro compiti tipici prima e dopo",
+                label: "Segmenti la coorte esperta e conti i passi dei loro compiti",
               },
-              { id: "c", label: "Ripristini il vecchio design e ripensi l'approccio" },
-              { id: "d", label: "Aggiungi un'opzione per tornare alla vecchia interfaccia" },
+              {
+                id: "c",
+                label: "Ripristini il vecchio design e ripensi l'approccio da zero",
+              },
+              {
+                id: "d",
+                label: "Aggiungi un'opzione per tornare alla vecchia interfaccia",
+              },
             ],
             correctId: "b",
             explanation:
-              "Le metriche aggregate nascondono per costruzione gli effetti sulle minoranze, e gli utenti esperti sono una minoranza numericamente piccola e spesso economicamente sproporzionata. La verifica specifica — quanti passi servono oggi per i loro compiti ricorrenti rispetto a prima — di solito produce una risposta netta in poche ore. Nella maggior parte dei casi la protesta ha una base concreta e circoscritta, risolvibile con scorciatoie o azioni multiple senza toccare il resto del redesign.",
+              "Le metriche aggregate nascondono per costruzione gli effetti sulle minoranze, e gli utenti esperti sono numericamente pochi e spesso economicamente sproporzionati. Contare quanti passi servono oggi per i loro compiti ricorrenti rispetto a prima dà una risposta netta in poche ore. La (d) è il compromesso che sembra rispettoso: crea due interfacce da mantenere per sempre e non ti dice se la protesta era fondata. La (a) usa un'etichetta psicologica al posto di una verifica.",
           },
           {
             id: "q4",
             prompt:
               "Devi convincere il comitato di prodotto a investire un trimestre nel debito di design. Qual è l'argomento più efficace?",
             options: [
-              { id: "a", label: "Che l'incoerenza danneggia la percezione del marchio" },
+              {
+                id: "a",
+                label: "Che l'incoerenza danneggia la percezione del marchio nel tempo",
+              },
               {
                 id: "b",
-                label:
-                  "Che il tempo per costruire funzioni che toccano più prodotti è cresciuto del 40% in un anno, misurato su lavori comparabili, e mostrare quali voci della roadmap sono rallentate da questo",
+                label: "Che il tempo per le funzioni cross-prodotto è cresciuto del 40%",
               },
-              { id: "c", label: "Che i designer sono frustrati" },
-              { id: "d", label: "Che i competitor hanno prodotti più coerenti" },
+              {
+                id: "c",
+                label: "Che i designer sono frustrati e il rischio di uscite è concreto",
+              },
+              {
+                id: "d",
+                label: "Che i concorrenti hanno prodotti visibilmente più coerenti",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il debito compete contro funzioni nuove che hanno un committente, un valore atteso e una data. Perde sempre, tranne quando è espresso nella stessa unità di misura: tempo di consegna del lavoro che il comitato ha già deciso di fare. Collegarlo a voci specifiche della roadmap trasforma un investimento in qualità in un investimento in velocità — che è ciò che il comitato compra.",
+              "Il debito compete contro funzioni nuove che hanno un committente, un valore atteso e una data: perde sempre, tranne quando è espresso nella stessa unità di misura, cioè il tempo di consegna del lavoro che il comitato ha già deciso di fare. La (a) e la (c) sono entrambe vere e non convertibili in una decisione di allocazione. La (d) invita un confronto che non controlli. Collegare il numero a voci specifiche della roadmap trasforma un investimento in qualità in un investimento in velocità.",
           },
           {
             id: "q5",
             prompt:
               "Proponi un rifacimento di 12 mesi dell'esperienza principale. Qual è la domanda più importante da porsi prima?",
             options: [
-              { id: "a", label: "Abbiamo le risorse per 12 mesi?" },
+              {
+                id: "a",
+                label: "Abbiamo le risorse per sostenere dodici mesi di lavoro?",
+              },
               {
                 id: "b",
-                label:
-                  "Cosa succede se ci fermano al 50%? Se la risposta è 'restiamo con due sistemi peggiori di quello attuale', il piano va spezzato in tappe che hanno valore da sole",
+                label: "Cosa resta in mano se ci fermano a metà del percorso?",
               },
-              { id: "c", label: "I team sono allineati sulla visione?" },
-              { id: "d", label: "Abbiamo abbastanza ricerca a supporto?" },
+              {
+                id: "c",
+                label: "I team sono allineati sulla visione e sull'ordine dei passi?",
+              },
+              {
+                id: "d",
+                label: "Abbiamo ricerca sufficiente a sostenere le scelte di fondo?",
+              },
             ],
             correctId: "b",
             explanation:
-              "I rifacimenti lunghi vengono interrotti — da un cambio di priorità, da un taglio, da un cambio di dirigenza — con una frequenza che li rende la modalità normale, non l'eccezione. Un piano che produce valore solo al 100% è una scommessa su una condizione che raramente si verifica. Spezzarlo in tappe indipendentemente utili non è prudenza: è il solo modo di consegnare qualcosa in un'organizzazione reale.",
-          },
+              "I rifacimenti lunghi vengono interrotti — da un cambio di priorità, da un taglio, da un cambio di dirigenza — con una frequenza che ne fa la modalità normale, non l'eccezione. Un piano che produce valore solo al cento per cento è una scommessa su una condizione che raramente si verifica. La (a), la (c) e la (d) sono tutte domande giuste e assumono tutte che il piano arrivi in fondo: verificano le condizioni di partenza invece della resistenza all'interruzione. Spezzare in tappe utili da sole non è prudenza, è l'unico modo di consegnare qualcosa.",
+          }
         ],
       },
       {
@@ -563,7 +642,7 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Convinci un solo team — quello con il beneficio più evidente e il costo più basso — a migrare per primo, e ne fai un caso documentato con numeri",
+                  "Convinci un solo team, quello col beneficio più evidente, e documenti",
                 score: 3,
                 outcome:
                   "Il team con il flusso più penalizzato dalla vecchia navigazione accetta. Sei settimane dopo hai un caso reale: −22% di ticket sulla navigazione, tre giorni risparmiati sull'ultima funzione consegnata. Gli altri due team ora hanno una prova interna invece di una promessa, e uno dei due si fa avanti da solo.",
@@ -605,7 +684,7 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Verifichi l'affermazione: quanti clienti hanno davvero espresso avversione, e a cosa esattamente. Poi progetti la migrazione per quel vincolo, con introduzione graduale e ritorno possibile",
+                  "Verifichi quanti clienti hanno davvero obiettato, e a cosa esattamente",
                 score: 3,
                 outcome:
                   "Emerge che l'avversione riguarda tre clienti su quaranta e nasce da un cambiamento fatto male due anni fa, senza preavviso. La migrazione parte con un programma di anteprima per quei tre clienti, coinvolti come collaudatori. Diventano i sostenitori più efficaci verso gli altri.",
@@ -613,7 +692,7 @@ export const leadModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Accetti e lasci quel prodotto sul vecchio sistema",
+                  "Accetti, e lasci quel prodotto sul vecchio sistema di navigazione",
                 score: 0,
                 outcome:
                   "Convivenza permanente: due sistemi da mantenere per sempre, e il beneficio della migrazione — un solo sistema — non arriva mai. È l'esito peggiore di tutti, e il più comune.",
@@ -647,7 +726,7 @@ export const leadModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Censisci le pagine residue, fissi una data di rimozione con i lead, e la rispetti anche se una o due pagine minori dovranno essere sistemate in fretta",
+                  "Censisci le pagine residue, fissi la data di rimozione, e la rispetti",
                 score: 3,
                 outcome:
                   "Il censimento trova 14 pagine, di cui 9 obsolete da eliminare comunque. La rimozione avviene alla data. Il beneficio della migrazione — un solo sistema da mantenere — si incassa finalmente, e la prossima volta che dichiarerai una data, tutti sapranno che è reale.",

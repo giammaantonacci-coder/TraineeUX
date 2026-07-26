@@ -412,6 +412,22 @@ corsivo (reso da `renderInline`, senza dipendenze markdown).
   expertAnswer: string[] }
 ```
 
+### La regola non negoziabile: la lunghezza non deve rivelare la risposta
+
+È il difetto di costruzione più comune nei quiz, e in questo progetto era
+sistematico: la risposta corretta era la più lunga in 59 domande su 60, in media
+4,28 volte più lunga dei distrattori. Si poteva chiudere ogni esercizio al 100%
+senza leggere le domande.
+
+Le opzioni di un passaggio devono stare in una banda di lunghezza comparabile, e
+ogni distrattore deve essere sbagliato in **un punto preciso**: una soglia
+errata, il principio giusto applicato all'ambito sbagliato, una causalità
+invertita, o l'affermazione vera che si ferma un passo prima della conclusione.
+
+`npm run audit:opzioni` misura il rapporto fra corretta e distrattori ed esce
+con errore sopra 1,25x di media o 1,6x su un singolo elemento. Va eseguito ogni
+volta che si aggiungono contenuti.
+
 ### Come si scrive un esercizio che funziona
 
 - **Quiz**: i distrattori devono essere errori che qualcuno commette davvero,

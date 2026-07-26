@@ -317,7 +317,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Passi due settimane a intervistare i 5 team che non lo usano e a leggere il loro codice per capire cosa reimplementano e perché",
+                  "Passi due settimane a intervistare i 5 team che non lo usano, e leggi il codice",
                 score: 3,
                 outcome:
                   "Emergono tre cause distinte, tutte risolvibili: il sistema non ha componenti per la densità di dati che serve a due team; le richieste di contributo hanno tempi di risposta medi di sei settimane; la documentazione non copre i casi di composizione. Nessuna delle tre è pigrizia. Ora hai un piano fondato invece che un'ipotesi.",
@@ -325,7 +325,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "Rifai la documentazione, che è chiaramente il problema principale",
+                  "Rifai la documentazione, che è chiaramente il problema principale qui",
                 score: 1,
                 outcome:
                   "La documentazione migliora ma l'adozione resta ferma. Hai speso sei settimane su una causa che era reale ma marginale, e non hai più credito per un secondo tentativo.",
@@ -351,7 +351,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Il tempo di risposta alle richieste: passi a un modello federato con percorso di contributo documentato e impegno di risposta in 5 giorni",
+                  "Il tempo di risposta: modello federato, con impegno di risposta in 5 giorni",
                 score: 3,
                 outcome:
                   "È la causa che blocca tutte le altre: finché contribuire costa sei settimane, i team continueranno a reimplementare anche i componenti che esistono. In tre mesi arrivano 9 contributi esterni, due dei quali risolvono da soli il problema della densità di dati. Il sistema inizia a crescere senza che il tuo team lo produca.",
@@ -366,14 +366,14 @@ export const avanzatoModules: Module[] = [
               },
               {
                 id: "c",
-                label: "La documentazione dei casi di composizione",
+                label: "La documentazione dei casi di composizione dei componenti esistenti",
                 score: 1,
                 outcome:
                   "Migliora la qualità di chi già usa il sistema. Non muove chi è fuori, perché chi è fuori non legge la documentazione di un sistema che non usa.",
               },
               {
                 id: "d",
-                label: "Costruisci un plugin che misura l'adozione in tempo reale",
+                label: "Costruisci un plugin che misura l'adozione dei componenti in tempo reale",
                 score: 1,
                 outcome:
                   "Ottimo strumento di reportistica verso la direzione, zero effetto sulla causa. Ti darà numeri precisi su un fallimento.",
@@ -391,7 +391,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Presenti il 68% di adozione come risultato principale",
+                  "Presenti il 68% di adozione come risultato principale del semestre",
                 score: 1,
                 outcome:
                   "L'adozione è una metrica di attività, non di valore. Il board chiederà — giustamente — perché dovrebbe interessargli, e non avrai una seconda occasione per rispondere meglio.",
@@ -399,7 +399,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Colleghi l'adozione a un effetto misurabile sul business: tempo medio dalla specifica al rilascio per schermate standard, prima e dopo, più il costo evitato sull'ultimo rebrand",
+                  "Colleghi l'adozione al tempo di consegna, e al costo evitato sul rebrand",
                 score: 3,
                 outcome:
                   "Mostri che le schermate standard passano da 9 a 4 giorni e che l'aggiornamento del brand di marzo è costato 3 settimane invece dei 4 mesi stimati sul vecchio modello. Il team viene confermato e ottiene una persona in più. Il numero che convince non è quanto il sistema è usato, ma cosa cambia perché è usato.",
@@ -415,7 +415,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Presenti il risparmio teorico calcolato sui componenti riusati per il costo stimato di sviluppo",
+                  "Presenti il risparmio teorico calcolato sui componenti riusati",
                 score: 1,
                 outcome:
                   "È il calcolo che ogni team di design system presenta e che ogni CFO ha già visto: si basa su un contrafattuale non verificabile ('avremmo costruito tutto da zero'). Passa la prima volta, non la seconda.",
@@ -667,7 +667,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Apri con il bisogno emerso — obiettivi condivisi tra partner — e presenti il rifiuto della condivisione sociale come il dato che ci porta lì",
+                  "Apri col bisogno emerso, e presenti il rifiuto come il dato che ci porta lì",
                 score: 3,
                 outcome:
                   "La stanza resta aperta. Il rifiuto non è una bocciatura ma il vincolo che ha rivelato l'opportunità vera: la stessa intuizione del VP — le persone vogliono risparmiare insieme — ma con il gruppo giusto. Nessuno deve ritrattare pubblicamente, e la funzione si sposta invece di morire.",
@@ -683,7 +683,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Anticipi i risultati al VP in privato prima della riunione",
+                  "Anticipi i risultati al VP in privato, prima della riunione col team",
                 score: 3,
                 outcome:
                   "Nessuna sorpresa in pubblico è una regola quasi sempre giusta con i risultati scomodi: gli dai il tempo di elaborare senza dover reagire davanti al team, e arriva in riunione come alleato invece che come imputato. Combinata con l'inquadramento di B, è la mossa migliore possibile.",
@@ -709,14 +709,14 @@ export const avanzatoModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Riconosci il limite reale, e proponi il test più economico che risolve il disaccordo: un fake door su entrambe le varianti — condivisione con amici e obiettivo condiviso con partner — per due settimane sul traffico reale",
+                  "Riconosci il limite e proponi un fake door su entrambe, per due settimane",
                 score: 3,
                 outcome:
                   "Hai accettato la sua obiezione invece di respingerla, e l'hai trasformata in un esperimento con una data. Due settimane dopo: 0,4% di attivazione sulla variante sociale, 7,1% su quella con partner. Il disaccordo si chiude da solo e nessuno ha dovuto avere torto.",
               },
               {
                 id: "c",
-                label: "Proponi di ampliare lo studio qualitativo a 30 partecipanti",
+                label: "Proponi di ampliare lo studio qualitativo a trenta partecipanti",
                 score: 1,
                 outcome:
                   "Sei settimane in più per rafforzare una conclusione che il VP non contesta sul merito ma sull'autorità. Arriverai agli stessi risultati con la stessa accoglienza.",
@@ -741,7 +741,7 @@ export const avanzatoModules: Module[] = [
             options: [
               {
                 id: "a",
-                label: "Una ricerca preliminare obbligatoria prima di ogni progetto",
+                label: "Una ricerca preliminare obbligatoria prima di ogni nuova iniziativa",
                 score: 1,
                 outcome:
                   "Diventi un ufficio autorizzazioni. I team impareranno a fare la ricerca minima sufficiente a passare il controllo, e le decisioni importanti prenderanno percorsi che ti aggirano.",
@@ -749,7 +749,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Un rituale leggero: per ogni iniziativa sopra una certa dimensione, si scrive prima l'assunzione più rischiosa e il test più economico che la falsifica; se non si sa rispondere, non si parte",
+                  "Un rituale: prima si scrive l'assunzione più rischiosa e come falsificarla",
                 score: 3,
                 outcome:
                   "Leggero, applicabile da chiunque, e sposta la ricerca dove serve — all'inizio, sull'assunzione che se sbagliata fa crollare tutto. Sei mesi dopo è diventato un riflesso del team e la tua coda di richieste 'di validazione' si è dimezzata.",
@@ -757,7 +757,7 @@ export const avanzatoModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "Un archivio consultabile di tutte le ricerche passate",
+                  "Un archivio consultabile di tutte le ricerche già svolte in azienda",
                 score: 2,
                 outcome:
                   "Utile e sottovalutato — molta ricerca viene rifatta perché nessuno sa che esiste già. Ma è uno strumento di memoria, non un cambio di comportamento: non avrebbe impedito questo errore.",

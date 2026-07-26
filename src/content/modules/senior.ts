@@ -85,93 +85,133 @@ export const seniorModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il team ha rimosso due campi dal modulo di registrazione. Le registrazioni completate sono +18%. Il PM vuole rimuoverne altri due. Cosa dici?",
+              "Il team ha rimosso due campi dalla registrazione: iscrizioni completate +18%. Il PM vuole rimuoverne altri due. Cosa dici?",
             options: [
-              { id: "a", label: "Procediamo: il dato è chiaro" },
+              {
+                id: "a",
+                label: "Procediamo: il dato è netto e la direzione è confermata",
+              },
               {
                 id: "b",
-                label:
-                  "Prima verifichiamo l'effetto a valle: quei campi servivano a qualificare o a personalizzare l'esperienza. Il guardrail è la ritenzione a 30 giorni e il tasso di attivazione della coorte, non il completamento",
+                label: "Prima il guardrail a valle: ritenzione e attivazione della coorte",
               },
-              { id: "c", label: "Serve un test più lungo per confermare il +18%" },
-              { id: "d", label: "Rimuoviamone uno solo per prudenza" },
+              {
+                id: "c",
+                label: "Serve un test più lungo per consolidare quel diciotto per cento",
+              },
+              {
+                id: "d",
+                label: "Rimuoviamone uno solo, per limitare il rischio a metà",
+              },
             ],
             correctId: "b",
             explanation:
-              "Ridurre l'attrito in ingresso aumenta quasi sempre il volume e quasi sempre abbassa la qualità della coorte. Il caso classico: si rimuove il campo 'dimensione azienda', le registrazioni salgono, e tre mesi dopo il team vendite non sa più a chi rivolgersi e la conversione a pagamento crolla. Il numero da guardare non è quanti entrano, ma quanti restano e valgono. La domanda 'e tra sei mesi?' qui ha una risposta precisa e verificabile.",
+              "Ridurre l'attrito in ingresso aumenta quasi sempre il volume e quasi sempre abbassa la qualità della coorte: si toglie il campo 'dimensione azienda', le iscrizioni salgono, e tre mesi dopo la conversione a pagamento crolla. La (c) è il distrattore metodologicamente educato: allunga un test sulla metrica sbagliata, quindi produce più certezza su una domanda che non conta. La (d) dimezza il passo e non aggiunge conoscenza. Il numero da guardare non è quanti entrano, ma quanti restano e valgono.",
           },
           {
             id: "q2",
             prompt:
               "Un test su 20 varianti di una schermata trova una vincente con p = 0,03. Quanto ti fidi?",
             options: [
-              { id: "a", label: "Molto: p < 0,05" },
+              {
+                id: "a",
+                label: "Molto: il valore è sotto la soglia convenzionale dello 0,05",
+              },
               {
                 id: "b",
-                label:
-                  "Poco: con 20 confronti simultanei, trovare almeno un falso positivo a soglia 0,05 è più probabile che non trovarlo. Serve una correzione per confronti multipli o una replica indipendente della sola variante vincente",
+                label: "Poco: con venti confronti un falso positivo è più probabile che no",
               },
-              { id: "c", label: "Abbastanza, se il campione è grande" },
-              { id: "d", label: "Dipende dalla dimensione dell'effetto" },
+              {
+                id: "c",
+                label: "Abbastanza, se il campione per variante è sufficientemente ampio",
+              },
+              {
+                id: "d",
+                label: "Dipende dalla dimensione dell'effetto, non dal valore di p",
+              },
             ],
             correctId: "b",
             explanation:
-              "Con 20 test indipendenti a α = 0,05, la probabilità di almeno un falso positivo è 1 − 0,95²⁰ ≈ 64%. È il problema dei confronti multipli, ed è endemico nei team che testano molte varianti in parallelo cercando 'cosa funziona'. La replica indipendente della sola variante vincente è la difesa più semplice e più convincente: se il risultato è reale, si ripete.",
+              "Con venti test indipendenti a soglia 0,05 la probabilità di almeno un falso positivo è 1 − 0,95²⁰, circa il 64%: trovarne uno è più probabile che non trovarlo. La (c) è il distrattore più insidioso perché la potenza per variante è un requisito reale, e non c'entra niente con questo problema: il campione grande rende preciso ogni singolo test e non corregge la molteplicità. La (d) sposta su un tema vero e diverso. La difesa è la correzione per confronti multipli, o la replica indipendente della sola vincente.",
           },
           {
             id: "q3",
             prompt:
-              "Il nuovo design della home ha −8% di click sul contenuto in evidenza ma +15% di sessioni con almeno due azioni completate. Come lo presenti?",
+              "Il nuovo design della home ha −8% di click sul contenuto in evidenza e +15% di sessioni con almeno due azioni completate. Come lo presenti?",
             options: [
-              { id: "a", label: "Come un risultato misto che richiede altre analisi" },
+              {
+                id: "a",
+                label: "Come esito misto, che richiede altre analisi prima di decidere",
+              },
               {
                 id: "b",
-                label:
-                  "Come un risultato positivo, se prima del test avevamo dichiarato che la metrica primaria era il completamento di azioni e il click era una metrica di superficie — altrimenti come un risultato che non possiamo interpretare senza sembrare opportunisti",
+                label: "Positivo se la gerarchia delle metriche era dichiarata prima",
               },
-              { id: "c", label: "Come un risultato positivo: il completamento vale più del click" },
-              { id: "d", label: "Come negativo: il calo dei click va spiegato" },
+              {
+                id: "c",
+                label: "Positivo: il completamento di azioni vale più del semplice click",
+              },
+              {
+                id: "d",
+                label: "Negativo: un calo dell'otto per cento va spiegato comunque",
+              },
             ],
             correctId: "b",
             explanation:
-              "La sostanza è che il completamento di azioni è quasi certamente la metrica migliore. Ma il punto che distingue un senior è metodologico: se la gerarchia delle metriche non era dichiarata prima del test, scegliere dopo quella che ha vinto è la definizione di HARKing — costruire l'ipotesi conoscendo i risultati. Anche quando la conclusione è giusta, farlo erode la credibilità di tutti i tuoi risultati futuri, e qualcuno in stanza se ne accorgerà.",
+              "Nel merito la (c) ha ragione, e per questo è il distrattore che seleziona: il completamento di azioni è quasi certamente la metrica migliore. Ma se la gerarchia non era dichiarata prima del test, scegliere dopo quella che ha vinto è HARKing — costruire l'ipotesi conoscendo il risultato — e anche quando la conclusione è giusta erode la credibilità di tutti i tuoi risultati futuri. La differenza fra la (b) e la (c) non è la conclusione: è se hai il diritto di trarla.",
           },
           {
             id: "q4",
             prompt:
               "Il capo chiede: 'quanto vale in euro il redesign che proponi?'. Non hai dati diretti. Qual è la risposta più solida?",
             options: [
-              { id: "a", label: "Che il valore del design non si misura in euro" },
+              {
+                id: "a",
+                label: "Che il valore del design non è riducibile a una cifra in euro",
+              },
               {
                 id: "b",
-                label:
-                  "Costruisci una stima esplicita e falsificabile: volume attuale del flusso × tasso di abbandono osservato × valore medio, dichiarando le assunzioni e l'incertezza, e proponi il test più economico che le verifica",
+                label: "Una stima con le assunzioni esplicite, più il test che le verifica",
               },
-              { id: "c", label: "Porti benchmark di settore su redesign simili" },
-              { id: "d", label: "Rimandi la stima a dopo la ricerca" },
+              {
+                id: "c",
+                label: "Un confronto con casi di settore su redesign comparabili",
+              },
+              {
+                id: "d",
+                label: "Rinvii la stima a dopo la ricerca, quando avrai i numeri veri",
+              },
             ],
             correctId: "b",
             explanation:
-              "Una stima con assunzioni esplicite non è una previsione: è un modello che chiunque può contestare pezzo per pezzo, ed è esattamente questo a renderla utile. Rifiutare di quantificare (a) è la risposta che esclude il design dalle conversazioni dove si allocano le risorse. I benchmark (c) sono deboli perché ogni prodotto è diverso e chi decide lo sa. La forza di B è che trasforma il disaccordo da 'credo/non credo' a 'quale assunzione contesti'.",
+              "Una stima con assunzioni esplicite non è una previsione: è un modello che chiunque può contestare pezzo per pezzo, ed è questo a renderla utile — sposta il disaccordo da 'ci credo o no' a 'quale assunzione contesti'. La (a) è la risposta che esclude il design dalle stanze dove si allocano risorse. La (c) è debole perché ogni prodotto è diverso e chi decide lo sa. La (d) sembra rigorosa e in pratica cede il turno: la decisione di budget si prende adesso, non dopo.",
           },
           {
             id: "q5",
             prompt:
               "Il team propone di ottimizzare il 'tempo medio in app' per una suite di produttività. Cosa segnali?",
             options: [
-              { id: "a", label: "Nulla: più tempo significa più valore percepito" },
+              {
+                id: "a",
+                label: "Niente: più tempo speso segnala più valore percepito dal cliente",
+              },
               {
                 id: "b",
-                label:
-                  "Che per uno strumento di produttività il tempo speso è un costo per l'utente, non un beneficio: la metrica corretta misura i risultati prodotti (compiti completati, documenti finalizzati) rapportati al tempo, non il tempo in sé",
+                label: "Per uno strumento il tempo è un costo: conta l'esito per tempo",
               },
-              { id: "c", label: "Che serve segmentare per tipo di utente" },
-              { id: "d", label: "Che va accoppiato al Net Promoter Score" },
+              {
+                id: "c",
+                label: "Che va segmentato per tipo di utente prima di fissare l'obiettivo",
+              },
+              {
+                id: "d",
+                label: "Che va accoppiato a un indice di soddisfazione tipo NPS",
+              },
             ],
             correctId: "b",
             explanation:
-              "È l'errore di importare metriche da modelli di business diversi. Per un prodotto pubblicitario il tempo è il ricavo; per uno strumento a abbonamento che promette efficienza, il tempo è ciò da cui l'utente vuole essere liberato. Ottimizzare il tempo in app su una suite di produttività porta, per gradi e senza cattive intenzioni, a rendere le cose più lente — ed è così che i prodotti peggiorano mentre tutte le dashboard sono verdi.",
-          },
+              "È l'errore di importare una metrica da un modello di business diverso: per un prodotto pubblicitario il tempo è il ricavo, per uno strumento a abbonamento che promette efficienza è ciò da cui l'utente vuole essere liberato. La (c) e la (d) sono entrambe buone pratiche applicate alla metrica sbagliata: segmentare o affiancare un indice di soddisfazione non cambia il fatto che l'obiettivo punta nella direzione opposta al valore. Ottimizzare il tempo in app su una suite di produttività porta, per gradi e senza cattive intenzioni, a rendere le cose più lente.",
+          }
         ],
       },
       {
@@ -192,7 +232,7 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Presenti in riunione i dati di ritenzione e le recensioni per mostrare che la strategia sta danneggiando il prodotto",
+                  "Presenti i dati di ritenzione e le recensioni per mostrare il danno",
                 score: 1,
                 outcome:
                   "Hai ragione sui fatti e hai attaccato pubblicamente un team che ha fatto il lavoro che gli era stato assegnato. La riunione diventa una difesa reciproca, e la conclusione più probabile è 'servono più dati'. Il vero responsabile — l'obiettivo mal formulato — resta invisibile.",
@@ -200,7 +240,7 @@ export const seniorModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Parli prima con il lead del team crescita, mostrando i dati e inquadrando il problema come un obiettivo mal formulato dalla direzione, non come un loro errore",
+                  "Parli prima col lead crescita: l'obiettivo è mal formulato, non è colpa loro",
                 score: 3,
                 outcome:
                   "Il lead conosceva già in parte il segnale sulla ritenzione ma non aveva mandato per agirci. Diventa un alleato: siete due team che chiedono insieme un obiettivo migliore, invece di due team in conflitto. È una posizione molto più difficile da respingere.",
@@ -216,7 +256,7 @@ export const seniorModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Avvii uno studio qualitativo sugli utenti che hanno disinstallato",
+                  "Avvii uno studio qualitativo sugli utenti che hanno disinstallato l'app",
                 score: 2,
                 outcome:
                   "Ottima ricerca, tempi sbagliati: richiede settimane e la riunione è tra sette giorni. Ottimo come secondo passo per consolidare, debole come prima mossa in una finestra decisionale che si sta chiudendo.",
@@ -233,7 +273,7 @@ export const seniorModules: Module[] = [
             options: [
               {
                 id: "a",
-                label: "Sostituire la metrica nord con la ritenzione a 90 giorni",
+                label: "Sostituire la metrica nord con la ritenzione a novanta giorni",
                 score: 2,
                 outcome:
                   "Direzionalmente corretto ma operativamente debole: la ritenzione a 90 giorni ha un ciclo di feedback di tre mesi, e nessun team può guidare il lavoro settimanale con un segnale così lento. Rischia di essere accettata e poi silenziosamente ignorata.",
@@ -241,7 +281,7 @@ export const seniorModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Mantenere le sessioni giornaliere come metrica operativa, ma vincolarla a un guardrail sulla ritenzione a 90 giorni che non deve peggiorare, con soglia esplicita e revisione mensile",
+                  "Tieni le sessioni come metrica operativa, con guardrail sulla ritenzione",
                 score: 3,
                 outcome:
                   "Il team crescita conserva un segnale veloce su cui iterare, e il guardrail impedisce che il segnale veloce venga comprato a scapito di quello lento. La direzione accetta perché non le state chiedendo di rinunciare a nulla, solo di aggiungere un limite. Due mesi dopo il guardrail blocca una proposta di notifiche notturne: il meccanismo funziona.",
@@ -257,7 +297,7 @@ export const seniorModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Proporre 'lezioni completate con successo a settimana' come nuova metrica nord",
+                  "Proporre 'lezioni completate a settimana' come nuova metrica nord",
                 score: 3,
                 outcome:
                   "Metrica eccellente: è un'unità di valore reale per l'utente, ha un ciclo di feedback rapido, ed è molto più difficile da gonfiare artificialmente rispetto alle sessioni. Se accompagnata dallo stesso guardrail sulla ritenzione, è la soluzione più solida di tutte.",
@@ -275,15 +315,15 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Non rimuoverli ma riprogettarli: eliminare la perdita a mezzanotte, introdurre recuperi e pause programmate, misurare l'effetto sulla ritenzione della coorte che rompe lo streak",
+                  "Non rimuoverli: togli la perdita a mezzanotte e aggiungi i recuperi",
                 score: 3,
                 outcome:
                   "Il meccanismo funziona — l'abitudine è reale e utile — ed è la punizione a produrre il danno. Dopo la modifica: le sessioni scendono del 6%, la ritenzione a 90 giorni risale al 29% in quattro mesi, e le recensioni che citano ansia si dimezzano. Il costo è piccolo e circoscritto, il beneficio è strutturale.",
               },
-              { id: "b", label: "Rimuoverli: sono la causa del danno", score: 1, outcome: "Butti via un meccanismo di formazione dell'abitudine che, senza la componente punitiva, ha evidenza solida a supporto. Le sessioni crollano, il team crescita perde fiducia nel nuovo modello di obiettivi, e il prossimo cambiamento sarà molto più difficile da ottenere." },
+              { id: "b", label: "Rimuoverli del tutto: sono la causa evidente del danno misurato", score: 1, outcome: "Butti via un meccanismo di formazione dell'abitudine che, senza la componente punitiva, ha evidenza solida a supporto. Le sessioni crollano, il team crescita perde fiducia nel nuovo modello di obiettivi, e il prossimo cambiamento sarà molto più difficile da ottenere." },
               {
                 id: "c",
-                label: "Mantenerli come sono e compensare altrove",
+                label: "Mantenerli come sono e compensare il danno da un'altra parte",
                 score: 0,
                 outcome:
                   "Hai ottenuto un guardrail e non lo usi sul caso più evidente. Il messaggio implicito al team è che il guardrail è ornamentale, e da quel momento lo sarà davvero.",
@@ -291,7 +331,7 @@ export const seniorModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Renderli opzionali con attivazione volontaria",
+                  "Renderli opzionali, con attivazione volontaria da parte dell'utente",
                 score: 2,
                 outcome:
                   "Rispettoso e difendibile, ma l'adesione volontaria a un meccanismo motivazionale è bassissima: nella pratica equivale quasi a rimuoverlo, con in più il costo di mantenere due percorsi.",
@@ -459,93 +499,133 @@ export const seniorModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il maggiore cliente enterprise chiede una funzione di reportistica personalizzata. Vale il 12% del fatturato. Qual è l'approccio migliore?",
+              "Il maggiore cliente enterprise, il 12% del fatturato, chiede una reportistica personalizzata. Qual è l'approccio migliore?",
             options: [
-              { id: "a", label: "Costruirla: un cliente da 12% non si perde" },
+              {
+                id: "a",
+                label: "Costruirla: un cliente da dodici per cento non si mette in coda",
+              },
               {
                 id: "b",
-                label:
-                  "Capire quale decisione quel report serve a prendere, verificare quanti altri clienti hanno la stessa esigenza sottostante, e proporre la soluzione che serve entrambi — con la soluzione su misura come ripiego negoziabile",
+                label: "Capire quale decisione serve, e quanti altri hanno lo stesso bisogno",
               },
-              { id: "c", label: "Rifiutare: il prodotto non si piega a un cliente" },
-              { id: "d", label: "Offrirla come servizio professionale a pagamento" },
+              {
+                id: "c",
+                label: "Rifiutare: il prodotto non si piega alle richieste di un cliente",
+              },
+              {
+                id: "d",
+                label: "Offrirla come servizio professionale a pagamento, fuori dal prodotto",
+              },
             ],
             correctId: "b",
             explanation:
-              "La richiesta di un report è quasi sempre l'ombra di una decisione che qualcuno deve prendere ogni settimana. Scoprire quale decisione porta spesso a una soluzione diversa e più semplice (un avviso, una soglia, un'esportazione già esistente). E la domanda 'quanti altri hanno lo stesso bisogno sotto' è ciò che distingue una funzione di prodotto da un lavoro su commessa che manterrai per anni. La soluzione dedicata resta un'opzione legittima, ma va scelta sapendo che lo è.",
+              "La richiesta di un report è quasi sempre l'ombra di una decisione che qualcuno deve prendere ogni settimana, e scoprire quale porta spesso a una soluzione più semplice: un avviso, una soglia, un export che esiste già. La (d) è il distrattore più professionale del set, e salta lo stesso passaggio della (a): decide il come prima di aver capito il cosa, e ti impegna a mantenere una soluzione dedicata per anni. La domanda 'quanti altri hanno lo stesso bisogno sotto' è ciò che distingue una funzione di prodotto da una commessa.",
           },
           {
             id: "q2",
             prompt:
               "In una sessione di prioritizzazione il team confronta 'migliorare la ricerca' e 'aggiungere le notifiche push'. Qual è il problema di questo confronto?",
             options: [
-              { id: "a", label: "Mancano le stime di effort" },
+              {
+                id: "a",
+                label: "Mancano le stime di sforzo per rendere comparabili le due voci",
+              },
               {
                 id: "b",
-                label:
-                  "Sono soluzioni che rispondono a opportunità diverse: senza risalire a quale bisogno serve ciascuna e quanto quel bisogno pesa sull'esito, il confronto si risolve per preferenza o per gerarchia",
+                label: "Sono soluzioni a bisogni diversi: manca l'opportunità a monte",
               },
-              { id: "c", label: "Manca il dato di impatto atteso" },
-              { id: "d", label: "Vanno confrontate con il framework RICE" },
+              {
+                id: "c",
+                label: "Manca il dato di impatto atteso su una metrica condivisa",
+              },
+              {
+                id: "d",
+                label: "Vanno confrontate con un punteggio strutturato tipo RICE",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il difetto è strutturale, e i punteggi non lo curano: RICE (c, d) applicato a soluzioni non comparabili produce numeri precisi su una domanda mal posta, con in più l'effetto collaterale di far sembrare oggettiva una scelta arbitraria. Risalire alle opportunità permette di chiedersi quale bisogno pesa di più sull'esito che vogliamo — che è una domanda a cui la ricerca può rispondere.",
+              "Il difetto è strutturale e i punteggi non lo curano. La (d) è il distrattore più forte perché RICE è uno strumento serio: applicato a soluzioni non comparabili produce numeri precisi su una domanda mal posta, con l'effetto collaterale di far sembrare oggettiva una scelta arbitraria. La (a) e la (c) aggiungono colonne alla stessa tabella sbagliata. Risalire alle opportunità permette la domanda a cui la ricerca può rispondere: quale bisogno pesa di più sull'esito che vogliamo.",
           },
           {
             id: "q3",
             prompt:
-              "Stai conducendo interviste JTBD. Qual è la domanda che produce l'informazione più utile?",
+              "Stai conducendo interviste Jobs to be Done. Quale domanda produce l'informazione più utile?",
             options: [
-              { id: "a", label: "'Cosa ti piacerebbe che il prodotto facesse?'" },
+              {
+                id: "a",
+                label: "'Cosa ti piacerebbe che il prodotto facesse e oggi non fa?'",
+              },
               {
                 id: "b",
-                label:
-                  "'Torniamo al momento in cui hai iniziato a cercare una soluzione: cosa era successo quel giorno?'",
+                label: "'Il giorno in cui hai iniziato a cercare, cosa era successo?'",
               },
-              { id: "c", label: "'Quali sono i tuoi problemi principali nel lavoro?'" },
-              { id: "d", label: "'Come valuti il nostro prodotto da 1 a 10?'" },
+              {
+                id: "c",
+                label: "'Quali sono i problemi principali che incontri nel tuo lavoro?'",
+              },
+              {
+                id: "d",
+                label: "'Come valuti il nostro prodotto su una scala da uno a dieci?'",
+              },
             ],
             correctId: "b",
             explanation:
-              "L'evento scatenante è il cuore del metodo. La gente non cerca una soluzione perché ha un problema — convive con i problemi per anni — ma perché è successo qualcosa che ha reso il problema insostenibile in quel momento. Quel qualcosa è ciò che devi conoscere: è replicabile, è il momento in cui il tuo prodotto può essere trovato, ed è invisibile a qualunque domanda su preferenze o valutazioni.",
+              "L'evento scatenante è il cuore del metodo: la gente non cerca una soluzione perché ha un problema — coi problemi convive per anni — ma perché è successo qualcosa che l'ha reso insostenibile in quel momento. La (c) è il distrattore che sembra più ricco e produce l'elenco dei fastidi cronici, cioè esattamente quelli con cui l'utente ha imparato a convivere. La (a) chiede una soluzione a chi ha il problema. La (d) misura un sentimento e non spiega niente.",
           },
           {
             id: "q4",
             prompt:
               "Il CEO annuncia che il prodotto avrà un assistente AI 'perché tutti ce l'hanno'. Non c'è evidenza di un bisogno. Come procedi?",
             options: [
-              { id: "a", label: "Esegui: è una decisione strategica del CEO" },
+              {
+                id: "a",
+                label: "Esegui: è una decisione strategica che non ti compete discutere",
+              },
               {
                 id: "b",
-                label:
-                  "Accetti la direzione e negozi l'inquadramento: quale compito attuale, lento e frequente, l'assistente dovrebbe accorciare? Trasformi un mandato tecnologico in un problema utente, e definisci come sapremo se funziona",
+                label: "Accetti la direzione e negozi a quale compito lento si applica",
               },
-              { id: "c", label: "Presenti i dati che mostrano l'assenza di domanda" },
-              { id: "d", label: "Proponi di aspettare che il mercato si chiarisca" },
+              {
+                id: "c",
+                label: "Presenti i dati d'uso che mostrano l'assenza di domanda",
+              },
+              {
+                id: "d",
+                label: "Proponi di attendere che il mercato chiarisca le aspettative",
+              },
             ],
             correctId: "b",
             explanation:
-              "Certe direzioni non sono negoziabili e a volte sono anche giuste per ragioni che non stanno nei dati d'uso (posizionamento, aspettative del mercato, raccolta di capitale). Combatterle frontalmente (c) è un modo affidabile di essere esclusi dalla conversazione. Ma il come è quasi sempre aperto, ed è lì che il design decide se il risultato sarà una funzione dimostrativa o qualcosa che la gente usa. Ancorare l'assistente a un compito reale, lento e frequente è la differenza tra le due.",
+              "Certe direzioni non sono negoziabili e a volte sono giuste per ragioni che non stanno nei dati d'uso: posizionamento, aspettative del mercato, raccolta di capitale. La (c) è la risposta che si sente più solida e che ti esclude dalla conversazione, perché combatte la decisione invece dell'esecuzione. La (d) chiede al CEO di rinunciare al vantaggio di muoversi prima. Il come è quasi sempre aperto, e ancorare l'assistente a un compito reale, lento e frequente è ciò che separa una funzione dimostrativa da una che la gente usa.",
           },
           {
             id: "q5",
             prompt:
               "Devi convincere il team a non costruire una funzione richiesta da molti utenti. Qual è l'argomento più forte?",
             options: [
-              { id: "a", label: "Che gli utenti non sanno cosa vogliono" },
+              {
+                id: "a",
+                label: "Che gli utenti conoscono i problemi ma non le soluzioni giuste",
+              },
               {
                 id: "b",
-                label:
-                  "Mostrare che il bisogno sottostante è già servito meglio da qualcos'altro che possiamo migliorare, e quantificare il costo permanente di manutenzione e complessità della funzione richiesta",
+                label: "Un'alternativa che serve lo stesso bisogno, più il costo del sì",
               },
-              { id: "c", label: "Che non è nella nostra visione di prodotto" },
-              { id: "d", label: "Che i competitor che l'hanno fatta non ne hanno beneficiato" },
+              {
+                id: "c",
+                label: "Che la funzione non rientra nella visione di prodotto dichiarata",
+              },
+              {
+                id: "d",
+                label: "Che i concorrenti che l'hanno fatta non ne hanno tratto beneficio",
+              },
             ],
             correctId: "b",
             explanation:
-              "'Gli utenti non sanno cosa vogliono' (a) è arrogante e spesso falso: sanno benissimo qual è il loro problema, sbagliano semmai la soluzione. Appellarsi alla visione (c) funziona solo se la visione è condivisa e specifica, altrimenti è un modo elegante di dire 'no perché no'. L'argomento che regge combina un'alternativa concreta che serve lo stesso bisogno con il costo reale del sì — che non è il tempo di sviluppo ma la complessità permanente aggiunta a tutto ciò che verrà dopo.",
-          },
+              "La (a) è il distrattore migliore perché è quasi vera, ed è la versione educata di 'gli utenti non sanno cosa vogliono': come argomento in stanza suona condiscendente e non porta nulla di costruibile. La (c) funziona solo se la visione è condivisa e specifica, altrimenti è un no elegante. La (d) invita a un confronto che non controlli. L'argomento che regge unisce un'alternativa concreta al costo reale del sì, che non è il tempo di sviluppo ma la complessità permanente aggiunta a tutto ciò che verrà dopo.",
+          }
         ],
       },
       {
@@ -574,7 +654,7 @@ export const seniorModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Gli chiedi prima come è stata costruita la roadmap e quali impegni esistono su ciascun progetto, poi presenti i dati come informazione nuova senza proporre subito una sostituzione",
+                  "Chiedi prima come è nata la roadmap e quali impegni esistono su ciascuna voce",
                 score: 3,
                 outcome:
                   "Scopri che l'integrazione ERP ha un contratto firmato, l'analisi predittiva è una promessa verbale a due clienti in rinnovo, e il ridisegno mobile non ha impegni esterni: era in lista perché 'l'app fa pena'. Solo ora sai dove c'è spazio, e la conversazione non è mai diventata un conflitto.",
@@ -590,7 +670,7 @@ export const seniorModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Continui a raccogliere dati per rafforzare il caso prima di parlarne",
+                  "Continui a raccogliere dati per rafforzare il caso, prima di parlarne",
                 score: 1,
                 outcome:
                   "L'evidenza è già sufficiente e il tempo lavora contro: ogni settimana il team si impegna di più sui progetti in corso e il costo del cambiamento sale. Rimandare una conversazione difficile la rende più difficile.",
@@ -608,7 +688,7 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Che i clienti in fase di vendita valutano funzionalità, mentre quelli che rinnovano valutano il tempo che gli fai perdere — e porti il dato di correlazione tra ore di riconciliazione e probabilità di rinnovo",
+                  "Che in vendita si valutano le funzioni, al rinnovo il tempo che si perde",
                 score: 3,
                 outcome:
                   "L'obiezione è corretta e la tua risposta la incorpora invece di negarla. Il dato mostra che gli account con più di 5 ore settimanali di riconciliazione rinnovano al 71%, gli altri all'89%. In un'azienda ad abbonamento, il rinnovo è il numero che il VP deve difendere davanti al board.",
@@ -616,7 +696,7 @@ export const seniorModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Che il team vendite non rappresenta la voce degli utenti",
+                  "Che il team vendite non rappresenta la voce degli utenti reali",
                 score: 0,
                 outcome:
                   "Vero in parte e pessima politica: contrapponi due funzioni aziendali e ti guadagni un avversario permanente in una funzione che ha molta più influenza della tua sulle decisioni di roadmap.",
@@ -650,7 +730,7 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Comunicare il cambio spiegando il perché, con i dati, e anticipando che la riconciliazione ridurrà anche il lavoro su mobile — dove oggi si fa parte di quel lavoro",
+                  "Comunicare il cambio con i dati, e cosa ci guadagnano i clienti",
                 score: 3,
                 outcome:
                   "I clienti reagiscono meglio del previsto: la maggior parte non ricordava l'annuncio mobile, e chi lo ricordava riconosce il problema della riconciliazione come più urgente. Comunicare un cambio di priorità con la ragione esplicita costruisce fiducia invece di consumarla.",
@@ -666,7 +746,7 @@ export const seniorModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "Fare entrambi in scala ridotta per non smentire l'annuncio",
+                  "Fare entrambi in scala ridotta, per non smentire l'annuncio dato",
                 score: 1,
                 outcome:
                   "Due progetti a metà consegnati male. È la risposta che evita la conversazione difficile e la paga in qualità su entrambi i fronti.",
@@ -842,94 +922,133 @@ export const seniorModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "In una critique, il design director interviene per primo con un'opinione forte. Sei il facilitatore. Cosa fai?",
+              "In una critique il design director interviene per primo con un'opinione forte. Sei il facilitatore. Cosa fai?",
             options: [
-              { id: "a", label: "Lasci parlare: è la persona più esperta" },
+              {
+                id: "a",
+                label: "Lo lasci parlare: è la persona con più esperienza in stanza",
+              },
               {
                 id: "b",
-                label:
-                  "Ringrazi, annoti, e chiedi al resto del gruppo di rispondere prima alla domanda posta da chi presenta — recuperando l'ordine di parola che protegge le opinioni non ancora espresse",
+                label: "Ringrazi, annoti a vista, e riporti la parola al gruppo",
               },
-              { id: "c", label: "Interrompi ricordando le regole della critique" },
-              { id: "d", label: "Chiedi a chi presenta di rispondere subito" },
+              {
+                id: "c",
+                label: "Interrompi ricordando al gruppo le regole della critique",
+              },
+              {
+                id: "d",
+                label: "Chiedi a chi presenta di rispondere subito nel merito",
+              },
             ],
             correctId: "b",
             explanation:
-              "L'ancoraggio è un effetto documentato e forte: la prima opinione autorevole restringe lo spazio di ciò che gli altri diranno, e le voci junior in particolare si allineeranno o taceranno. Interrompere richiamando le regole (c) è tecnicamente corretto e socialmente costoso davanti al gruppo. Ringraziare, annotare visibilmente e riportare la parola all'insieme ottiene lo stesso risultato senza esporre nessuno — e la parte 'annotare visibilmente' è ciò che rende accettabile il rinvio.",
+              "L'ancoraggio è un effetto documentato e forte: la prima opinione autorevole restringe ciò che gli altri diranno, e le voci junior si allineano o tacciono. La (c) è tecnicamente corretta e socialmente costosa davanti al gruppo: hai ragione e hai speso capitale per averla. La (d) mette chi presenta in difesa proprio nel momento in cui dovrebbe ascoltare. La parte che fa funzionare la (b) è 'a vista': annotare visibilmente è ciò che rende accettabile il rinvio, invece di sembrare che tu stia ignorando il commento.",
           },
           {
             id: "q2",
             prompt:
-              "Hai 5 minuti con il CEO per presentare la nuova esperienza di onboarding. Cosa metti nel primo minuto?",
+              "Hai 5 minuti con il CEO per presentare la nuova onboarding. Cosa metti nel primo minuto?",
             options: [
-              { id: "a", label: "Il contesto: dati sul problema e ricerca svolta" },
+              {
+                id: "a",
+                label: "Il contesto: i dati sul problema e la ricerca che hai svolto",
+              },
               {
                 id: "b",
-                label:
-                  "La raccomandazione e cosa serve da lui: cosa proponiamo, quale effetto ci aspettiamo, quale decisione o sblocco ci serve oggi",
+                label: "La raccomandazione, l'effetto atteso e cosa ti serve da lui",
               },
-              { id: "c", label: "Una demo del prototipo" },
-              { id: "d", label: "Le tre opzioni valutate" },
+              {
+                id: "c",
+                label: "Una dimostrazione dal vivo del prototipo navigabile",
+              },
+              {
+                id: "d",
+                label: "Le tre opzioni valutate, con i rispettivi compromessi",
+              },
             ],
             correctId: "b",
             explanation:
-              "Chi ha cinque minuti e trenta riunioni al giorno ha bisogno di sapere subito cosa deve fare con l'informazione. Aprire con il contesto (a) è la struttura corretta per un pubblico che ha tempo, e la peggiore per chi non ne ha: il rischio concreto è che al minuto quattro, quando arriva la richiesta, l'attenzione sia già altrove. Il contesto va tenuto pronto per le domande, che arriveranno se la raccomandazione è interessante.",
+              "Chi ha cinque minuti e trenta riunioni al giorno deve sapere subito cosa fare con l'informazione. La (a) è la struttura corretta per un pubblico che ha tempo e la peggiore per chi non ne ha: il rischio concreto è che al minuto quattro, quando arriva la richiesta, l'attenzione sia altrove. La (d) è il distrattore che sembra più rispettoso e scarica su di lui una decisione che dovresti aver preso tu. La (c) mostra come funziona a chi deve decidere se farlo. Il contesto si tiene pronto per le domande.",
           },
           {
             id: "q3",
             prompt:
               "Un dirigente dice: 'questa schermata non mi convince, sembra confusa'. Qual è la risposta migliore?",
             options: [
-              { id: "a", label: "'Su cosa in particolare? Il layout o i contenuti?'" },
+              {
+                id: "a",
+                label: "'Su cosa in particolare? Il layout oppure i contenuti?'",
+              },
               {
                 id: "b",
-                label:
-                  "'Mi aiuta a capire: se fossi un utente che apre questa schermata per la prima volta, cosa ti aspetteresti di poter fare per primo?'",
+                label: "'Cosa ti aspetteresti di poter fare per primo, aprendola?'",
               },
-              { id: "c", label: "'Abbiamo testato questa versione e ha funzionato bene'" },
-              { id: "d", label: "'Posso mostrarti il ragionamento dietro questa struttura'" },
+              {
+                id: "c",
+                label: "'Abbiamo testato questa versione e ha funzionato bene'",
+              },
+              {
+                id: "d",
+                label: "'Posso mostrarti il ragionamento dietro questa struttura'",
+              },
             ],
             correctId: "b",
             explanation:
-              "La domanda di B riporta la persona nel compito dell'utente, che è il terreno su cui il design si valuta, e produce quasi sempre un'informazione utilizzabile ('mi aspetterei di vedere subito i miei ordini') — informazione che quel dirigente possiede e che tu magari no. Chiedere di specificare (a) è meglio di niente ma resta nel registro dell'opinione. Difendersi con i test (c) mette in competizione la sua percezione con i tuoi dati e chiude la conversazione, anche quando i dati ti danno ragione.",
+              "La (b) riporta la persona nel compito dell'utente, che è il terreno su cui il design si valuta, e produce quasi sempre un'informazione utilizzabile che quel dirigente possiede e tu no. La (a) è meglio di niente e resta nel registro dell'opinione: ti fa scegliere fra due categorie tue. La (d) sposta la conversazione sul tuo processo, che non è ciò che lo ha lasciato perplesso. La (c) mette la sua percezione in competizione coi tuoi dati e chiude la conversazione, anche quando i dati ti danno ragione.",
           },
           {
             id: "q4",
             prompt:
               "Il VP impone una scelta che secondo te danneggerà la conversione. Hai già argomentato e perso. Cosa fai?",
             options: [
-              { id: "a", label: "Esegui senza commenti: la decisione è sua" },
+              {
+                id: "a",
+                label: "Esegui senza commenti: la decisione è sua e va rispettata",
+              },
               {
                 id: "b",
-                label:
-                  "Esegui, e metti per iscritto in modo neutro il rischio previsto con la metrica che lo rileverà e la data di verifica, concordandola con lui",
+                label: "Esegui e registri il rischio con metrica e data, concordate",
               },
-              { id: "c", label: "Esegui malvolentieri e documenti il tuo dissenso al tuo capo" },
-              { id: "d", label: "Rifiuti di lavorarci per coerenza professionale" },
+              {
+                id: "c",
+                label: "Esegui e documenti il tuo dissenso al tuo responsabile",
+              },
+              {
+                id: "d",
+                label: "Rifiuti di lavorarci, per coerenza professionale con i dati",
+              },
             ],
             correctId: "b",
             explanation:
-              "Questa è la differenza tra registrare un rischio e costruirsi un alibi. La forma conta: neutra, orientata alla verifica, concordata — non 'lo dicevo io' depositato agli atti. Se il rischio si materializza, la conversazione successiva parte da una previsione condivisa invece che da un conflitto; se non si materializza, hai imparato qualcosa e non hai perso nulla. Il rifiuto (d) è appropriato solo per questioni etiche o legali, non per un disaccordo di merito.",
+              "La differenza fra la (b) e la (c) è tutta qui: la prima registra un rischio, la seconda si costruisce un alibi. La forma conta — neutra, orientata alla verifica, e concordata con lui, non depositata altrove. Se il rischio si materializza, la conversazione successiva parte da una previsione condivisa invece che da un conflitto; se non si materializza, hai imparato qualcosa e non hai perso nulla. La (d) è appropriata per questioni etiche o legali, non per un disaccordo di merito.",
           },
           {
             id: "q5",
             prompt:
               "Un designer junior riceve in critique quindici commenti contraddittori e ne esce paralizzato. Cosa avresti dovuto fare come facilitatore?",
             options: [
-              { id: "a", label: "Limitare il numero di commenti per persona" },
+              {
+                id: "a",
+                label: "Limitare il numero di commenti che ciascuno può portare",
+              },
               {
                 id: "b",
-                label:
-                  "Far dichiarare in apertura su cosa serviva feedback, tenere il gruppo su quello, e chiudere riassumendo i tre temi ricorrenti — lasciando esplicitamente a chi presenta la decisione finale",
-
+                label: "Far dichiarare il perimetro all'inizio e sintetizzare alla fine",
               },
-              { id: "c", label: "Fare una votazione sui commenti più importanti" },
-              { id: "d", label: "Invitare meno persone alla critique" },
+              {
+                id: "c",
+                label: "Far votare il gruppo sui commenti più importanti da tenere",
+              },
+              {
+                id: "d",
+                label: "Invitare meno persone, per ridurre il volume di feedback",
+              },
             ],
             correctId: "b",
             explanation:
-              "La paralisi nasce da due assenze: nessun perimetro dichiarato all'inizio, e nessuna sintesi alla fine. Il perimetro ('oggi mi serve feedback sulla gerarchia della home, non sui colori') rende legittimo scartare ciò che è fuori tema. La sintesi trasforma quindici voci in tre temi e restituisce a chi presenta l'autorità sulla decisione — che è il punto: la critique informa, non delibera. La votazione (c) fa l'opposto, trasformando la critique in un organo decisionale collettivo.",
-          },
+              "La paralisi nasce da due assenze: nessun perimetro dichiarato all'inizio e nessuna sintesi alla fine. Il perimetro rende legittimo scartare ciò che è fuori tema; la sintesi trasforma quindici voci in tre temi e restituisce a chi presenta l'autorità sulla decisione. La (c) fa l'opposto ed è il distrattore più dannoso: trasforma la critique in un organo deliberante, mentre il suo compito è informare. La (a) e la (d) riducono il volume e non l'ambiguità: quindici commenti su un perimetro chiaro non paralizzano nessuno.",
+          }
         ],
       },
       {
@@ -958,7 +1077,7 @@ export const seniorModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "«Buona domanda, e tocca una cosa importante: te la mostro subito» — salti direttamente alla schermata e poi torni indietro",
+                  "«Buona domanda, te la mostro subito» e salti alla schermata, poi torni",
                 score: 3,
                 outcome:
                   "Trenta secondi e la preoccupazione è chiusa. Hai mostrato che sei preparato, che il tema era già stato considerato, e hai guadagnato l'attenzione del VP Sales per il resto della presentazione. Il riordino della sequenza costa meno di quanto costi un ascoltatore ostile.",
@@ -966,7 +1085,7 @@ export const seniorModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "«Preferirei rispondere alla fine per non perdere il filo»",
+                  "«Preferirei rispondere alla fine, per non perdere il filo del discorso»",
                 score: 0,
                 outcome:
                   "Hai chiesto alla persona che controlla il canale di vendita di aspettare. Formalmente ragionevole, socialmente costoso: la domanda tornerà alla fine con più energia e meno benevolenza.",
@@ -992,7 +1111,7 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "«Capisco. Facciamo così: cosa dovrebbe provare una persona che finisce questo flusso? Se ci accordiamo su quello, so su cosa lavorare.»",
+                  "«Cosa dovrebbe provare chi finisce questo flusso? Su quello posso lavorare»",
                 score: 3,
                 outcome:
                   "Trasformi un commento estetico in un requisito di esperienza discutibile. Il CEO risponde: «Dovrebbe sentire di aver fatto la scelta giusta.» Ora hai un obiettivo verificabile, e scopri che la sua preoccupazione riguardava la schermata finale — che nella tua versione è la più asciutta di tutte, e lui ha ragione.",
@@ -1007,14 +1126,14 @@ export const seniorModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "«L'obiettivo di questo flusso è ridurre l'abbandono, e i test mostrano che la versione asciutta funziona meglio»",
+                  "«L'obiettivo è ridurre l'abbandono, e i test danno meglio la versione asciutta»",
                 score: 1,
                 outcome:
                   "Difesa corretta nel merito che contrappone i tuoi dati alla sua sensazione davanti a sei persone. Anche vincendo, hai insegnato al CEO che dare feedback al design significa ricevere una controargomentazione.",
               },
               {
                 id: "d",
-                label: "«Prendo nota, ci lavoro e ti mostro una versione alternativa»",
+                label: "«Prendo nota, ci lavoro e ti mostro una versione alternativa domani»",
                 score: 2,
                 outcome:
                   "Sicuro e neutro, ma esci dalla stanza senza aver capito cosa devi cambiare. La versione alternativa sarà un tentativo alla cieca, e ci sarà un secondo giro.",
@@ -1032,7 +1151,7 @@ export const seniorModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Mandi un riepilogo scritto: cosa ho sentito, cosa farò e cosa no con la ragione, quali decisioni restano aperte e chi deve prenderle entro quando",
+                  "Mandi un riepilogo: cosa farò, cosa no e perché, e cosa resta da decidere",
                 score: 3,
                 outcome:
                   "Il riepilogo diventa il documento di riferimento. Due richieste in conflitto vengono risolte via email dai diretti interessati in un giorno, e le tre non accolte non tornano più perché la ragione era scritta. Chi scrive la sintesi decide cosa è stato deciso.",

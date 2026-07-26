@@ -327,7 +327,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Chiedi qual è il problema che il menù radiale dovrebbe risolvere, e come sapremo se l'ha risolto",
+                  "Chiedi quale problema il menù radiale risolve, e come sapremo se l'ha risolto",
                 score: 3,
                 outcome:
                   "La domanda sposta la conversazione dalla soluzione al problema, senza mettere nessuno in difesa. Emerge che il vero fastidio del fondatore è che la nav ha 11 voci e 'sembra disordinata'. Il problema reale è la struttura dell'informazione, non il meccanismo di navigazione.",
@@ -369,7 +369,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Fai un tree test online su 40 utenti attuali con 6 compiti reali, più un card sort su 15",
+                  "Fai un tree test su 40 utenti con 6 compiti reali, più un card sort su 15",
                 score: 3,
                 outcome:
                   "In otto giorni hai numeri: il tasso di successo sui compiti è del 52%, con due voci che raccolgono da sole il 70% dei fallimenti perché usano gergo interno. Ora la discussione non è più tra due gusti: c'è un dato che nessuno può liquidare.",
@@ -403,7 +403,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "a",
                 label:
-                  "Proponi di risolvere prima la tassonomia con la nav attuale, misurare, e riaprire il tema del meccanismo dopo — con la nuova baseline",
+                  "Prima la tassonomia con la nav attuale, misuri, e poi riapri il meccanismo",
                 score: 3,
                 outcome:
                   "Nessuno perde la faccia, il problema reale viene risolto per primo, e la proposta del fondatore non è respinta ma messa in coda con una condizione oggettiva. Dopo il rilascio il tasso di successo sale al 84% e il tema del menù radiale non viene più sollevato: era un sintomo, non un desiderio.",
@@ -411,7 +411,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "b",
                 label:
-                  "Dici che i dati parlano chiaro e che il menù radiale non si farà",
+                  "Dici che i dati parlano chiaro e che il menù radiale non si farà mai",
                 score: 0,
                 outcome:
                   "Hai vinto la discussione e perso un pezzo di rapporto. Il fondatore ha imparato che portarti un'idea significa essere corretto con i dati davanti al team. La prossima volta non te la porta: la dà direttamente agli sviluppatori.",
@@ -419,7 +419,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "c",
                 label:
-                  "Accetti un test A/B tra nav laterale riorganizzata e menù radiale",
+                  "Accetti un test A/B fra nav laterale riorganizzata e menù radiale",
                 score: 2,
                 outcome:
                   "Metodologicamente onesto, ma costoso: significa costruire comunque il menù radiale, e su un B2B con pochi utenti attivi non raggiungerai la potenza statistica in tempi utili. Rischi un risultato non conclusivo che riapre tutto.",
@@ -427,7 +427,7 @@ export const intermedioModules: Module[] = [
               {
                 id: "d",
                 label:
-                  "Fai entrambe le cose: riorganizzi la tassonomia e implementi il menù radiale come opzione attivabile",
+                  "Fai entrambe: riorganizzi la tassonomia e aggiungi il radiale come opzione",
                 score: 1,
                 outcome:
                   "Hai creato due navigazioni da mantenere per sempre, e una preferenza che il 2% attiverà. Il debito di manutenzione è permanente, il beneficio è marginale. È il compromesso che sembra diplomatico e costa per anni.",
