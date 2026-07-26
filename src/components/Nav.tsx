@@ -74,6 +74,10 @@ export function BottomNav() {
                 >
                   <Link
                     href={item.href}
+                    /* Scarica in anticipo la schermata intera, non solo lo
+                       scheletro: sono quattro rotte e si passa la vita fra
+                       quelle. */
+                    prefetch
                     aria-current={active ? "page" : undefined}
                     /* Il nome accessibile non puo' dipendere dall'animazione:
                        sulle voci inattive l'etichetta ha larghezza zero e
@@ -127,6 +131,7 @@ export function SideNav() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch
                   aria-current={active ? "page" : undefined}
                   className={`tappable flex items-center gap-3 rounded-full px-4 py-3 text-sm font-semibold ${
                     active

@@ -4,39 +4,31 @@ import { redirect } from "next/navigation";
 import { signOut } from "@/app/actions";
 import { EXERCISE_TYPE_LABEL, MODULES, TOTAL_EXERCISES } from "@/content";
 import { BADGES } from "@/content/badges";
-import { getUserData } from "@/lib/data";
+import {
+  getProfileData,
+  moduleBestPct,
+  totalAttempts,
+  totalExercisesDone,
+} from "@/lib/data";
 import { MASTERY_THRESHOLD, RANKS, levelMeta, rankForXp } from "@/lib/progression";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
-import type { ExerciseType } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Profilo" };
 
 export default async function ProfiloPage() {
-  const data = await getUserData();
+  const data = await getProfileData();
   if (!data) redirect("/benvenuto");
 
-  const { profile, attempts, progress, badges } = data;
+  const { profile, best, byType, badges } = data;
   const xp = profile?.xp ?? 0;
   const rank = rankForXp(xp);
   const earned = new Set(badges.map((b) => b.badge_id));
 
   const mastered = MODULES.filter(
-    (m) =>
-      (progress.find((p) => p.module_id === m.id)?.best_score_pct ?? 0) >=
-      MASTERY_THRESHOLD,
+    (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
   );
 
-  const byType = new Map<ExerciseType, { count: number; pct: number }>();
-  for (const a of attempts) {
-    const current = byType.get(a.exercise_type) ?? { count: 0, pct: 0 };
-    const pct = a.max_score > 0 ? (a.score / a.max_score) * 100 : 0;
-    byType.set(a.exercise_type, {
-      count: current.count + 1,
-      pct: current.pct + pct,
-    });
-  }
-
-  const doneCount = new Set(attempts.map((a) => `${a.module_id}/${a.exercise_id}`)).size;
+  const doneCount = totalExercisesDone(best);
   const capabilities = mastered.flatMap((m) =>
     m.capabilities.map((c) => ({ ...c, module: m })),
   );
@@ -90,7 +82,7 @@ export default async function ProfiloPage() {
 
       <section className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi svolti" />
-        <Stat value={`${attempts.length}`} label="tentativi totali" />
+        <Stat value={`${totalAttempts(best)}`} label="tentativi totali" />
         <Stat value={`${profile?.streak_count ?? 0}`} label="serie attuale" />
         <Stat value={`${profile?.longest_streak ?? 0}`} label="serie record" />
       </section>
@@ -136,27 +128,29 @@ export default async function ProfiloPage() {
         )}
       </section>
 
-      {byType.size > 0 ? (
+      {byType.length > 0 ? (
         <section className="mt-8">
           <h2 className="mb-3 text-lg font-bold tracking-tight">
             Dove sei forte, dove no
           </h2>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {[...byType.entries()].map(([type, agg]) => {
-              const avg = Math.round(agg.pct / agg.count);
-              return (
-                <li key={type} className="card-light flex items-center gap-4 p-5">
-                  <ScoreRing value={avg} size={56} />
-                  <div className="min-w-0">
-                    <p className="font-bold">{EXERCISE_TYPE_LABEL[type]}</p>
-                    <p className="text-[13px] text-ink-muted">
-                      media su {agg.count}{" "}
-                      {agg.count === 1 ? "tentativo" : "tentativi"}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
+            {byType.map((agg) => (
+              <li
+                key={agg.exercise_type}
+                className="card-light flex items-center gap-4 p-5"
+              >
+                <ScoreRing value={agg.media_pct} size={56} />
+                <div className="min-w-0">
+                  <p className="font-bold">
+                    {EXERCISE_TYPE_LABEL[agg.exercise_type]}
+                  </p>
+                  <p className="text-[13px] text-ink-muted">
+                    media su {agg.tentativi}{" "}
+                    {agg.tentativi === 1 ? "tentativo" : "tentativi"}
+                  </p>
+                </div>
+              </li>
+            ))}
           </ul>
         </section>
       ) : null}
@@ -194,8 +188,7 @@ export default async function ProfiloPage() {
           <h2 className="mb-3 text-lg font-bold tracking-tight">Moduli padroneggiati</h2>
           <ul className="space-y-2">
             {mastered.map((m) => {
-              const best =
-                progress.find((p) => p.module_id === m.id)?.best_score_pct ?? 0;
+              const pct = moduleBestPct(best, m.id);
               return (
                 <li key={m.id}>
                   <Link
@@ -208,7 +201,7 @@ export default async function ProfiloPage() {
                         {levelMeta(m.level).name}
                       </span>
                     </span>
-                    <ScoreRing value={best} size={44} />
+                    <ScoreRing value={pct} size={44} />
                   </Link>
                 </li>
               );

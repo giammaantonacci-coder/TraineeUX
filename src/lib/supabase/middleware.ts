@@ -22,12 +22,17 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // Se Supabase è irraggiungibile non deve cadere l'intero sito: si degrada
-  // a "non autenticato" e le pagine pubbliche continuano a funzionare.
-  let user = null;
+  // getClaims verifica il token localmente quando il progetto usa chiavi
+  // asimmetriche, togliendo una chiamata di rete al server di autenticazione
+  // da OGNI navigazione. Con le chiavi simmetriche ricade su una verifica
+  // remota, quindi non è mai peggio di getUser.
+  // Se Supabase è irraggiungibile il sito non deve cadere: si degrada a
+  // "non autenticato" e le pagine pubbliche continuano a funzionare.
+  let user: { id: string } | null = null;
   try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
+    const { data } = await supabase.auth.getClaims();
+    const sub = data?.claims?.sub;
+    if (sub) user = { id: sub };
   } catch {
     user = null;
   }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getExercise } from "@/content";
-import { getUserData } from "@/lib/data";
+import { requireUser } from "@/lib/data";
 import { toPublicExercise } from "@/lib/grading";
 import { BASE_XP, levelMeta } from "@/lib/progression";
 import { ExerciseRunner } from "@/components/ExerciseRunner";
@@ -26,8 +26,10 @@ export default async function AllenamentoPage({
   const found = getExercise(moduleId, exerciseId);
   if (!found) notFound();
 
-  const data = await getUserData();
-  if (!data) redirect("/benvenuto");
+  // Questa pagina non legge progressi: i contenuti vengono dal modulo, quindi
+  // basta sapere che la sessione esiste. Prima faceva quattro query per niente.
+  const user = await requireUser();
+  if (!user) redirect("/benvenuto");
 
   const { module: mod, exercise } = found;
   const level = levelMeta(mod.level);

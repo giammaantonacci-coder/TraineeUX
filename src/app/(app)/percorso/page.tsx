@@ -2,29 +2,20 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MODULES } from "@/content";
-import { getUserData } from "@/lib/data";
+import {
+  exercisesDoneInModule,
+  getProgressData,
+  moduleBestPct,
+} from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
 import { ACCENT_BG, PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Percorso" };
 
 export default async function PercorsoPage() {
-  const data = await getUserData();
+  const data = await getProgressData();
   if (!data) redirect("/benvenuto");
-  const { progress, attempts } = data;
-
-  const doneByModule = new Map<string, number>();
-  for (const a of attempts) {
-    const key = a.module_id;
-    const set = doneByModule.get(key) ?? 0;
-    doneByModule.set(key, set);
-  }
-  const exercisesDone = new Map<string, Set<string>>();
-  for (const a of attempts) {
-    const set = exercisesDone.get(a.module_id) ?? new Set<string>();
-    set.add(a.exercise_id);
-    exercisesDone.set(a.module_id, set);
-  }
+  const { best } = data;
 
   return (
     <div className="animate-rise">
@@ -38,9 +29,7 @@ export default async function PercorsoPage() {
         {LEVELS.map((level) => {
           const modules = MODULES.filter((m) => m.level === level.id);
           const mastered = modules.filter(
-            (m) =>
-              (progress.find((p) => p.module_id === m.id)?.best_score_pct ?? 0) >=
-              MASTERY_THRESHOLD,
+            (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
           ).length;
 
           return (
@@ -58,9 +47,8 @@ export default async function PercorsoPage() {
 
               <ul className="grid gap-3 md:grid-cols-2">
                 {modules.map((module) => {
-                  const best =
-                    progress.find((p) => p.module_id === module.id)?.best_score_pct ?? 0;
-                  const done = exercisesDone.get(module.id)?.size ?? 0;
+                  const pct = moduleBestPct(best, module.id);
+                  const done = exercisesDoneInModule(best, module.id);
                   const total = module.exercises.length;
 
                   return (
@@ -81,9 +69,9 @@ export default async function PercorsoPage() {
                           </div>
                           {done > 0 ? (
                             <ScoreRing
-                              value={best}
+                              value={pct}
                               size={52}
-                              label={`Miglior punteggio ${best} per cento`}
+                              label={`Miglior punteggio ${pct} per cento`}
                             />
                           ) : null}
                         </div>
@@ -97,7 +85,7 @@ export default async function PercorsoPage() {
                             <span>
                               {done}/{total} esercizi · {module.minutes} min
                             </span>
-                            {best >= MASTERY_THRESHOLD ? (
+                            {pct >= MASTERY_THRESHOLD ? (
                               <span className="text-mint-deep">Padroneggiato</span>
                             ) : done > 0 ? (
                               <span>In corso</span>
@@ -107,7 +95,7 @@ export default async function PercorsoPage() {
                           </div>
                           <ProgressBar
                             value={total > 0 ? (done / total) * 100 : 0}
-                            tone={best >= MASTERY_THRESHOLD ? "mint" : "dark"}
+                            tone={pct >= MASTERY_THRESHOLD ? "mint" : "dark"}
                           />
                         </div>
                       </Link>

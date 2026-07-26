@@ -7,7 +7,7 @@ import {
   MODULES,
   getModule,
 } from "@/content";
-import { bestPctPerExercise, getUserData } from "@/lib/data";
+import { bestPctPerExercise, getProgressData, moduleBestPct } from "@/lib/data";
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
 
@@ -34,12 +34,11 @@ export default async function ModulePage({
   const mod = getModule(moduleId);
   if (!mod) notFound();
 
-  const data = await getUserData();
+  const data = await getProgressData();
   if (!data) redirect("/benvenuto");
 
-  const bestPct = bestPctPerExercise(data.attempts);
-  const moduleBest =
-    data.progress.find((p) => p.module_id === mod.id)?.best_score_pct ?? 0;
+  const bestPct = bestPctPerExercise(data.best);
+  const moduleBest = moduleBestPct(data.best, mod.id);
   const mastered = moduleBest >= MASTERY_THRESHOLD;
   const level = levelMeta(mod.level);
 

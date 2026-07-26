@@ -26,10 +26,9 @@
   color-scheme: light;
 }
 
-html {
-  /* Gli ancoraggi interni (i livelli in /percorso) scorrono morbidi. */
-  scroll-behavior: smooth;
-}
+/* Niente scroll-behavior: smooth globale. Next riporta in cima a ogni cambio
+   di rotta, e con lo scorrimento morbido quel ritorno diventa un'animazione
+   che si somma all'attesa: la navigazione sembra piu' lenta di quanto sia. */
 
 html,
 body {

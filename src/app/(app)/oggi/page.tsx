@@ -7,7 +7,12 @@ import {
   MODULES,
   TOTAL_EXERCISES,
 } from "@/content";
-import { bestPctPerExercise, getUserData } from "@/lib/data";
+import {
+  bestPctPerExercise,
+  getProgressData,
+  moduleBestPct,
+  totalExercisesDone,
+} from "@/lib/data";
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import type { Exercise, Module } from "@/lib/types";
@@ -15,22 +20,22 @@ import type { Exercise, Module } from "@/lib/types";
 export const metadata: Metadata = { title: "Oggi" };
 
 export default async function OggiPage() {
-  const data = await getUserData();
+  const data = await getProgressData();
   if (!data) redirect("/benvenuto");
 
-  const { profile, attempts, progress } = data;
+  const { profile, best } = data;
   const xp = profile?.xp ?? 0;
   const streak = profile?.streak_count ?? 0;
   const name = profile?.display_name ?? data.email?.split("@")[0] ?? "designer";
   const rank = rankForXp(xp);
-  const bestPct = bestPctPerExercise(attempts);
-  const doneCount = new Set(attempts.map((a) => `${a.module_id}/${a.exercise_id}`)).size;
+  const bestPct = bestPctPerExercise(best);
+  const doneCount = totalExercisesDone(best);
 
-  const suggestions = buildSuggestions(bestPct, progress.length === 0);
+  const suggestions = buildSuggestions(bestPct, best.length === 0);
   const [primary, ...rest] = suggestions;
 
-  const masteredCount = progress.filter(
-    (p) => p.best_score_pct >= MASTERY_THRESHOLD,
+  const masteredCount = MODULES.filter(
+    (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
   ).length;
 
   return (
@@ -134,10 +139,9 @@ export default async function OggiPage() {
           {LEVEL_ORDER.map((levelId) => {
             const meta = levelMeta(levelId);
             const modules = MODULES.filter((m) => m.level === levelId);
-            const mastered = modules.filter((m) => {
-              const p = progress.find((x) => x.module_id === m.id);
-              return (p?.best_score_pct ?? 0) >= MASTERY_THRESHOLD;
-            }).length;
+            const mastered = modules.filter(
+              (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
+            ).length;
             const pct = Math.round((mastered / modules.length) * 100);
             return (
               <Link
