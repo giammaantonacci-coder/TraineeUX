@@ -2,7 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
 
-const PUBLIC_PATHS = ["/login", "/auth", "/benvenuto"];
+/**
+ * Il manifest è elencato anche qui, oltre che escluso dal matcher: è la risorsa
+ * da cui iOS ricava display e scope dell'app installata, e se un domani il
+ * matcher venisse riscritto, un suo redirect rimanderebbe l'app in Safari
+ * senza che nulla nell'interfaccia lo faccia sospettare.
+ */
+const PUBLIC_PATHS = ["/login", "/auth", "/benvenuto", "/manifest.webmanifest"];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });

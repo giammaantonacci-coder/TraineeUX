@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     title: "TraineeUX",
     statusBarStyle: "default",
   },
+  // appleWebApp.capable da solo non basta: Next emette il nome standard
+  // "mobile-web-app-capable", che è quello che riconosce Android. iOS legge
+  // ancora soltanto il nome con il prefisso apple, e senza quello l'icona sulla
+  // schermata home resta un segnalibro di Safari. Vanno dichiarati entrambi.
+  other: { "apple-mobile-web-app-capable": "yes" },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
