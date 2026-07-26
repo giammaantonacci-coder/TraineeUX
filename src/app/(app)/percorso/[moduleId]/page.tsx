@@ -10,6 +10,7 @@ import {
 import { bestPctPerExercise, getProgressData, moduleBestPct } from "@/lib/data";
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
+import { CheckIcon } from "@/components/icons";
 
 export async function generateMetadata({
   params,
@@ -112,7 +113,7 @@ export default async function ModulePage({
                     mastered ? "bg-mint text-ink" : "bg-black/5 text-ink-muted"
                   }`}
                 >
-                  {mastered ? "✓" : i + 1}
+                  {mastered ? <CheckIcon className="h-3.5 w-3.5" /> : i + 1}
                 </span>
                 <div>
                   <p className="text-[15px] font-semibold leading-relaxed">{c.claim}</p>

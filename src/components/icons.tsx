@@ -1,0 +1,110 @@
+import type { ExerciseType } from "@/lib/types";
+
+/**
+ * Icone disegnate, non caratteri di testo.
+ *
+ * Prima i tipi di esercizio erano glifi (◷ ◎ ⌥ ✎) messi al centro di un
+ * riquadro con items-center: quello centra la riga di testo, non il disegno.
+ * Ogni carattere ha estensioni proprie sopra e sotto la linea di base, quindi
+ * dentro riquadri identici i quattro simboli finivano a altezze diverse — la
+ * matita in particolare risultava alta e spostata a sinistra.
+ *
+ * Su una griglia 24×24 il centro è geometrico e uguale per tutte, e lo spessore
+ * del tratto è lo stesso della navigazione.
+ */
+
+type Props = { className?: string };
+
+const comune = {
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.8,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true as const,
+  focusable: "false" as const,
+};
+
+/** Quiz: tre risposte fra cui scegliere. */
+export function QuizIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <circle cx="5.5" cy="7" r="1.75" />
+      <circle cx="5.5" cy="12" r="1.75" />
+      <circle cx="5.5" cy="17" r="1.75" />
+      <path d="M10.5 7h8M10.5 12h8M10.5 17h8" />
+    </svg>
+  );
+}
+
+/** Critique: il bersaglio che si guarda da vicino. */
+export function CritiqueIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="3.1" />
+    </svg>
+  );
+}
+
+/** Scenario: una decisione che si biforca. */
+export function ScenarioIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M12 20.5v-4.2" />
+      <path d="M12 16.3c0-3 1.9-4.9 4.9-4.9h1.3" />
+      <path d="M12 16.3c0-3-1.9-4.9-4.9-4.9H5.8" />
+      <circle cx="18.4" cy="11.4" r="1.6" />
+      <circle cx="5.6" cy="11.4" r="1.6" />
+      <circle cx="12" cy="5.4" r="1.6" />
+      <path d="M12 7v4.4" />
+    </svg>
+  );
+}
+
+/** Brief: si scrive. */
+export function BriefIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M4.5 19.5 8 18.6 19.1 7.5a2.05 2.05 0 0 0-2.9-2.9L5.1 15.7Z" />
+      <path d="M14.9 6.8 17.8 9.7" />
+    </svg>
+  );
+}
+
+const PER_TIPO: Record<ExerciseType, (p: Props) => React.ReactElement> = {
+  quiz: QuizIcon,
+  critique: CritiqueIcon,
+  scenario: ScenarioIcon,
+  brief: BriefIcon,
+};
+
+export function ExerciseIcon({
+  type,
+  className,
+}: {
+  type: ExerciseType;
+  className?: string;
+}) {
+  const Icon = PER_TIPO[type];
+  return <Icon className={className} />;
+}
+
+/** Spunta della padronanza: stessa griglia, stesso centro dei numeri accanto. */
+export function CheckIcon({ className }: Props) {
+  return (
+    <svg {...comune} strokeWidth={2.4} className={className}>
+      <path d="M5.5 12.5 10 17l8.5-9" />
+    </svg>
+  );
+}
+
+/** Capacità non ancora attiva: cerchio vuoto, al posto del glifo ○. */
+export function CircleIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <circle cx="12" cy="12" r="6.4" />
+    </svg>
+  );
+}

@@ -96,16 +96,17 @@ export function ListaNews({
           <p className="font-bold">Nessun articolo per questo argomento</p>
           <p className="mt-2 text-sm text-ink-muted">
             Le fonti di questa categoria non hanno pubblicato di recente, oppure non
-            hanno risposto. Prova{" "}
-            <button
-              type="button"
-              onClick={() => scegli(null)}
-              className="font-semibold underline"
-            >
-              tutti gli argomenti
-            </button>
-            .
+            hanno risposto.
           </p>
+          {/* Pulsante pieno e non collegamento nel testo: in mezzo alla frase
+              era alto venti pixel, sotto il minimo tattile di ventiquattro. */}
+          <button
+            type="button"
+            onClick={() => scegli(null)}
+            className="tappable mt-4 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white"
+          >
+            Mostra tutti gli argomenti
+          </button>
         </div>
       ) : (
         <ul className="space-y-3">

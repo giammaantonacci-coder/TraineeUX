@@ -10,6 +10,7 @@ import { badgeById } from "@/content/badges";
 import { EXERCISE_TYPE_LABEL, verdict } from "@/lib/labels";
 import { ACCENT_BG, Pill, ProgressBar, Prose, ScoreRing, renderInline } from "@/components/ui";
 import { Bity, moodForScore } from "@/components/Bity";
+import { CheckIcon, CircleIcon } from "@/components/icons";
 import { Mock } from "@/components/mocks";
 
 type Phase = "intro" | "run" | "done";
@@ -270,11 +271,15 @@ export function ExerciseRunner({
                 <div className="flex items-start gap-3">
                   <span
                     aria-hidden="true"
-                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
                       mastered ? "bg-mint text-ink" : "bg-black/5 text-ink-muted"
                     }`}
                   >
-                    {mastered ? "✓" : "○"}
+                    {mastered ? (
+                      <CheckIcon className="h-3.5 w-3.5" />
+                    ) : (
+                      <CircleIcon className="h-3 w-3" />
+                    )}
                   </span>
                   <div>
                     <p className="text-[15px] font-semibold leading-relaxed">{c.claim}</p>

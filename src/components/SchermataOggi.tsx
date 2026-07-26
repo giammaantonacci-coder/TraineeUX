@@ -15,6 +15,7 @@ import {
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import { Bity } from "@/components/Bity";
+import { ExerciseIcon } from "@/components/icons";
 import type { Exercise, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
@@ -290,15 +291,9 @@ function SuggestionCard({
     >
       <span
         aria-hidden="true"
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${ACCENT_BG[mod.accent]} text-lg`}
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${ACCENT_BG[mod.accent]}`}
       >
-        {exercise.type === "quiz"
-          ? "◷"
-          : exercise.type === "critique"
-            ? "◎"
-            : exercise.type === "scenario"
-              ? "⌥"
-              : "✎"}
+        <ExerciseIcon type={exercise.type} className="h-[22px] w-[22px]" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-bold">{exercise.title}</span>
