@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { Bity } from "@/components/Bity";
 
 /**
  * Stato di errore progettato, non la schermata predefinita di Next.
@@ -21,9 +22,7 @@ export default function Error({
 
   return (
     <div className="mx-auto max-w-lg py-10 text-center">
-      <span aria-hidden="true" className="text-4xl">
-        🛠️
-      </span>
+      <Bity mood="spiacente" tint="blush" size={80} className="mx-auto" />
       <h1 className="mt-4 text-2xl font-extrabold tracking-tight">
         Questa schermata non si è caricata
       </h1>

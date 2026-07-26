@@ -1,4 +1,5 @@
 import { AuthPanel } from "@/components/AuthPanel";
+import { Bity } from "@/components/Bity";
 import type { Metadata } from "next";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
@@ -10,9 +11,14 @@ export default function BenvenutoPage() {
     <div className="mx-auto min-h-dvh w-full max-w-5xl px-4 py-8 md:px-6 md:py-14">
       <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-start md:gap-12">
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-ink-muted">
-            TraineeUX
-          </p>
+          {/* Marchio: Bity accanto al nome. È il primo schermo dell'app e l'unico
+              posto dove la mascotte si presenta per nome. */}
+          <div className="mb-4 flex items-center gap-2.5">
+            <Bity size={44} float label="Bity, la mascotte di TraineeUX" />
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink-muted">
+              TraineeUX
+            </p>
+          </div>
           <h1 className="text-[34px] font-extrabold leading-[1.05] tracking-tight md:text-5xl">
             Allenati sul giudizio,
             <br />
@@ -31,24 +37,26 @@ export default function BenvenutoPage() {
             <Stat value={`${LEVELS.length}`} label="livelli" />
           </dl>
 
-          <div className="mt-8 space-y-3">
-            {LEVELS.map((level, i) => (
-              <div
+          {/* Una lista ordinata, non cinque div: la sequenza dei livelli è
+              informazione, e così la riceve anche chi non vede l'impaginazione.
+              Bity prende la tinta del livello, che è la stessa che ritroverà nel
+              percorso: il colore si impara qui. */}
+          <ol className="mt-8 space-y-3">
+            {LEVELS.map((level) => (
+              <li
                 key={level.id}
                 className="flex items-center gap-3 rounded-3xl bg-surface-muted p-3.5"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
-                  {i + 1}
-                </span>
+                <Bity level={level.id} size={38} className="shrink-0" />
                 <div className="min-w-0">
                   <p className="text-sm font-bold">{level.name}</p>
                   <p className="text-[13px] leading-snug text-ink-muted">
                     {level.subtitle}
                   </p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <Feature

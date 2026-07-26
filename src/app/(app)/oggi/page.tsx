@@ -15,6 +15,7 @@ import {
 } from "@/lib/data";
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
+import { Bity } from "@/components/Bity";
 import type { Exercise, Module } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Oggi" };
@@ -41,15 +42,25 @@ export default async function OggiPage() {
   return (
     <div className="animate-rise">
       <header className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
-            Ciao, {name} 👋
-          </h1>
-          <p className="mt-1 text-sm text-ink-muted">
-            {streak > 0
-              ? `Serie di ${streak} ${streak === 1 ? "giorno" : "giorni"}. Non spezzarla oggi.`
-              : "Un esercizio oggi vale più di cinque domenica prossima."}
-          </p>
+        <div className="flex min-w-0 items-start gap-3">
+          {/* Solo al primo accesso: qui la riga contiene già saluto, sottotitolo
+              e il contatore della serie, e su 390px la mascotte toglierebbe
+              larghezza al testo ogni giorno per dire qualcosa che il resto
+              della schermata dice meglio. Al primo accesso invece è l'unico
+              momento in cui presentarsi vale lo spazio. */}
+          {doneCount === 0 ? (
+            <Bity mood="curioso" size={48} float className="-mt-1 shrink-0" />
+          ) : null}
+          <div className="min-w-0">
+            <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
+              Ciao, {name}
+            </h1>
+            <p className="mt-1 text-sm text-ink-muted">
+              {streak > 0
+                ? `Serie di ${streak} ${streak === 1 ? "giorno" : "giorni"}. Non spezzarla oggi.`
+                : "Un esercizio oggi vale più di cinque domenica prossima."}
+            </p>
+          </div>
         </div>
         <Link
           href="/profilo"

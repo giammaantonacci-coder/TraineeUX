@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { Bity } from "@/components/Bity";
 
 export default function NotFound() {
   return (
     <div className="mx-auto max-w-lg py-10 text-center">
-      <span aria-hidden="true" className="text-4xl">
-        🧭
-      </span>
+      <Bity mood="pensieroso" tint="sky" size={80} className="mx-auto" />
       <h1 className="mt-4 text-2xl font-extrabold tracking-tight">
         Questa pagina non esiste
       </h1>

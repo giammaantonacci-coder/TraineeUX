@@ -47,6 +47,7 @@ export default async function AllenamentoPage({
         moduleId={mod.id}
         moduleTitle={mod.title}
         moduleAccent={mod.accent}
+        levelId={mod.level}
         levelName={level.name}
         maxXp={Math.round(BASE_XP[exercise.type] * level.xpMultiplier)}
         capabilities={mod.capabilities}

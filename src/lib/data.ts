@@ -1,6 +1,8 @@
 import "server-only";
 import { createClient } from "./supabase/server";
-import type { BadgeRow, ExerciseType, ProfileRow } from "./types";
+import { MODULES } from "@/content";
+import { LEVEL_ORDER } from "./progression";
+import type { BadgeRow, ExerciseType, LevelId, ProfileRow } from "./types";
 
 /**
  * Ogni schermata è un server component che interroga Supabase, quindi il numero
@@ -172,4 +174,18 @@ export function totalExercisesDone(best: ExerciseBest[]): number {
 
 export function totalAttempts(best: ExerciseBest[]): number {
   return best.reduce((sum, b) => sum + b.tentativi, 0);
+}
+
+/**
+ * Livello più alto in cui è stato toccato almeno un modulo. Serve a colorare
+ * Bity: il colore della mascotte dice fin dove sei arrivato, non quanto hai
+ * fatto in totale, quindi basta aver messo piede nel livello.
+ */
+export function highestLevelReached(best: ExerciseBest[]): LevelId {
+  const done = new Set(best.map((b) => b.module_id));
+  let reached: LevelId = "intermedio";
+  for (const level of LEVEL_ORDER) {
+    if (MODULES.some((m) => m.level === level && done.has(m.id))) reached = level;
+  }
+  return reached;
 }

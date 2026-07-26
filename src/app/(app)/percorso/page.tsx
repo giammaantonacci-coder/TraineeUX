@@ -9,8 +9,15 @@ import {
 } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
 import { ACCENT_BG, PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { Bity, type BityMood } from "@/components/Bity";
 
 export const metadata: Metadata = { title: "Percorso" };
+
+function levelMood(mastered: number, total: number, touched: boolean): BityMood {
+  if (mastered === total) return "esulta";
+  if (mastered > 0) return "felice";
+  return touched ? "curioso" : "assonnato";
+}
 
 export default async function PercorsoPage() {
   const data = await getProgressData();
@@ -31,18 +38,34 @@ export default async function PercorsoPage() {
           const mastered = modules.filter(
             (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
           ).length;
+          const touched = modules.some((m) => exercisesDoneInModule(best, m.id) > 0);
 
           return (
             <section key={level.id} id={level.id} className="scroll-mt-6">
-              <div className="mb-4">
-                <div className="flex flex-wrap items-center gap-2">
+              {/* Bity porta il colore del livello: scorrendo la pagina i cinque
+                  livelli diventano cinque tinte, e lo stato di ciascuno si legge
+                  dall'espressione prima che dalle pillole. Decorativa: il conteggio
+                  "x/y padroneggiati" accanto dice già la stessa cosa a parole. */}
+              <div className="mb-4 flex items-start gap-3">
+                <Bity
+                  level={level.id}
+                  mood={levelMood(mastered, modules.length, touched)}
+                  size={46}
+                  className="-mt-1 shrink-0"
+                />
+                <div className="min-w-0">
                   <h2 className="text-xl font-extrabold tracking-tight">{level.name}</h2>
-                  <Pill>×{level.xpMultiplier} XP</Pill>
-                  <Pill tone={mastered === modules.length ? "mint" : "neutral"}>
-                    {mastered}/{modules.length} padroneggiati
-                  </Pill>
+                  {/* Le pillole su una riga propria: accanto al titolo, su
+                      telefono, andavano a capo una per volta e la colonna
+                      diventava una scala irregolare. */}
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                    <Pill>×{level.xpMultiplier} XP</Pill>
+                    <Pill tone={mastered === modules.length ? "mint" : "neutral"}>
+                      {mastered}/{modules.length} padroneggiati
+                    </Pill>
+                  </div>
+                  <p className="mt-2 text-sm text-ink-muted">{level.subtitle}</p>
                 </div>
-                <p className="mt-1 text-sm text-ink-muted">{level.subtitle}</p>
               </div>
 
               <ul className="grid gap-3 md:grid-cols-2">

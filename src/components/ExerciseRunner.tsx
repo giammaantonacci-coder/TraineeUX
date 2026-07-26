@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { submitExercise, type SubmitResult } from "@/app/actions";
 import type { ExerciseAnswer, PublicExercise } from "@/lib/grading";
-import type { Capability } from "@/lib/types";
+import type { Capability, LevelId } from "@/lib/types";
 import { MASTERY_THRESHOLD } from "@/lib/progression";
 import { badgeById } from "@/content/badges";
 import { EXERCISE_TYPE_LABEL, verdict } from "@/lib/labels";
 import { ACCENT_BG, Pill, ProgressBar, Prose, ScoreRing, renderInline } from "@/components/ui";
+import { Bity, moodForScore } from "@/components/Bity";
 import { Mock } from "@/components/mocks";
 
 type Phase = "intro" | "run" | "done";
@@ -17,6 +18,7 @@ export function ExerciseRunner({
   moduleId,
   moduleTitle,
   moduleAccent,
+  levelId,
   levelName,
   maxXp,
   capabilities,
@@ -25,6 +27,7 @@ export function ExerciseRunner({
   moduleId: string;
   moduleTitle: string;
   moduleAccent: string;
+  levelId: LevelId;
   levelName: string;
   maxXp: number;
   capabilities: Capability[];
@@ -195,14 +198,26 @@ export function ExerciseRunner({
     return (
       <div ref={resultRef} tabIndex={-1} className="outline-none">
         <div className="card-dark p-6 md:p-8">
-          <div className="flex items-center justify-between gap-5">
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
-                {v.title}
-              </p>
-              <p className="mt-1 text-2xl font-extrabold">
-                {grade.score} / {grade.maxScore} punti
-              </p>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              {/* Bity non ha nome accessibile: la sua espressione ripete il
+                  verdetto e il punteggio che stanno qui accanto, e annunciarla
+                  due volte sarebbe rumore. */}
+              <Bity
+                mood={moodForScore(grade.scorePct)}
+                level={levelId}
+                size={54}
+                pop
+                className="shrink-0"
+              />
+              <div className="min-w-0">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
+                  {v.title}
+                </p>
+                <p className="mt-1 text-2xl font-extrabold">
+                  {grade.score} / {grade.maxScore} punti
+                </p>
+              </div>
             </div>
             <ScoreRing value={grade.scorePct} size={76} />
           </div>

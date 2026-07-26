@@ -17,6 +17,10 @@
   --color-blush: #ffb6dc;
   --color-blush-deep: #ff8ec9;
   --color-butter: #ffe3a3;
+  --color-butter-deep: #f5c76a;
+  /* Quinta tinta: i livelli sono cinque, gli accenti dei moduli quattro. */
+  --color-plum: #cbb8f7;
+  --color-plum-deep: #a98ceb;
 
   --radius-card: 28px;
   --radius-pill: 999px;
@@ -110,6 +114,41 @@ body {
 }
 .tappable:active {
   transform: scale(0.985);
+}
+
+/* Bity, la mascotte. Il galleggiamento è lento e di pochi pixel: deve dare
+   segno di vita senza tirare l'occhio via dal contenuto. */
+@keyframes bity-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+.animate-bity-float {
+  animation: bity-float 3.4s ease-in-out infinite;
+}
+
+/* Comparsa dopo la consegna di un esercizio: una molla corta, non un rimbalzo
+   lungo, perché arriva insieme al punteggio e non deve rubargli la scena. */
+@keyframes bity-pop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-bity-pop {
+  animation: bity-pop 0.42s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
 /* Collegamento per saltare la navigazione, visibile solo da tastiera. */

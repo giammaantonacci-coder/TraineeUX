@@ -6,12 +6,14 @@ import { EXERCISE_TYPE_LABEL, MODULES, TOTAL_EXERCISES } from "@/content";
 import { BADGES } from "@/content/badges";
 import {
   getProfileData,
+  highestLevelReached,
   moduleBestPct,
   totalAttempts,
   totalExercisesDone,
 } from "@/lib/data";
 import { MASTERY_THRESHOLD, RANKS, levelMeta, rankForXp } from "@/lib/progression";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { Bity } from "@/components/Bity";
 
 export const metadata: Metadata = { title: "Profilo" };
 
@@ -29,6 +31,7 @@ export default async function ProfiloPage() {
   );
 
   const doneCount = totalExercisesDone(best);
+  const reachedLevel = highestLevelReached(best);
   const capabilities = mastered.flatMap((m) =>
     m.capabilities.map((c) => ({ ...c, module: m })),
   );
@@ -43,7 +46,18 @@ export default async function ProfiloPage() {
 
       <section className="card-dark p-6 md:p-7">
         <div className="flex items-start justify-between gap-5">
-          <div>
+          <div className="flex min-w-0 items-start gap-3.5">
+            {/* Il colore di Bity è il livello più alto in cui hai messo piede:
+                è l'unico posto dell'app dove quel dato è visibile. Per questo
+                qui ha un nome accessibile, mentre altrove è decorativa. */}
+            <Bity
+              level={reachedLevel}
+              mood={doneCount === 0 ? "curioso" : "felice"}
+              size={56}
+              className="shrink-0"
+              label={`Bity nel colore del livello ${levelMeta(reachedLevel).name}`}
+            />
+            <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
               Grado
             </p>
@@ -51,6 +65,7 @@ export default async function ProfiloPage() {
             <p className="mt-2 max-w-md text-[15px] leading-relaxed text-white/70">
               {rank.current.description}
             </p>
+            </div>
           </div>
           <p className="shrink-0 text-right">
             <span className="block text-3xl font-extrabold">{xp}</span>
@@ -98,6 +113,7 @@ export default async function ProfiloPage() {
         </p>
         {capabilities.length === 0 ? (
           <div className="card-light p-6 text-center">
+            <Bity mood="curioso" size={64} className="mx-auto mb-2" float />
             <p className="font-bold">Nessuna capacità sbloccata per ora</p>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ink-muted">
               Chiudi il tuo primo modulo sopra il {MASTERY_THRESHOLD}% e qui comparirà
