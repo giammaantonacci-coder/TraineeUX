@@ -15,7 +15,6 @@ import {
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import { Bity } from "@/components/Bity";
-import { Diagnostica } from "@/components/Diagnostica";
 import type { Exercise, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
@@ -173,11 +172,6 @@ export async function SchermataOggi() {
           })}
         </div>
       </section>
-
-      {/* Temporaneo: serve a capire perché l'app installata esce dalla finestra
-          autonoma. Sta sulla schermata iniziale perché è l'unica che resta
-          dentro l'app, quindi l'unica dove si può leggere il risultato. */}
-      <Diagnostica />
     </div>
   );
 }
