@@ -85,93 +85,133 @@ export const avanzatoModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il team ti chiede di aggiungere il tema scuro. I componenti attualmente usano direttamente token primitivi (`gray-900`, `white`). Qual è l'intervento corretto?",
+              "Ti chiedono il tema scuro. I componenti usano direttamente i token primitivi (gray-900, white). Qual è l'intervento corretto?",
             options: [
-              { id: "a", label: "Aggiungere token primitivi per il tema scuro e usarli condizionalmente nei componenti" },
+              {
+                id: "a",
+                label: "Aggiungere primitivi scuri e scegliere fra i due nei componenti",
+              },
               {
                 id: "b",
-                label:
-                  "Introdurre uno strato semantico (`surface`, `text-primary`, `border-subtle`), rimappare i componenti su quello, e definire il tema scuro come mappatura alternativa dei semantici sui primitivi",
+                label: "Introdurre lo strato semantico e rimappare i componenti su quello",
               },
-              { id: "c", label: "Applicare un filtro di inversione a livello di applicazione" },
-              { id: "d", label: "Duplicare i componenti in versione chiara e scura" },
+              {
+                id: "c",
+                label: "Applicare un filtro di inversione a livello di applicazione",
+              },
+              {
+                id: "d",
+                label: "Duplicare i componenti in variante chiara e variante scura",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il tema scuro è il test di stress che rivela se lo strato semantico esiste. La condizionalità nei componenti (a) sparge la logica di tema in centinaia di punti e la rende impossibile da estendere a un terzo tema. L'inversione (c) rompe immagini, ombre e semantica del colore. La duplicazione (d) raddoppia il costo di ogni modifica futura. La rimappatura semantica ha un costo iniziale una tantum e rende gratuiti tutti i temi successivi.",
+              "Il tema scuro è il test di stress che rivela se lo strato semantico esiste. La (a) è la più tentatrice perché sembra il cambiamento minimo: sparge la logica di tema in centinaia di punti e rende impossibile un terzo tema. La (c) rompe immagini, ombre e la semantica del colore. La (d) raddoppia il costo di ogni modifica futura, per sempre. La rimappatura semantica ha un costo iniziale una volta sola e rende gratuiti tutti i temi successivi: è la differenza fra pagare una volta e pagare ogni volta.",
           },
           {
             id: "q2",
             prompt:
-              "Un componente Button ha accumulato: `isLoading`, `isDisabled`, `isFullWidth`, `hasIcon`, `iconOnly`, `isDestructive`, `isGhost`, `isSmall`. Qual è la diagnosi?",
+              "Un Button ha accumulato isLoading, isDisabled, isFullWidth, hasIcon, iconOnly, isDestructive, isGhost, isSmall. Qual è la diagnosi?",
             options: [
-              { id: "a", label: "È normale: i pulsanti hanno molti casi d'uso" },
+              {
+                id: "a",
+                label: "È fisiologico: un pulsante ha molti casi d'uso legittimi",
+              },
               {
                 id: "b",
-                label:
-                  "I booleani mutuamente esclusivi sono varianti travestite: `isDestructive`/`isGhost` sono valori di `variant`, `isSmall` è un valore di `size`, `hasIcon`/`iconOnly` vanno sostituiti da slot",
+                label: "I booleani esclusivi sono varianti: vanno chiusi in enumerazioni",
               },
-              { id: "c", label: "Va spezzato in Button, IconButton, LoadingButton e DestructiveButton" },
-              { id: "d", label: "Vanno spostati in un oggetto di configurazione" },
+              {
+                id: "c",
+                label: "Va spezzato in Button, IconButton, LoadingButton, Destructive",
+              },
+              {
+                id: "d",
+                label: "Vanno raccolti in un solo oggetto di configurazione tipizzato",
+              },
             ],
             correctId: "b",
             explanation:
-              "Otto booleani sono 256 combinazioni nominali, la maggior parte prive di senso: `isGhost` e `isDestructive` insieme non significano nulla. Riconoscere che un gruppo di booleani esclusivi è un'enumerazione è la correzione più frequente nelle API dei design system, e riduce lo spazio degli stati a una manciata di combinazioni valide. Spezzare in quattro componenti (c) sposta il problema sulla scelta del componente giusto e moltiplica la manutenzione.",
+              "Otto booleani sono 256 combinazioni nominali, quasi tutte prive di senso: isGhost e isDestructive insieme non significano niente. La (c) è il distrattore più forte perché i booleani spariscono davvero — ma il problema si sposta sulla scelta del componente giusto e la manutenzione si moltiplica per quattro. La (d) cambia la sintassi e non lo spazio degli stati: le combinazioni impossibili restano possibili. Riconoscere che un gruppo di booleani esclusivi è un'enumerazione è la correzione più frequente nelle API dei design system.",
           },
           {
             id: "q3",
             prompt:
-              "Un team prodotto chiede di aggiungere al sistema una card con un layout particolare che serve solo alla loro sezione. Cosa fai?",
+              "Un team prodotto chiede di aggiungere al sistema una card con un layout che serve solo alla loro sezione. Cosa fai?",
             options: [
-              { id: "a", label: "La aggiungi: le richieste dei team vanno servite" },
+              {
+                id: "a",
+                label: "La aggiungi: le richieste dei team prodotto vanno servite",
+              },
               {
                 id: "b",
-                label:
-                  "La lasci locale al loro codice, la annoti nel registro dei pattern emergenti, e la promuovi nel sistema quando un terzo team ne ha bisogno",
+                label: "Resta locale, entra nei pattern emergenti, promossa al terzo caso",
               },
-              { id: "c", label: "La rifiuti: il sistema deve restare piccolo" },
-              { id: "d", label: "Aggiungi al componente Card una proprietà `layout` con il loro caso" },
+              {
+                id: "c",
+                label: "La rifiuti, perché il sistema deve restare piccolo e coerente",
+              },
+              {
+                id: "d",
+                label: "Aggiungi a Card una proprietà 'layout' con il loro caso dentro",
+              },
             ],
             correctId: "b",
             explanation:
-              "Un caso singolo non è un pattern: è un requisito. Astrarlo ora significa progettare per un solo utente e scoprire al secondo che l'astrazione era sbagliata. Il registro dei pattern emergenti è il meccanismo che rende questa risposta diversa da un rifiuto: non stai dicendo no, stai dicendo 'non ancora' con un criterio esplicito per il sì. E il team resta sbloccato subito, che è la cosa che rende un sistema amato invece che aggirato.",
+              "Un caso singolo non è un pattern, è un requisito: astrarlo ora significa progettare per un solo utente e scoprire al secondo che l'astrazione era sbagliata. La (d) è il distrattore che assomiglia più a buona ingegneria — serve la richiesta dentro il componente condiviso, ed è esattamente così che i componenti accumulano proprietà che usa un team solo. La (c) è un no che spinge il team ad aggirare il sistema. Il registro dei pattern emergenti è ciò che rende la (b) un 'non ancora' con un criterio, non un rifiuto.",
           },
           {
             id: "q4",
             prompt:
-              "L'adozione del design system è ferma al 40% dopo un anno. Il team di sistema è convinto che i team prodotto siano pigri. Come indaghi?",
+              "L'adozione del design system è ferma al 40% dopo un anno, e il team di sistema pensa che i team prodotto siano pigri. Come indaghi?",
             options: [
-              { id: "a", label: "Rendi obbligatorio l'uso via linter e code review" },
+              {
+                id: "a",
+                label: "Rendi obbligatorio l'uso con un linter e la revisione del codice",
+              },
               {
                 id: "b",
-                label:
-                  "Misuri dove il sistema viene aggirato e perché: quali componenti vengono 'detachati', quali richieste sono in coda da quanto tempo, quali casi d'uso non sono coperti",
+                label: "Misuri dove il sistema viene aggirato, e perché, prima di agire",
               },
-              { id: "c", label: "Fai formazione sui componenti disponibili" },
-              { id: "d", label: "Aggiungi più componenti per coprire più casi" },
+              {
+                id: "c",
+                label: "Fai formazione sui componenti disponibili e sulla documentazione",
+              },
+              {
+                id: "d",
+                label: "Aggiungi i componenti che mancano, prendendoli dal backlog",
+              },
             ],
             correctId: "b",
             explanation:
-              "La bassa adozione è quasi sempre un sintomo, e le cause più frequenti sono due: il sistema non copre casi reali, oppure ottenere una modifica richiede troppo tempo. Entrambe sono diagnosticabili dai dati che il sistema già produce. Imporre l'uso (a) senza rimuovere la causa produce conformità di facciata: i team useranno il componente e poi lo sovrascriveranno con CSS locale, che è lo scenario peggiore perché diventa invisibile.",
+              "La bassa adozione è un sintomo, e le due cause frequenti — copertura insufficiente e tempi di risposta lunghi — sono entrambe diagnosticabili dai dati che il sistema già produce. La (a) produce conformità di facciata, che è lo scenario peggiore: useranno il componente e lo sovrascriveranno con CSS locale, rendendo il problema invisibile. La (d) è ragionevole e parziale: il backlog riflette solo chi già partecipa, quindi non dice nulla sui cinque team silenziosi. La (c) presuppone che il problema sia la conoscenza.",
           },
           {
             id: "q5",
             prompt:
-              "Devi deprecare il vecchio componente Modal in favore di Dialog. 60 punti d'uso in 8 team. Qual è il piano corretto?",
+              "Devi deprecare il vecchio Modal in favore di Dialog: 60 punti d'uso in 8 team. Qual è il piano corretto?",
             options: [
               {
                 id: "a",
-                label:
-                  "Annunci la deprecazione, fornisci guida di migrazione e codemod, marchi il vecchio come deprecato negli strumenti (con avviso in console e nota nel file di design), dichiari una data di rimozione ad almeno un ciclo di distanza, e la rispetti",
+                label: "Annunci, dai codemod e guida, marchi deprecato, fissi la data",
               },
-              { id: "b", label: "Rimuovi Modal e lasci che i team si adeguino" },
-              { id: "c", label: "Mantieni entrambi indefinitamente per non rompere nulla" },
-              { id: "d", label: "Rinomini Modal in Dialog mantenendo la stessa API" },
+              {
+                id: "b",
+                label: "Rimuovi Modal e lasci che gli otto team si adeguino al volo",
+              },
+              {
+                id: "c",
+                label: "Mantieni entrambi a tempo indeterminato per non rompere nulla",
+              },
+              {
+                id: "d",
+                label: "Rinomini Modal in Dialog conservando la stessa API pubblica",
+              },
             ],
             correctId: "a",
             explanation:
-              "Le due parti che vengono saltate più spesso sono il codemod e il rispetto della data. Senza automazione, la migrazione compete con le priorità di prodotto degli otto team e perde sempre. Senza una data rispettata, la deprecazione diventa rumore che tutti imparano a ignorare — e alla terza deprecazione annunciata e mai eseguita, nessuno si muoverà più. Mantenere entrambi per sempre (c) è la scelta che sembra gentile e che uccide i sistemi per accumulo.",
-          },
+              "Le due parti che vengono saltate più spesso sono il codemod e il rispetto della data. Senza automazione la migrazione compete con le priorità di prodotto di otto team e perde sempre; senza una data rispettata almeno una volta, ogni deprecazione successiva è trattabile. La (d) è il distrattore più subdolo perché sembra indolore: rinominare senza cambiare l'API lascia il vecchio comportamento sotto un nome nuovo, quindi paghi la migrazione e non incassi il beneficio. La (c) è la scelta gentile che uccide i sistemi per accumulo.",
+          }
         ],
       },
       {
@@ -475,87 +515,131 @@ export const avanzatoModules: Module[] = [
             prompt:
               "Il PM chiede: 'gli utenti userebbero una funzione di condivisione del report?'. Come imposti la ricerca?",
             options: [
-              { id: "a", label: "Sondaggio a 500 utenti chiedendo se la userebbero" },
+              {
+                id: "a",
+                label: "Sondaggio su cinquecento utenti, chiedendo se la userebbero",
+              },
               {
                 id: "b",
-                label:
-                  "Cerchi prima cosa fa già la gente oggi: quante volte esportano PDF e li mandano via email, come chiamano quel gesto, quali soluzioni improvvisate hanno costruito",
+                label: "Guardi cosa fanno già: export, invii, soluzioni improvvisate",
               },
-              { id: "c", label: "8 interviste chiedendo l'interesse per la funzione" },
-              { id: "d", label: "Un fake door test con un pulsante finto" },
+              {
+                id: "c",
+                label: "Otto interviste in profondità sull'interesse per la funzione",
+              },
+              {
+                id: "d",
+                label: "Un fake door test con un pulsante finto e i click misurati",
+              },
             ],
             correctId: "b",
             explanation:
-              "Le dichiarazioni di intenzione futura sono il dato meno affidabile che la ricerca produca: la gente sopravvaluta sistematicamente il proprio interesse per ciò che non esiste. Il comportamento attuale invece è verificabile e già disponibile — chi condivide già i report con metodi macchinosi ha dimostrato il bisogno con il proprio tempo. Il fake door (d) è metodologicamente valido e vale come secondo passo, ma ha un costo di fiducia e va usato quando l'evidenza comportamentale non basta.",
+              "Le dichiarazioni di intenzione futura sono il dato meno affidabile che la ricerca produca: la gente sopravvaluta il proprio interesse per ciò che non esiste. Il comportamento attuale è verificabile e già disponibile a costo zero — chi condivide con metodi macchinosi ha dimostrato il bisogno col proprio tempo. La (d) è metodologicamente valida ed è il secondo passo giusto: costa fiducia, quindi va dopo l'evidenza gratuita. La (a) e la (c) differiscono solo per numerosità e fanno entrambe la stessa domanda ipotetica.",
           },
           {
             id: "q2",
             prompt:
               "Durante un test di usabilità il partecipante si blocca e chiede: 'dovrei cliccare qui?'. Cosa rispondi?",
             options: [
-              { id: "a", label: "'Sì, è quello il percorso corretto'" },
-              { id: "b", label: "'Cosa ti aspetteresti che succeda se lo facessi?'" },
-              { id: "c", label: "'Non posso rispondere, prosegui come faresti a casa tua'" },
-              { id: "d", label: "'Non c'è una risposta giusta, fai come ti viene naturale'" },
+              {
+                id: "a",
+                label: "'Sì, è quello il percorso corretto per questo compito'",
+              },
+              {
+                id: "b",
+                label: "'Cosa ti aspetteresti che succeda?' e poi lasci il silenzio",
+              },
+              {
+                id: "c",
+                label: "'Non posso rispondere, prosegui come faresti a casa tua'",
+              },
+              {
+                id: "d",
+                label: "'Non c'è una risposta giusta, fai come ti viene naturale'",
+              },
             ],
             correctId: "b",
             explanation:
-              "Rigirare la domanda mantiene il partecipante nel compito e trasforma un momento di stallo nel dato più prezioso del test: il modello mentale. Le risposte C e D sono corrette nell'intenzione ma sprecano l'occasione, e C in particolare suona come un rifiuto che aumenta il disagio di chi è già bloccato. Rispondere (a) contamina tutto ciò che segue e rende il resto della sessione inutilizzabile.",
+              "Rigirare la domanda tiene il partecipante nel compito e trasforma uno stallo nel dato più prezioso della sessione: il modello mentale. La (c) e la (d) sono corrette nell'intenzione e sprecano l'occasione — e la (c) in particolare suona come un rifiuto, aumentando il disagio di chi è già bloccato. La (a) contamina tutto ciò che segue e rende inutilizzabile il resto della sessione. Il dettaglio operativo che quasi nessuno applica è la seconda metà della (b): il silenzio dopo la domanda.",
           },
           {
             id: "q3",
             prompt:
-              "Hai fatto 8 interviste. 6 partecipanti citano un problema di lentezza. Come lo riporti?",
+              "Hai fatto 8 interviste e 6 partecipanti citano un problema di lentezza. Come lo riporti?",
             options: [
-              { id: "a", label: "'Gli utenti trovano il prodotto lento'" },
+              {
+                id: "a",
+                label: "'Gli utenti trovano lento il caricamento della dashboard'",
+              },
               {
                 id: "b",
-                label:
-                  "'6 partecipanti su 8 hanno menzionato l'attesa senza che fosse chiesto, tutti riferendosi al caricamento della dashboard. Tre hanno descritto una soluzione improvvisata: la tengono aperta in una scheda per non ricaricarla.'",
+                label: "'6 su 8 l'hanno citata spontaneamente, 3 con un rimedio proprio'",
               },
-              { id: "c", label: "'La performance è il problema principale segnalato'" },
-              { id: "d", label: "'Il 75% degli utenti riporta problemi di performance'" },
+              {
+                id: "c",
+                label: "'La performance è il problema principale segnalato in assoluto'",
+              },
+              {
+                id: "d",
+                label: "'Il 75% degli utenti riporta problemi di prestazioni gravi'",
+              },
             ],
             correctId: "b",
             explanation:
-              "B riporta il conteggio esatto sul campione, specifica che il tema è emerso spontaneamente (molto più forte di una risposta sollecitata), circoscrive il punto preciso, e aggiunge il comportamento compensatorio — che è la prova più forte perché mostra un costo che la gente sta già pagando. D è l'errore grave: trasformare 6 su 8 in una percentuale suggerisce una generalizzabilità che un campione di 8 non ha, ed è il modo più rapido per perdere credibilità con chiunque conosca la statistica.",
+              "La (b) riporta il conteggio esatto sul campione, specifica che il tema è emerso senza essere sollecitato — molto più forte di una risposta indotta — e aggiunge il comportamento compensatorio, che è la prova migliore perché mostra un costo già pagato. La (d) è l'errore grave: trasformare 6 su 8 in una percentuale suggerisce una generalizzabilità che un campione di otto non ha, e con chiunque conosca la statistica ti costa la credibilità. La (a) e la (c) perdono il numero, e senza numero non c'è niente su cui agire.",
           },
           {
             id: "q4",
             prompt:
-              "Un test A/B su una nuova onboarding mostra +12% di completamento con p = 0,04 dopo 4 giorni. Il PM vuole rilasciare. Cosa segnali?",
+              "Un test A/B sulla nuova onboarding mostra +12% di completamento con p = 0,04 dopo 4 giorni. Il PM vuole rilasciare. Cosa segnali?",
             options: [
-              { id: "a", label: "Nulla, p < 0,05: il risultato è significativo" },
+              {
+                id: "a",
+                label: "Niente: con p sotto 0,05 il risultato è significativo",
+              },
               {
                 id: "b",
-                label:
-                  "Che fermare un test al primo momento in cui p scende sotto la soglia gonfia i falsi positivi (peeking), che 4 giorni non coprono un ciclo settimanale completo, e che va verificato l'effetto sulla ritenzione a valle e non solo sul completamento",
+                label: "Fermarsi al primo p buono gonfia i falsi positivi, e manca la settimana",
               },
-              { id: "c", label: "Che serve un campione più grande" },
-              { id: "d", label: "Che il 12% è troppo alto per essere credibile" },
+              {
+                id: "c",
+                label: "Serve un campione più ampio per stringere l'intervallo",
+              },
+              {
+                id: "d",
+                label: "Un +12% è troppo alto per essere credibile su un onboarding",
+              },
             ],
             correctId: "b",
             explanation:
-              "Tre problemi distinti, tutti frequenti. Il peeking: controllare ripetutamente e fermarsi quando il valore piace fa salire il tasso reale di falsi positivi ben oltre il 5% dichiarato — serve una durata fissata in anticipo o un metodo sequenziale progettato per questo. La stagionalità settimanale: gli utenti del fine settimana si comportano diversamente da quelli infrasettimanali. E soprattutto la metrica: più completamento dell'onboarding può significare aver fatto passare gente non qualificata, con ritenzione peggiore a 30 giorni. È la trappola classica dell'ottimizzazione di una metrica di superficie.",
+              "Tre problemi in uno: il peeking, che fa salire il tasso reale di falsi positivi ben oltre il 5% dichiarato; la stagionalità settimanale, che quattro giorni non coprono; e soprattutto la metrica, perché più completamento può significare aver fatto passare gente non qualificata, con ritenzione peggiore a trenta giorni. La (c) confonde precisione con validità: un campione più grande non sana una regola d'arresto decisa dopo. La (d) rifiuta un risultato per intuizione invece che per metodo.",
           },
           {
             id: "q5",
             prompt:
               "La direzione ha già deciso di costruire una funzione e chiede una ricerca 'per validare'. Come ti comporti?",
             options: [
-              { id: "a", label: "Rifiuti: è ricerca di conferma, non è etica" },
+              {
+                id: "a",
+                label: "Rifiuti: è ricerca di conferma e non produce informazione",
+              },
               {
                 id: "b",
-                label:
-                  "Accetti riformulando: non 'è una buona idea?' ma 'quali sono i modi in cui questa funzione potrebbe fallire e cosa possiamo cambiare adesso per evitarli?' — utile alla decisione già presa e onesto",
+                label: "Riformuli: non 'è buona', ma 'come può fallire e cosa cambiamo'",
               },
-              { id: "c", label: "Fai la ricerca come richiesta e riporti i risultati" },
-              { id: "d", label: "Proponi di rimandare la decisione fino ai risultati" },
+              {
+                id: "c",
+                label: "Esegui come richiesto e riporti i risultati senza commento",
+              },
+              {
+                id: "d",
+                label: "Proponi di sospendere la decisione finché non arrivano i dati",
+              },
             ],
             correctId: "b",
             explanation:
-              "Quando la decisione è presa e non è reversibile, la ricerca valutativa sulla bontà dell'idea è denaro sprecato: nessun risultato la cambierà. Ma la ricerca generativa sull'esecuzione ha ancora tutto il suo valore, perché il come è ancora aperto. Rifiutare (a) è coerente ma costa il posto al tavolo, e chi non è al tavolo non influenza la decisione successiva. Riformulare la domanda è la competenza politica centrale del ricercatore senior.",
-          },
+              "Quando la decisione è presa e non è reversibile, la ricerca valutativa sulla bontà dell'idea è denaro sprecato: nessun risultato la cambierà. Ma il come è ancora aperto, e lì la ricerca generativa conserva tutto il suo valore. La (a) è coerente e costa il posto al tavolo, e chi non è al tavolo non influenza la decisione dopo. La (d) chiede una cosa che non verrà concessa, quindi brucia credibilità senza ottenere nulla. La (c) esegue senza esercitare la competenza per cui sei lì.",
+          }
         ],
       },
       {
@@ -852,93 +936,133 @@ export const avanzatoModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il tuo campo di testo ha bordo #E5E7EB su sfondo bianco. Il designer sostiene che è conforme perché il testo interno ha contrasto 12:1. Chi ha ragione?",
+              "Il tuo campo di testo ha bordo #E5E7EB su bianco. Il designer dice che è conforme perché il testo interno ha contrasto 12:1. Chi ha ragione?",
             options: [
-              { id: "a", label: "Il designer: conta il contrasto del testo" },
+              {
+                id: "a",
+                label: "Il designer: il criterio di contrasto si applica al testo",
+              },
               {
                 id: "b",
-                label:
-                  "No: il criterio 1.4.11 richiede 3:1 anche per i bordi dei componenti interattivi, perché servono a identificare l'elemento. #E5E7EB su bianco è circa 1,2:1",
+                label: "No: 1.4.11 chiede 3:1 anche ai bordi dei componenti attivi",
               },
-              { id: "c", label: "Dipende dalla dimensione del campo" },
-              { id: "d", label: "È conforme se c'è un'etichetta esterna" },
+              {
+                id: "c",
+                label: "Dipende dalla dimensione del campo e dallo spessore del bordo",
+              },
+              {
+                id: "d",
+                label: "È conforme se un'etichetta esterna identifica il campo",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il criterio 1.4.11 (Non-text Contrast, AA) copre le informazioni non testuali necessarie a identificare i componenti dell'interfaccia e i loro stati. Il bordo di un campo è ciò che comunica dove si può scrivere: se è invisibile per chi ha ipovisione o guarda lo schermo in pieno sole, il componente non è identificabile. È la violazione più diffusa nei design 'minimali', e la più facile da correggere.",
+              "Il criterio 1.4.11 copre le informazioni non testuali necessarie a identificare i componenti e i loro stati, e il bordo di un campo è ciò che comunica dove si può scrivere: a 1,2:1 è invisibile a chi ha ipovisione o guarda lo schermo in pieno sole. La (d) è il distrattore migliore perché confonde due cose diverse: l'etichetta dice a cosa serve il campo, non dove si trova l'area in cui digitare. La (c) inventa una soglia che nella norma non esiste.",
           },
           {
             id: "q2",
             prompt:
-              "Un'intestazione fissa in cima alla pagina copre l'elemento che riceve il focus quando l'utente naviga da tastiera scorrendo. Quanto è grave?",
+              "Un'intestazione fissa copre l'elemento che riceve il focus quando si naviga da tastiera scorrendo la pagina. Quanto è grave?",
             options: [
-              { id: "a", label: "Fastidioso ma non è una violazione" },
+              {
+                id: "a",
+                label: "Fastidioso, ma non viola nessun criterio delle linee guida",
+              },
               {
                 id: "b",
-                label:
-                  "È una violazione di 2.4.12 Focus Not Obscured (AA in WCAG 2.2): l'elemento con il focus non deve essere completamente nascosto da contenuto creato dall'autore",
+                label: "Viola 2.4.12 Focus Not Obscured, livello AA nella WCAG 2.2",
               },
-              { id: "c", label: "È una violazione solo se l'utente non può scorrere" },
-              { id: "d", label: "Riguarda solo gli utenti di screen reader" },
+              {
+                id: "c",
+                label: "È una violazione solo se l'utente non può scorrere a mano",
+              },
+              {
+                id: "d",
+                label: "Riguarda solo chi usa uno screen reader, non chi vede",
+              },
             ],
             correctId: "b",
             explanation:
-              "È uno dei criteri introdotti dalla WCAG 2.2 proprio perché il problema era diventato endemico con la diffusione delle barre fisse. Colpisce chi naviga da tastiera e vede lo schermo — una popolazione ampia che include chi ha disabilità motorie e molti utenti esperti. Si risolve con `scroll-margin-top` sugli elementi focusabili, ed è una correzione di poche righe che quasi nessuno mette in specifica.",
+              "È uno dei criteri introdotti dalla 2.2 proprio perché le barre fisse avevano reso il problema endemico. La (d) inverte esattamente chi colpisce: riguarda chi naviga da tastiera e vede lo schermo — una popolazione ampia, che include disabilità motorie e utenti esperti. La (c) inventa un'esenzione che non esiste. Si risolve con scroll-margin-top sugli elementi focusabili: poche righe, e quasi nessuno le mette nella specifica di design.",
           },
           {
             id: "q3",
             prompt:
               "Una tabella ha 12 pulsanti icona 'Modifica' identici, uno per riga. Come li rendi accessibili?",
             options: [
-              { id: "a", label: "aria-label='Modifica' su ciascuno" },
+              {
+                id: "a",
+                label: "aria-label='Modifica' su ciascuno dei dodici pulsanti",
+              },
               {
                 id: "b",
-                label:
-                  "Un nome accessibile che includa il contesto della riga: 'Modifica la fattura 2024-0142'",
+                label: "Un nome col contesto: 'Modifica la fattura 2024-0142'",
               },
-              { id: "c", label: "Un title='Modifica' su ciascuno" },
-              { id: "d", label: "Basta l'icona, è universalmente comprensibile" },
+              {
+                id: "c",
+                label: "Un attributo title='Modifica' su ciascuno dei pulsanti",
+              },
+              {
+                id: "d",
+                label: "L'icona basta: la matita è compresa universalmente",
+              },
             ],
             correctId: "b",
             explanation:
-              "Chi usa uno screen reader spesso naviga per elenco di elementi interattivi, fuori dal contesto della tabella: dodici voci 'Modifica' identiche sono indistinguibili e il pannello va usato a tentativi. Il nome accessibile deve essere autosufficiente. Il `title` (c) è la soluzione peggiore: non appare su touch, ha supporto incoerente tra screen reader, e non è pensato per questo. Questo è un esempio perfetto di conformità formale che non produce usabilità.",
+              "Chi usa uno screen reader spesso naviga per elenco di elementi interattivi, fuori dal contesto della tabella: dodici voci 'Modifica' identiche sono indistinguibili e il pannello si usa a tentativi. La (a) è il distrattore che conta: passa qualunque controllo automatico e fallisce con l'utente, perché il nome c'è ma non discrimina. La (c) è peggio dell'assenza: title non appare su touch e ha supporto incoerente fra screen reader. Il nome accessibile deve essere autosufficiente.",
           },
           {
             id: "q4",
             prompt:
               "Il team propone di sostituire il CAPTCHA con un puzzle di trascinamento 'più divertente'. Cosa segnali?",
             options: [
-              { id: "a", label: "È un miglioramento: il CAPTCHA testuale è peggio" },
+              {
+                id: "a",
+                label: "È un miglioramento: il CAPTCHA testuale è peggiore per tutti",
+              },
               {
                 id: "b",
-                label:
-                  "Il criterio 3.3.8 (Accessible Authentication, AA in WCAG 2.2) vieta di richiedere un test cognitivo come unico passaggio di autenticazione; e un puzzle di trascinamento esclude anche chi ha disabilità motorie. Serve un'alternativa che non richieda né il puzzle né la memoria",
+                label: "3.3.8 vieta il test cognitivo obbligatorio, e il trascinamento esclude",
               },
-              { id: "c", label: "Va bene se c'è un'alternativa audio" },
-              { id: "d", label: "Va bene se si può saltare dopo tre tentativi" },
+              {
+                id: "c",
+                label: "Va bene se resta disponibile un'alternativa audio per chi non vede",
+              },
+              {
+                id: "d",
+                label: "Va bene se dopo tre tentativi la verifica si può saltare",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il 3.3.8 è uno dei criteri più fraintesi della 2.2 e uno dei più rilevanti nella pratica: vieta di rendere obbligatorio un test cognitivo (riconoscimento di oggetti, trascrizione, risoluzione di rompicapo) per autenticarsi, quando non esiste un'alternativa. L'alternativa audio (c) risolve per la vista ma non per il carico cognitivo. Le soluzioni conformi esistono e sono migliori per tutti: link magici via email, passkey, verifica lato server senza interazione.",
+              "Il criterio 3.3.8 vieta di rendere obbligatorio un test cognitivo per autenticarsi quando non esiste un'alternativa, e il trascinamento aggiunge una barriera motoria che il CAPTCHA testuale non aveva. La (c) è la correzione parziale più diffusa: risolve per la vista e non per il carico cognitivo, che è ciò che il criterio protegge. La (d) rende la barriera temporanea, non assente, e chiede all'utente di fallire tre volte prima. Le soluzioni conformi — passkey, link via email — sono migliori per tutti.",
           },
           {
             id: "q5",
             prompt:
-              "Lighthouse dà 100/100 sull'accessibilità. Il PM conclude che il prodotto è conforme. Cosa rispondi?",
+              "Lighthouse dà 100/100 sull'accessibilità e il PM conclude che il prodotto è conforme. Cosa rispondi?",
             options: [
-              { id: "a", label: "Confermi: 100/100 è il massimo ottenibile" },
+              {
+                id: "a",
+                label: "Confermi: cento su cento è il massimo punteggio ottenibile",
+              },
               {
                 id: "b",
-                label:
-                  "Che gli strumenti automatici intercettano solo una parte dei criteri — grosso modo un terzo — e non possono valutare ordine di lettura, sensatezza dei nomi accessibili, gestione del focus o completabilità dei flussi. Serve almeno un passaggio manuale da tastiera e con screen reader sui percorsi critici",
+                label: "Gli automatismi coprono una parte: servono tastiera e screen reader",
               },
-              { id: "c", label: "Che serve anche il test con axe DevTools" },
-              { id: "d", label: "Che 100/100 riguarda solo la homepage" },
+              {
+                id: "c",
+                label: "Serve affiancare un secondo strumento, per esempio axe DevTools",
+              },
+              {
+                id: "d",
+                label: "Quel punteggio vale solo per la pagina che è stata analizzata",
+              },
             ],
             correctId: "b",
             explanation:
-              "Un punteggio automatico perfetto è compatibile con un prodotto completamente inutilizzabile: un modulo può avere tutte le etichette corrette e un ordine di focus che salta avanti e indietro rendendolo incompilabile. Nessun controllo automatico può stabilire se un testo alternativo descrive davvero l'immagine, o se un flusso si può portare a termine senza mouse. Aggiungere un secondo strumento (c) non cambia la natura del limite.",
-          },
+              "Un punteggio automatico perfetto è compatibile con un prodotto inutilizzabile: un modulo può avere tutte le etichette corrette e un ordine di focus che lo rende incompilabile. La (c) è il distrattore per chi conosce gli strumenti, e sbaglia sulla natura del limite: aggiungere un secondo scanner amplia la copertura di ciò che è automatizzabile, non la sposta. Nessun controllo automatico può dire se un testo alternativo descrive l'immagine o se un flusso si completa senza mouse. La (d) è vera e irrilevante.",
+          }
         ],
       },
       {

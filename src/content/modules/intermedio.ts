@@ -86,97 +86,141 @@ export const intermedioModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "In un'app di gestione file, il pulsante 'Elimina definitivamente' è largo, colorato e adiacente a 'Salva'. Qual è la lettura più precisa del problema?",
-            options: [
-              { id: "a", label: "Viola la legge di Hick: troppe opzioni vicine" },
-              {
-                id: "b",
-                label:
-                  "Viola la legge di Fitts al contrario: un'azione distruttiva è resa facile da colpire quanto una costruttiva",
-              },
-              { id: "c", label: "Viola la legge di Miller: sovraccarico di memoria" },
-              { id: "d", label: "Non è un problema se c'è un dialogo di conferma" },
-            ],
-            correctId: "b",
-            explanation:
-              "Fitts non dice solo 'fai i bersagli grandi': dice che dimensione e vicinanza determinano la probabilità di colpire. Applicata al design difensivo, significa che le azioni irreversibili vanno rese deliberatamente più costose da raggiungere. Il dialogo di conferma non risolve: gli utenti li chiudono in automatico dopo la terza volta (banner blindness applicata ai modali). La risposta migliore resta rendere l'azione reversibile — un annulla di 10 secondi batte qualsiasi conferma.",
-          },
-          {
-            id: "q2",
-            prompt:
-              "Il PM chiede di ridurre le voci del menù principale da 9 a 5 'perché la legge di Miller dice massimo 7'. Cosa rispondi?",
+              "In un gestore di file, 'Elimina definitivamente' è largo, colorato e a 12px da 'Salva'. Qual è la lettura precisa del difetto?",
             options: [
               {
                 id: "a",
                 label:
-                  "Ha ragione, 7±2 è il limite di elementi visualizzabili in un'interfaccia",
+                  "Viola Hick: due azioni adiacenti allungano il tempo di decisione",
               },
               {
                 id: "b",
                 label:
-                  "Miller riguarda la memoria di lavoro, non gli elementi visibili: un menù è sempre lì da leggere, non va ricordato. Il criterio giusto è se le etichette corrispondono a categorie mentali reali",
+                  "Viola Fitts: un'azione irreversibile è colpibile quanto quella utile",
               },
-              { id: "c", label: "Meglio 3 voci, secondo la legge di Hick" },
-              { id: "d", label: "Il numero è irrilevante, conta solo il contrasto" },
+              {
+                id: "c",
+                label:
+                  "Viola Miller: due pulsanti simili saturano la memoria di lavoro",
+              },
+              {
+                id: "d",
+                label:
+                  "Non è un difetto: il dialogo di conferma copre il rischio residuo",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il 7±2 di Miller (1956) descrive quanti chunk si tengono nella memoria di lavoro a breve termine. Un menù persistente non impegna la memoria: è disponibile alla lettura. Ridurre le voci può essere giusto per altri motivi (scansione visiva, gerarchia, focus strategico), ma citare Miller è un errore tecnico — ed è il tipo di errore che un senior in stanza noterà. Il criterio corretto è la corrispondenza con il modello mentale, verificabile con un tree test.",
+              "Fitts lega dimensione e distanza alla probabilità di colpire un bersaglio: applicata al design difensivo, dice che un'azione irreversibile va resa deliberatamente più costosa da raggiungere. Hick (a) riguarda il numero di alternative, non la loro vicinanza. Miller (c) riguarda quanti elementi si tengono a mente, e qui non c'è niente da ricordare. La (d) è la trappola più insidiosa perché è quasi vera: il dialogo esiste, ma dopo la terza volta si chiude in automatico — la cura reale è rendere l'azione annullabile, non chiedere conferma.",
+          },
+          {
+            id: "q2",
+            prompt:
+              "Il PM vuole ridurre il menù da 9 a 5 voci 'perché Miller dice massimo 7'. Cosa rispondi?",
+            options: [
+              {
+                id: "a",
+                label:
+                  "Ha ragione: oltre sette elementi la memoria di lavoro si satura",
+              },
+              {
+                id: "b",
+                label:
+                  "Miller riguarda la memoria, non un menù sempre rileggibile",
+              },
+              {
+                id: "c",
+                label:
+                  "Meglio tre voci: Hick premia sempre il numero minimo di scelte",
+              },
+              {
+                id: "d",
+                label:
+                  "Il numero conta solo su mobile, dove lo spazio è più stretto",
+              },
+            ],
+            correctId: "b",
+            explanation:
+              "Il 7±2 di Miller (1956) descrive quanti elementi si trattengono nella memoria di lavoro. Un menù persistente non impegna la memoria: è lì da leggere. La (a) ripete l'errore diffuso. La (c) sbaglia su Hick, che dice che il tempo di decisione cresce col logaritmo delle opzioni — quindi spezzare 9 voci in tre menù da tre aggiunge passi di navigazione e spesso peggiora. La (d) confonde un vincolo di spazio con un vincolo cognitivo. Ridurre le voci può essere giusto, ma per corrispondenza col modello mentale, verificabile con un tree test.",
           },
           {
             id: "q3",
             prompt:
-              "Un flusso di iscrizione in 5 passi ha un tasso di completamento alto ma gli utenti lo descrivono come 'faticoso'. L'ultimo passo è una schermata bianca con scritto 'Fatto'. Qual è l'intervento a più alto rapporto valore/costo?",
+              "Un'iscrizione in 5 passi ha completamento alto, ma gli utenti la descrivono come 'faticosa'. L'ultimo passo è una schermata bianca con 'Fatto'. Intervento a maggior valore?",
             options: [
-              { id: "a", label: "Ridurre i passi da 5 a 3 accorpando i campi" },
+              {
+                id: "a",
+                label: "Accorpare i campi per scendere da cinque passi a tre",
+              },
               {
                 id: "b",
-                label:
-                  "Lavorare sulla chiusura: l'effetto peak-end dice che il ricordo dell'esperienza è dominato dal picco e dalla fine, e qui la fine è vuota",
+                label: "Lavorare sulla chiusura, perché è la fine che si ricorda",
               },
-              { id: "c", label: "Aggiungere una barra di avanzamento" },
-              { id: "d", label: "Spostare i campi opzionali dopo l'iscrizione" },
+              {
+                id: "c",
+                label: "Aggiungere una barra di avanzamento con i passi numerati",
+              },
+              {
+                id: "d",
+                label: "Spostare i campi facoltativi a dopo la prima iscrizione",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il dato dice che il flusso funziona (completamento alto): il problema è il ricordo, non la performance. Kahneman e Redelmeier hanno mostrato che la valutazione retrospettiva di un'esperienza dipende dal momento di picco e dal finale, quasi non dalla durata ('duration neglect'). Accorpare campi (a) rischia di peggiorare la densità percepita a fronte di un problema che non è di efficienza. Una chiusura che riconosce lo sforzo e mostra il primo valore ottenuto costa poco e cambia il ricordo.",
+              "Il dato dice che il flusso funziona: il problema è il ricordo, non l'efficienza. Kahneman e Redelmeier hanno mostrato che la valutazione retrospettiva dipende dal picco e dalla fine, quasi non dalla durata — è il 'duration neglect'. Per questo (a) e (d), che accorciano, curano un sintomo che non c'è, e (a) rischia di peggiorare la densità percepita. La (c) è la risposta che quasi tutti danno: informa sul progresso ma non tocca il finale, che qui è vuoto. Una chiusura che riconosce lo sforzo e mostra il primo valore ottenuto costa poco e cambia il ricordo.",
           },
           {
             id: "q4",
             prompt:
-              "Stai progettando un configuratore per una polizza assicurativa: 14 variabili interdipendenti, per legge tutte necessarie. Il capo chiede 'semplificalo'. Qual è la mossa corretta secondo la legge di Tesler?",
+              "Un configuratore assicurativo ha 14 variabili interdipendenti, tutte obbligatorie per legge. Il capo dice 'semplificalo'. Cosa fai, secondo Tesler?",
             options: [
-              { id: "a", label: "Nascondere le variabili avanzate in un accordion" },
+              {
+                id: "a",
+                label: "Sposti le variabili avanzate dentro una sezione a soffietto",
+              },
               {
                 id: "b",
-                label:
-                  "Precompilare con default intelligenti derivati dai dati già in nostro possesso e dai casi più frequenti, lasciando modificabile tutto",
+                label: "Precompili con default derivati dai dati che già possiedi",
               },
-              { id: "c", label: "Dividere in 14 schermate da una domanda ciascuna" },
-              { id: "d", label: "Ridurre le variabili a 6 e ignorare le altre" },
+              {
+                id: "c",
+                label: "Dividi in quattordici schermate con una domanda ciascuna",
+              },
+              {
+                id: "d",
+                label: "Riduci a sei variabili e calcoli le altre per stima",
+              },
             ],
             correctId: "b",
             explanation:
-              "La complessità è irriducibile per vincolo legale: non si elimina, si sposta. Nasconderla (a) la lascia sull'utente, solo meno visibile. Spalmarla su 14 schermate (c) la aumenta aggiungendo navigazione. Rimuoverla (d) non è un'opzione. I default intelligenti la spostano sul sistema: il sistema fa il lavoro di indovinare, l'utente fa il lavoro di correggere — e correggere è molto più economico che compilare. È lo stesso principio dietro l'autocompletamento degli indirizzi.",
+              "La legge di Tesler dice che la complessità non si elimina, si sposta: la domanda è chi se la prende. La (a) la lascia sull'utente, solo meno visibile. La (c) la aumenta, aggiungendo navigazione a parità di campi. La (d) è la più tentatrice e la più pericolosa: con vincoli di legge, stimare significa produrre un preventivo non valido. I default intelligenti spostano il lavoro sul sistema, che indovina, e lasciano all'utente solo il correggere — che costa molto meno del compilare. È lo stesso principio dell'autocompletamento degli indirizzi.",
           },
           {
             id: "q5",
             prompt:
-              "Devi assegnare la severità a due difetti: (A) l'icona di export è ambigua, gli utenti la trovano al secondo tentativo, la usa il 60% degli utenti ogni settimana; (B) il flusso di cancellazione account si blocca al terzo passo, lo usa lo 0,5% degli utenti. Quale prioritizzi e perché?",
+              "Due difetti: (A) icona di export ambigua, trovata al secondo tentativo, usata dal 60% ogni settimana. (B) la cancellazione account si blocca al terzo passo, la usa lo 0,5%. Quale prioritizzi?",
             options: [
-              { id: "a", label: "A, perché tocca molti più utenti" },
+              {
+                id: "a",
+                label: "A, perché la frequenza settimanale moltiplica il fastidio",
+              },
               {
                 id: "b",
-                label:
-                  "B, perché è un blocco totale su un'azione che l'utente non può portare a termine in nessun altro modo, e ha implicazioni legali (GDPR)",
+                label: "B, perché blocca un compito senza alternative ed è un obbligo",
               },
-              { id: "c", label: "A, perché si ripete ogni settimana" },
-              { id: "d", label: "Pari severità: uno per frequenza, uno per impatto" },
+              {
+                id: "c",
+                label: "A, perché tocca centoventi volte più utenti ogni settimana",
+              },
+              {
+                id: "d",
+                label: "Pari: una vince per frequenza, l'altra per gravità del blocco",
+              },
             ],
             correctId: "b",
             explanation:
-              "Frequenza × impatto × persistenza, ma con una regola sopra tutte: un blocco che impedisce di completare un compito senza alternative ha severità massima a prescindere dalla frequenza. In più qui c'è un rischio di compliance (diritto alla cancellazione). Il difetto A è reale e va risolto, ma è un attrito da 'secondo tentativo', non un muro. Chi prioritizza solo per numero di utenti impattati sbaglia sistematicamente sui difetti gravi delle code lunghe — e sono quelli che finiscono su X e nelle segnalazioni all'autorità.",
-          },
+              "Frequenza, impatto e persistenza contano, ma una regola sta sopra: un blocco che impedisce di portare a termine un compito senza alcuna alternativa ha gravità massima a prescindere da quanti lo incontrano. Qui si somma il diritto alla cancellazione del GDPR, quindi è anche esposizione legale. Le (a) e (c) applicano correttamente due assi reali al caso sbagliato: il difetto A è attrito da secondo tentativo, non un muro. La (d) sembra equilibrata e in pratica non decide — ed è così che i difetti gravi delle code lunghe restano aperti per anni.",
+          }
         ],
       },
       {
@@ -477,100 +521,133 @@ export const intermedioModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Il prodotto ha una navigazione a 9 voci che il team sospetta non funzioni. Nessuno sa dire dove sia il problema. Budget: due settimane, nessuna incentivazione economica per i partecipanti. Quale metodo scegli per primo?",
+              "Il prodotto ha una nav a 9 voci che il team sospetta non funzioni, ma nessuno sa dove sia il problema. Due settimane, nessun incentivo per i partecipanti. Da cosa parti?",
             options: [
-              { id: "a", label: "Card sort aperto con 20 utenti" },
+              {
+                id: "a",
+                label: "Card sort aperto su venti utenti, per far emergere i gruppi",
+              },
               {
                 id: "b",
-                label:
-                  "Tree test remoto con 40 utenti su 6 compiti frequenti, preceduto dall'analisi delle query di ricerca interna",
+                label: "Tree test remoto su quaranta utenti con sei compiti reali",
               },
-              { id: "c", label: "5 interviste in profondità" },
-              { id: "d", label: "Test di usabilità moderato su prototipo" },
+              {
+                id: "c",
+                label: "Cinque interviste in profondità sull'uso quotidiano",
+              },
+              {
+                id: "d",
+                label: "Test di usabilità moderato su un prototipo navigabile",
+              },
             ],
             correctId: "b",
             explanation:
-              "La domanda è diagnostica ('dov'è il problema?') su una struttura che esiste già. Il tree test è l'unico metodo che ti dà, per ogni compito, il tasso di successo, il percorso seguito e il punto esatto di abbandono. L'analisi dei log di ricerca costa zero e ti dice quali compiti mettere nel test. Il card sort aperto (a) genera struttura, non la diagnostica. Il test moderato (d) mescola struttura e design visivo: se fallisce non sai a chi dare la colpa.",
+              "La domanda è diagnostica su una struttura che esiste già, e il tree test è l'unico metodo che per ogni compito restituisce tasso di successo, percorso seguito e punto esatto di abbandono. Il card sort (a) genera struttura, non la diagnostica: è il metodo giusto per la domanda sbagliata. Le interviste (c) danno racconti, non tassi. Il test moderato (d) è il distrattore più forte perché è un metodo eccellente, ma mescola struttura e design visivo: se il compito fallisce non sai a quale dei due attribuirlo.",
           },
           {
             id: "q2",
             prompt:
-              "In un tree test, il compito 'trova come esportare i dati fiscali' ha successo del 38%, e il 45% dei partecipanti passa da 'Impostazioni' prima di trovarlo sotto 'Report'. Come leggi il dato?",
+              "Nel tree test il compito 'trova come esportare i dati fiscali' ha successo del 38%, e il 45% passa da 'Impostazioni' prima di trovarlo sotto 'Report'. Come agisci?",
             options: [
               {
                 id: "a",
-                label: "Va spostato sotto Impostazioni, dove la gente lo cerca",
+                label: "Sposti la voce sotto Impostazioni, dove la gente la cerca",
               },
               {
                 id: "b",
-                label:
-                  "Il dato dice dove la gente guarda per prima; prima di spostarlo verifico se 'Report' fallisce anche per altri compiti e se un cross-link da Impostazioni risolve senza rompere la coerenza",
+                label: "Verifichi se Report falla anche su altri compiti del test",
               },
-              { id: "c", label: "Il 38% è accettabile per un compito raro" },
-              { id: "d", label: "Serve un altro test con più partecipanti" },
+              {
+                id: "c",
+                label: "Accetti il 38%: per un compito raro è una soglia normale",
+              },
+              {
+                id: "d",
+                label: "Ripeti il test con più partecipanti per confermare il dato",
+              },
             ],
             correctId: "b",
             explanation:
-              "Il percorso di primo click è il dato più prezioso di un tree test, ma spostare la voce sulla base di un singolo compito è il modo classico di rompere una struttura per aggiustare un caso. La lettura corretta guarda il pattern su tutti i compiti: se 'Report' fallisce solo qui, un puntatore da Impostazioni è la cura chirurgica; se fallisce ovunque, l'etichetta è sbagliata. Ricorda che la collocazione multipla è legittima — deve solo esistere una fonte canonica.",
+              "Il percorso di primo click è il dato più prezioso del tree test, e la (a) lo usa nel modo più naturale e più sbagliato: spostare una voce sulla base di un solo compito rompe la struttura per aggiustare un caso. Il pattern su tutti i compiti dice quale delle due cure serve — un puntatore da Impostazioni se Report falla solo qui, un'etichetta nuova se falla dappertutto. La (c) confonde rarità con accettabilità. La (d) è il modo più elegante di rinviare: quaranta partecipanti danno già numeri stabili.",
           },
           {
             id: "q3",
             prompt:
-              "Le query a zero risultati nella ricerca interna sono dominate da 'fattura', 'fatture', 'invoice', mentre nel prodotto la funzione si chiama 'Documenti contabili'. Qual è la conclusione più solida?",
+              "Le query a zero risultati sono dominate da 'fattura', 'fatture', 'invoice', mentre nel prodotto la funzione si chiama 'Documenti contabili'. Qual è la conclusione più solida?",
             options: [
-              { id: "a", label: "Vanno aggiunti sinonimi al motore di ricerca" },
+              {
+                id: "a",
+                label: "Aggiungere i sinonimi al motore di ricerca e chiudere qui",
+              },
               {
                 id: "b",
-                label:
-                  "I sinonimi risolvono il sintomo oggi; il segnale vero è che l'etichetta del prodotto non è la parola che gli utenti usano, e va cambiata anche nella navigazione",
+                label: "Cambiare l'etichetta: quella è la parola del dominio",
               },
-              { id: "c", label: "Gli utenti cercano una funzione che non esiste" },
-              { id: "d", label: "Il motore di ricerca ha un problema di stemming" },
+              {
+                id: "c",
+                label: "Gli utenti cercano una funzione che il prodotto non ha",
+              },
+              {
+                id: "d",
+                label: "Il motore sbaglia la riduzione delle parole alla radice",
+              },
             ],
             correctId: "b",
             explanation:
-              "Aggiungere sinonimi (a) è giusto e va fatto subito, ma tratta la ricerca come pezza di un'architettura sbagliata. Se centinaia di persone cercano 'fattura' significa che quella è la parola del dominio; 'Documenti contabili' è gergo interno. Le query a zero risultati sono la fonte più onesta di vocabolario utente che esista, ed è gratuita. Il fatto che sia gratuita è il motivo per cui quasi nessuno la guarda.",
+              "La (a) è il distrattore più difficile perché non è falsa: i sinonimi vanno aggiunti, e subito. È incompleta, e questa è la differenza che conta — tratta la ricerca come pezza di un'architettura sbagliata, mentre il segnale vero è che l'etichetta del prodotto non è la parola che la gente usa. La (c) è smentita dal fatto che la funzione esiste. La (d) è una spiegazione tecnica plausibile applicata all'osservazione sbagliata: lo stemming confonde 'fattura' con 'fatture', non con 'documenti contabili'.",
           },
           {
             id: "q4",
             prompt:
-              "Un catalogo B2B ha 8.000 prodotti con 12 attributi ciascuno. Gli utenti dicono 'non trovo mai quello che cerco'. Cosa progetti per primo?",
+              "Un catalogo B2B ha 8.000 prodotti con 12 attributi ciascuno, e gli utenti dicono 'non trovo quello che cerco'. Cosa progetti per primo?",
             options: [
-              { id: "a", label: "Una gerarchia di categorie più profonda" },
+              {
+                id: "a",
+                label: "Una gerarchia di categorie più profonda e più specifica",
+              },
               {
                 id: "b",
-                label:
-                  "Navigazione a faccette con conteggi per valore, filtri attivi rimuovibili e nessuna combinazione a zero risultati senza via d'uscita",
+                label: "Faccette con conteggi e filtri attivi rimuovibili a uno a uno",
               },
-              { id: "c", label: "Una ricerca con autocomplete" },
-              { id: "d", label: "Una home con i prodotti più venduti" },
+              {
+                id: "c",
+                label: "Una ricerca con completamento automatico sui nomi prodotto",
+              },
+              {
+                id: "d",
+                label: "Una home con i più venduti e le categorie più visitate",
+              },
             ],
             correctId: "b",
             explanation:
-              "8.000 oggetti con 12 attributi indipendenti è la definizione da manuale del problema che le faccette risolvono: nessuna gerarchia singola può servire tutti i modi in cui la gente restringe la ricerca (per compatibilità, per prezzo, per disponibilità, per marca...). Approfondire la gerarchia (a) obbliga a scegliere un solo asse. L'autocomplete (c) aiuta chi sa già il nome, che non è il caso descritto.",
+              "Ottomila oggetti con dodici attributi indipendenti è la definizione da manuale del problema che le faccette risolvono: nessuna gerarchia singola può servire tutti i modi in cui la gente restringe. La (a) è la reazione istintiva e obbliga a scegliere un solo asse — per compatibilità o per tipo, mai entrambi. La (c) aiuta chi conosce già il nome, che non è il caso descritto. La (d) serve la scoperta, non la ricerca di un ricambio compatibile: risolve il problema di un altro utente.",
           },
           {
             id: "q5",
             prompt:
-              "Il capo dell'area Marketing chiede che 'Novità' sia la prima voce di menù perché è il contenuto su cui il suo team investe. I dati dicono che riceve il 2% dei click. Qual è la risposta più efficace?",
+              "Il capo del Marketing chiede che 'Novità' sia la prima voce di menù perché è il contenuto su cui investe. I dati dicono che riceve il 2% dei click. Qual è la risposta più efficace?",
             options: [
-              { id: "a", label: "Accettare: è una richiesta legittima di un'area interna" },
+              {
+                id: "a",
+                label: "Accettare: è una richiesta legittima di un'area interna",
+              },
               {
                 id: "b",
-                label:
-                  "Rifiutare citando i dati di click",
+                label: "Mostrare che la nav non è la leva giusta, e portare l'alternativa",
               },
               {
                 id: "c",
-                label:
-                  "Mostrare che la posizione in navigazione non è la leva giusta per il suo obiettivo, e proporre l'alternativa che lo serve meglio (promozione contestuale nei punti dove l'utente è già ingaggiato), misurando entrambe",
+                label: "Rifiutare citando il 2% di click, che è un dato oggettivo",
               },
-              { id: "d", label: "Portare la decisione al livello superiore" },
+              {
+                id: "d",
+                label: "Portare la decisione al livello superiore e farla arbitrare",
+              },
             ],
-            correctId: "c",
+            correctId: "b",
             explanation:
-              "La navigazione principale è uno spazio a somma zero: ogni promozione è una retrocessione per qualcos'altro. Rifiutare con i dati (b) vince l'argomento e crea un avversario. La mossa efficace riconosce l'obiettivo legittimo — più attenzione ai contenuti — e sposta la conversazione sullo strumento: la nav è pessima per la promozione (la guardano quelli che sanno già cosa vogliono), mentre un modulo contestuale dove l'utente è già coinvolto rende molto di più. Serve il suo interesse meglio di quanto lo servisse la sua proposta.",
-          },
+              "La navigazione principale è uno spazio a somma zero: ogni promozione è una retrocessione. La (c) è la risposta che sembra più professionale ed è la peggiore sul lungo periodo: vince l'argomento e crea un avversario stabile. La (d) spende l'autorità di qualcun altro su un problema tuo, e ti toglie il tavolo. La (a) cede senza servire nemmeno il suo obiettivo. La mossa efficace riconosce l'obiettivo — più attenzione al contenuto — e sposta la conversazione sullo strumento: la nav la guardano quelli che sanno già cosa vogliono.",
+          }
         ],
       },
       {
@@ -810,101 +887,133 @@ export const intermedioModules: Module[] = [
           {
             id: "q1",
             prompt:
-              "Un'API restituisce i dati in media in 250ms, ma nel 5% dei casi impiega 4 secondi. Cosa progetti?",
+              "Un'API risponde in media in 250ms, ma nel 5% dei casi impiega 4 secondi. Cosa progetti?",
             options: [
-              { id: "a", label: "Uno spinner sempre, per coerenza" },
+              {
+                id: "a",
+                label: "Uno spinner sempre visibile, per coerenza fra le schermate",
+              },
               {
                 id: "b",
-                label:
-                  "Nessun indicatore sotto i 400ms, skeleton tra 400ms e ~1s, e oltre il secondo un messaggio che spiega l'attesa e mantiene il resto della pagina utilizzabile",
+                label: "Niente sotto 400ms, skeleton fino a un secondo, poi messaggio",
               },
-              { id: "c", label: "Un caricamento ottimistico che mostra dati finti" },
-              { id: "d", label: "Una barra di progresso indeterminata" },
+              {
+                id: "c",
+                label: "Un caricamento ottimistico con dati di esempio al posto dei veri",
+              },
+              {
+                id: "d",
+                label: "Una barra di avanzamento indeterminata dal primo istante",
+              },
             ],
             correctId: "b",
             explanation:
-              "Sotto i ~400ms l'attesa è percepita come istantanea e un indicatore la rende più lenta, perché attira l'attenzione su di essa. Lo skeleton nella fascia intermedia comunica struttura e riduce lo spostamento di layout all'arrivo dei dati. Oltre il secondo l'utente ha bisogno di sapere che il sistema è vivo. Il punto che distingue una risposta da mid da una da senior: progettare esplicitamente per la coda lenta del 5%, non per la media.",
+              "Sotto i 400ms circa l'attesa è percepita come istantanea, e un indicatore la fa sembrare più lenta perché ci porta l'attenzione: è l'errore che (a) e (d) condividono, con la (a) che aggiunge il costo di apparire su tutte le schermate veloci. Lo skeleton nella fascia intermedia comunica struttura e previene lo spostamento del layout. La (c) mostra all'utente dati falsi. Il dettaglio che distingue una risposta da mid da una da senior: si progetta per la coda lenta del 5%, non per la mediana.",
           },
           {
             id: "q2",
             prompt:
-              "Quale di questi messaggi di errore è progettato meglio, per un pagamento rifiutato dalla banca?",
+              "Quale messaggio è progettato meglio, per un pagamento rifiutato dalla banca?",
             options: [
-              { id: "a", label: "'Pagamento fallito. Errore 402.'" },
+              {
+                id: "a",
+                label: "'Pagamento rifiutato dalla banca. Errore 402: non completato.'",
+              },
               {
                 id: "b",
-                label:
-                  "'Ops! Qualcosa è andato storto 😅 Riprova!'",
+                label: "'La banca ha rifiutato. Non abbiamo addebitato nulla: usa un'altra carta.'",
               },
               {
                 id: "c",
-                label:
-                  "'La tua banca ha rifiutato il pagamento. Non abbiamo addebitato nulla e il tuo ordine è salvo. Prova con un'altra carta, oppure contatta la banca: spesso è un blocco di sicurezza sui pagamenti online.'",
+                label: "'Ops! Qualcosa è andato storto. Riprova, dovrebbe funzionare.'",
               },
               {
                 id: "d",
-                label:
-                  "'Non è stato possibile completare la transazione. Verifica i dati inseriti e riprova.'",
+                label: "'Non è stato possibile completare. Verifica i dati e riprova.'",
               },
             ],
-            correctId: "c",
+            correctId: "b",
             explanation:
-              "C fa tutti e tre i lavori: dice cosa è successo e chi ha deciso (la banca, non noi), rimuove la paura peggiore in un pagamento fallito ('mi hanno addebitato due volte?'), e offre due strade concrete. Il tono giocoso di B è esattamente sbagliato per un momento ad alto stress. D è educato ma manda l'utente a controllare dati che sono giusti — la causa non è quella, e mandare qualcuno a cercare un errore inesistente è peggio che non dire nulla.",
+              "Un errore utile dice cosa è successo, cosa fare adesso, e non fa sentire stupido chi legge. La (b) aggiunge la cosa che conta di più in un pagamento: rimuove la paura peggiore, l'addebito doppio. La (a) descrive lo stato interno del sistema. La (c) usa un tono giocoso nel momento di massimo stress. La (d) è il distrattore più insidioso perché è educata, chiara e grammaticalmente perfetta: manda l'utente a controllare dati che sono corretti, e cercare un errore che non esiste è peggio che non dire niente.",
           },
           {
             id: "q3",
             prompt:
-              "Stai progettando lo stato vuoto della sezione 'Report' di un prodotto B2B appena installato. Qual è l'obiettivo principale di quello schermo?",
+              "Stai progettando lo stato vuoto della sezione 'Report' in un prodotto B2B appena installato. Qual è l'obiettivo principale di quello schermo?",
             options: [
-              { id: "a", label: "Comunicare che non ci sono ancora dati" },
+              {
+                id: "a",
+                label: "Comunicare con chiarezza che non ci sono ancora dati",
+              },
               {
                 id: "b",
-                label:
-                  "Far compiere all'utente la prima azione che genererà dati, mostrando concretamente cosa vedrà dopo",
+                label: "Portare alla prima azione che genera dati, mostrando l'esito",
               },
-              { id: "c", label: "Mostrare un'illustrazione che alleggerisca il vuoto" },
-              { id: "d", label: "Offrire un link alla documentazione" },
+              {
+                id: "c",
+                label: "Mettere un'illustrazione che alleggerisca il senso di vuoto",
+              },
+              {
+                id: "d",
+                label: "Offrire un collegamento alla documentazione e ai video",
+              },
             ],
             correctId: "b",
             explanation:
-              "Lo stato vuoto della prima volta è lo schermo di onboarding più visto e meno progettato del prodotto. L'utente ci arriva già motivato — ha cliccato lì di proposito. Comunicare l'assenza (a) è un'informazione che ha già. Il pattern che funziona: anteprima realistica di cosa apparirà, una singola azione primaria per arrivarci, ed eventualmente dati d'esempio esplorabili. L'illustrazione decorativa è la risposta di chi tratta lo stato vuoto come un problema estetico.",
+              "È lo schermo di onboarding più visto e meno progettato del prodotto, e l'utente ci arriva già motivato: ha cliccato lì di proposito. La (a) gli comunica un'informazione che ha già sotto gli occhi. La (d) delega l'apprendimento a un altro posto, e chi è in un prodotto nuovo raramente esce per leggere. La (c) è la risposta di chi tratta lo stato vuoto come un problema estetico invece che come un passaggio del percorso. Il pattern che funziona è anteprima realistica più una sola azione primaria per arrivarci.",
           },
           {
             id: "q4",
             prompt:
-              "Un dialogo chiede: 'Vuoi annullare l'iscrizione?' con i pulsanti [Annulla] [OK]. Qual è il problema tecnico più grave?",
+              "Un dialogo chiede 'Vuoi annullare l'iscrizione?' con i pulsanti [Annulla] [OK]. Qual è il difetto più grave?",
             options: [
-              { id: "a", label: "'OK' non è abbastanza descrittivo" },
+              {
+                id: "a",
+                label: "'OK' è generico e non descrive l'azione che verrà eseguita",
+              },
               {
                 id: "b",
-                label:
-                  "'Annulla' è ambiguo perché il verbo dell'azione e il verbo del pulsante di uscita coincidono: l'utente non può sapere se annulla l'iscrizione o annulla il dialogo",
+                label: "'Annulla' collide col verbo dell'azione: il dialogo è indecidibile",
               },
-              { id: "c", label: "Manca un'icona di avvertimento" },
-              { id: "d", label: "I pulsanti sono nell'ordine sbagliato" },
+              {
+                id: "c",
+                label: "Manca l'icona di avvertimento su un'azione distruttiva",
+              },
+              {
+                id: "d",
+                label: "I pulsanti sono nell'ordine sbagliato per questa piattaforma",
+              },
             ],
             correctId: "b",
             explanation:
-              "È una collisione semantica, non una questione di chiarezza generica. Quando l'azione descritta contiene la parola che usi per il pulsante di rifiuto, il dialogo diventa indecidibile — e su un'azione distruttiva questo produce disiscrizioni non volute. La correzione è rendere entrambe le opzioni esplicite e diverse: '[Resta iscritto] [Disiscrivimi]'. Regola generale: mai etichette generiche in un dialogo, mai un'etichetta che ripete il verbo dell'azione con significato opposto.",
+              "La (a) è vera, ed è per questo il distrattore migliore del set: si ferma un passo prima. Anche sostituendo 'OK' con un'etichetta descrittiva, 'Annulla' resterebbe ambiguo — annulla l'iscrizione o annulla il dialogo? La collisione semantica rende il dialogo indecidibile a prescindere dall'altro pulsante, e su un'azione distruttiva produce disiscrizioni non volute. La cura è rendere entrambe le opzioni esplicite e diverse: '[Resta iscritto] [Disiscrivimi]'. La (c) e la (d) sono rifiniture su un difetto strutturale.",
           },
           {
             id: "q5",
             prompt:
-              "Il backend restituisce a volte errori grezzi tipo 'null constraint violation on user_ref'. Il team dice che rifarli tutti costa troppo. Qual è la proposta più solida da designer?",
+              "Il backend restituisce a volte errori grezzi tipo 'null constraint violation on user_ref'. Il team dice che rifarli tutti costa troppo. Cosa proponi?",
             options: [
-              { id: "a", label: "Accettare e documentare la limitazione" },
+              {
+                id: "a",
+                label: "Accettare il limite e documentarlo nelle note di rilascio",
+              },
               {
                 id: "b",
-                label:
-                  "Un fallback unico e ben scritto lato client per tutti gli errori non mappati, più la mappatura esplicita dei 10 errori più frequenti nei log: copre l'80% dei casi con un costo contenuto",
+                label: "Un fallback unico più i dieci errori più frequenti nei log",
               },
-              { id: "c", label: "Nascondere il dettaglio e mostrare solo 'Errore'" },
-              { id: "d", label: "Mostrare l'errore tecnico in un accordion 'dettagli'" },
+              {
+                id: "c",
+                label: "Nascondere il dettaglio e mostrare sempre un generico 'Errore'",
+              },
+              {
+                id: "d",
+                label: "Mostrare l'errore tecnico in una sezione 'dettagli' richiudibile",
+              },
             ],
             correctId: "b",
             explanation:
-              "La distribuzione degli errori in produzione è quasi sempre a coda lunga: pochi tipi coprono la maggior parte degli eventi. Chiedere di riscriverli tutti è una richiesta che verrà rifiutata; chiedere i primi dieci, con i numeri dei log in mano, è una richiesta che viene accettata. Il fallback protegge il resto. Questo è il tipo di proposta che distingue un designer con cui gli sviluppatori vogliono lavorare: parte dal vincolo reale e trova la leva più economica.",
-          },
+              "In produzione gli errori si distribuiscono a coda lunga: pochi tipi coprono la maggior parte degli eventi. Chiedere di riscriverli tutti è una richiesta che verrà rifiutata; chiederne dieci, con i numeri dei log in mano, è una richiesta che passa. La (c) peggiora la situazione, perché toglie all'utente anche l'unico indizio che aveva. La (d) sembra un compromesso trasparente e in realtà scarica sull'utente la traduzione. La (a) rinuncia senza aver provato la leva più economica disponibile.",
+          }
         ],
       },
       {
