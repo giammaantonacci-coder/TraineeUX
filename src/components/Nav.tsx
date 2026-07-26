@@ -5,14 +5,22 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ITEMS = [
-  { href: "/oggi", label: "Oggi", icon: HomeIcon },
+  { href: "/", label: "Oggi", icon: HomeIcon },
   { href: "/percorso", label: "Percorso", icon: PathIcon },
   { href: "/news", label: "News", icon: NewsIcon },
   { href: "/profilo", label: "Profilo", icon: ProfileIcon },
 ];
 
 function indexOfPath(pathname: string): number {
-  return Math.max(0, ITEMS.findIndex((item) => pathname.startsWith(item.href)));
+  const i = ITEMS.findIndex((item) =>
+    // La radice va confrontata per intero: con startsWith sarebbe attiva
+    // ovunque. "/oggi" è il vecchio indirizzo della stessa schermata e resta
+    // vivo per le installazioni già presenti su qualche telefono.
+    item.href === "/"
+      ? pathname === "/" || pathname === "/oggi"
+      : pathname.startsWith(item.href),
+  );
+  return Math.max(0, i);
 }
 
 /**

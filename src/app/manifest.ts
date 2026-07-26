@@ -17,7 +17,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "Percorso di allenamento in UX e product design dal livello intermedio all'expert: esercizi, progressi, premi e news di settore.",
     lang: "it",
     dir: "ltr",
-    start_url: "/oggi",
+    start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",

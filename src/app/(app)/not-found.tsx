@@ -20,7 +20,7 @@ export default function NotFound() {
           Vai al percorso
         </Link>
         <Link
-          href="/oggi"
+          href="/"
           className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-sm font-bold transition-transform active:scale-[0.97]"
         >
           Torna a Oggi

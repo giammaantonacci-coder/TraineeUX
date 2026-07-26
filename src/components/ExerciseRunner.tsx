@@ -369,7 +369,7 @@ export function ExerciseRunner({
             Torna a {moduleTitle}
           </Link>
           <Link
-            href="/oggi"
+            href="/"
             className="rounded-full px-6 py-3.5 text-sm font-bold text-ink-muted hover:text-ink"
           >
             Cosa fare adesso

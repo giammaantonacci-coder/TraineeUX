@@ -68,6 +68,8 @@ export async function submitExercise(
 
   const newBadgeIds = await syncBadges(supabase, userId, stats.streak ?? 0);
 
+  revalidatePath("/");
+  // "/oggi" serve la stessa schermata per le installazioni gia' esistenti
   revalidatePath("/oggi");
   revalidatePath("/percorso");
   revalidatePath(`/percorso/${moduleId}`);
@@ -158,7 +160,7 @@ export async function signIn(_prev: AuthResult, formData: FormData): Promise<Aut
           : error.message,
     };
   }
-  redirect("/oggi");
+  redirect("/");
 }
 
 export async function signUp(_prev: AuthResult, formData: FormData): Promise<AuthResult> {
@@ -183,7 +185,7 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
   if (error) return { error: error.message };
 
   // Se la conferma email è disattivata, la sessione c'è già: entra subito.
-  if (data.session) redirect("/oggi");
+  if (data.session) redirect("/");
 
   return {
     message:
