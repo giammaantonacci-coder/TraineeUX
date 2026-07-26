@@ -35,10 +35,11 @@ export async function submitExercise(
   }
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Sessione scaduta. Rientra e riprova." };
+  // Firma verificata invece di un giro sul server di autenticazione: la
+  // consegna è il momento in cui l'attesa si nota di più.
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const userId = claimsData?.claims?.sub;
+  if (!userId) return { ok: false, error: "Sessione scaduta. Rientra e riprova." };
 
   // La correzione avviene qui: le soluzioni non sono mai state inviate al client.
   const grade = gradeExercise(exercise, answer);
@@ -65,7 +66,7 @@ export async function submitExercise(
     streak?: number;
   };
 
-  const newBadgeIds = await syncBadges(supabase, user.id, stats.streak ?? 0);
+  const newBadgeIds = await syncBadges(supabase, userId, stats.streak ?? 0);
 
   revalidatePath("/oggi");
   revalidatePath("/percorso");

@@ -29,6 +29,38 @@ export interface TypeStat {
   media_pct: number;
 }
 
+
+/**
+ * Identità della richiesta corrente.
+ *
+ * Usa getClaims e non getUser: getUser interroga sempre il server di
+ * autenticazione via rete, e su ogni navigazione questo si somma al controllo
+ * che il middleware ha già fatto — due andate e ritorni per schermata.
+ * getClaims verifica la firma del token, in locale quando il progetto usa
+ * chiavi asimmetriche.
+ *
+ * Non è un indebolimento: i dati sono protetti dalle policy RLS dentro
+ * Postgres, che valuta il token per conto proprio. Questo controllo serve a
+ * decidere i reindirizzamenti, e la firma verificata è garanzia sufficiente.
+ */
+async function currentUser(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+): Promise<{ id: string; email: string | null } | null> {
+  try {
+    const { data } = await supabase.auth.getClaims();
+    const claims = data?.claims;
+    if (!claims?.sub) return null;
+    return {
+      id: claims.sub,
+      email: typeof claims.email === "string" ? claims.email : null,
+    };
+  } catch {
+    // Supabase irraggiungibile: si degrada a "non autenticato" invece di
+    // far cadere la pagina con un 500.
+    return null;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Livello 1 — solo autenticazione                                     */
 /* ------------------------------------------------------------------ */
@@ -39,13 +71,7 @@ export interface TypeStat {
  */
 export async function requireUser(): Promise<{ id: string; email: string | null } | null> {
   const supabase = await createClient();
-  try {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) return null;
-    return { id: data.user.id, email: data.user.email ?? null };
-  } catch {
-    return null;
-  }
+  return currentUser(supabase);
 }
 
 /* ------------------------------------------------------------------ */
@@ -63,14 +89,7 @@ export interface ProgressData {
 /** Per Oggi, Percorso e il dettaglio di un modulo. Due query leggere. */
 export async function getProgressData(): Promise<ProgressData | null> {
   const supabase = await createClient();
-
-  let user;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    return null;
-  }
+  const user = await currentUser(supabase);
   if (!user) return null;
 
   const [profileRes, bestRes] = await Promise.all([
@@ -83,7 +102,7 @@ export async function getProgressData(): Promise<ProgressData | null> {
 
   return {
     userId: user.id,
-    email: user.email ?? null,
+    email: user.email,
     profile: (profileRes.data as ProfileRow | null) ?? null,
     best: (bestRes.data as ExerciseBest[] | null) ?? [],
   };
@@ -100,14 +119,7 @@ export interface ProfileData extends ProgressData {
 
 export async function getProfileData(): Promise<ProfileData | null> {
   const supabase = await createClient();
-
-  let user;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    return null;
-  }
+  const user = await currentUser(supabase);
   if (!user) return null;
 
   const [profileRes, bestRes, typeRes, badgeRes] = await Promise.all([
@@ -125,7 +137,7 @@ export async function getProfileData(): Promise<ProfileData | null> {
 
   return {
     userId: user.id,
-    email: user.email ?? null,
+    email: user.email,
     profile: (profileRes.data as ProfileRow | null) ?? null,
     best: (bestRes.data as ExerciseBest[] | null) ?? [],
     byType: (typeRes.data as TypeStat[] | null) ?? [],
