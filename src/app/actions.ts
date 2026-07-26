@@ -196,5 +196,9 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  // Ora che il router tiene in cache le schermate per qualche secondo, uscire
+  // senza svuotarla lascerebbe i progressi di chi esce a disposizione di chi
+  // entra dopo sullo stesso dispositivo.
+  revalidatePath("/", "layout");
   redirect("/benvenuto");
 }

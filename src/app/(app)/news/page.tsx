@@ -1,22 +1,39 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { FEED_SOURCES, TOPIC_LABEL, fetchNews, formatDate } from "@/lib/news";
-import { PageHeader, Pill } from "@/components/ui";
+import { PageHeader } from "@/components/ui";
+import { ListaNews, type Articolo } from "@/components/ListaNews";
 
 export const metadata: Metadata = { title: "News" };
 
+/**
+ * La pagina non legge più l'argomento dall'indirizzo, e questo la rende
+ * statica: viene servita dalla cache invece di essere ricostruita a ogni
+ * visita. Il filtro è passato al client, dove agisce su articoli già in
+ * pagina e non costa nulla.
+ */
 export const revalidate = 3600;
 
-const TOPICS = [...new Set(FEED_SOURCES.map((s) => s.topic))];
+const TOPICS = [...new Set(FEED_SOURCES.map((s) => s.topic))].map((t) => ({
+  id: t,
+  label: TOPIC_LABEL[t],
+}));
 
-export default async function NewsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ topic?: string }>;
-}) {
-  const { topic } = await searchParams;
+export default async function NewsPage() {
   const { items, failed } = await fetchNews();
-  const filtered = topic ? items.filter((i) => i.topic === topic) : items;
+
+  // Tutto quello che serve a disegnare una scheda viene calcolato qui: al
+  // client arrivano stringhe pronte, non il modulo delle news.
+  const articoli: Articolo[] = items.map((i) => ({
+    id: i.id,
+    link: i.link,
+    title: i.title,
+    summary: i.summary,
+    sourceName: i.sourceName,
+    topic: i.topic,
+    topicLabel: TOPIC_LABEL[i.topic],
+    data: formatDate(i.publishedAt),
+    host: dominio(i.link),
+  }));
 
   return (
     <div className="animate-rise">
@@ -25,102 +42,16 @@ export default async function NewsPage({
         title="Cosa si muove nel settore"
         subtitle="Aggregato in tempo reale dalle fonti che vale la pena leggere: ricerca applicata, design system, accessibilità e prodotti AI. Aggiornato ogni ora."
       />
-
-      <nav aria-label="Filtra per argomento" className="mb-5">
-        <ul className="scrollbar-none flex gap-2 overflow-x-auto pb-1">
-          <li>
-            <FilterLink href="/news" active={!topic} label="Tutto" />
-          </li>
-          {TOPICS.map((t) => (
-            <li key={t}>
-              <FilterLink
-                href={`/news?topic=${t}`}
-                active={topic === t}
-                label={TOPIC_LABEL[t]}
-              />
-            </li>
-          ))}
-          <li>
-            <FilterLink href="/aziende" active={false} label="Aziende ›" />
-          </li>
-        </ul>
-      </nav>
-
-      {filtered.length === 0 ? (
-        <div className="card-light p-8 text-center">
-          <p className="font-bold">Nessun articolo disponibile ora</p>
-          <p className="mt-2 text-sm text-ink-muted">
-            Le fonti non hanno risposto. Riprova tra qualche minuto — nel frattempo
-            puoi guardare le{" "}
-            <Link href="/aziende" className="font-semibold underline">
-              schede aziende
-            </Link>
-            .
-          </p>
-        </div>
-      ) : (
-        <ul className="space-y-3">
-          {filtered.map((item) => (
-            <li key={item.id}>
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-light tappable block p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
-              >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <Pill tone="dark">{item.sourceName}</Pill>
-                  <Pill>{TOPIC_LABEL[item.topic]}</Pill>
-                  {item.publishedAt ? (
-                    <span className="text-xs font-semibold text-ink-muted">
-                      {formatDate(item.publishedAt)}
-                    </span>
-                  ) : null}
-                </div>
-                <h2 className="text-[17px] font-bold leading-snug">{item.title}</h2>
-                {item.summary ? (
-                  <p className="mt-1.5 text-[14px] leading-relaxed text-ink-muted">
-                    {item.summary}
-                  </p>
-                ) : null}
-                <p className="mt-3 text-[13px] font-semibold text-ink-muted">
-                  Apri su {new URL(item.link).hostname.replace("www.", "")} ↗
-                  <span className="sr-only"> — si apre in una nuova finestra</span>
-                </p>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {failed.length > 0 ? (
-        <p className="mt-6 text-[13px] text-ink-muted">
-          Fonti non raggiungibili in questo momento: {failed.join(", ")}. Il resto del
-          feed è aggiornato.
-        </p>
-      ) : null}
+      <ListaNews articoli={articoli} topics={TOPICS} failed={failed} />
     </div>
   );
 }
 
-function FilterLink({
-  href,
-  active,
-  label,
-}: {
-  href: string;
-  active: boolean;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "true" : undefined}
-      className={`inline-block whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-        active ? "bg-ink text-white" : "border border-black/10 bg-white text-ink-muted hover:text-ink active:bg-black/5"
-      }`}
-    >
-      {label}
-    </Link>
-  );
+/** Un feed con un link malformato non deve far cadere l'intera pagina. */
+function dominio(link: string): string {
+  try {
+    return new URL(link).hostname.replace("www.", "");
+  } catch {
+    return "la fonte";
+  }
 }
