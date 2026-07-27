@@ -14,11 +14,16 @@ import {
 import { MASTERY_THRESHOLD, RANKS, levelMeta, rankForXp } from "@/lib/progression";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 import { Bity } from "@/components/Bity";
+import { ImpostazioniNotifiche } from "@/components/ImpostazioniNotifiche";
+import { leggiPreferenze } from "@/app/notifiche/actions";
 
 export const metadata: Metadata = { title: "Profilo" };
 
 export default async function ProfiloPage() {
-  const data = await getProfileData();
+  const [data, prefNotifiche] = await Promise.all([
+    getProfileData(),
+    leggiPreferenze(),
+  ]);
   if (!data) redirect("/benvenuto");
 
   const { profile, best, byType, badges } = data;
@@ -223,6 +228,15 @@ export default async function ProfiloPage() {
           </ul>
         </section>
       ) : null}
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-bold tracking-tight">Notifiche</h2>
+        <ImpostazioniNotifiche
+          iniziali={
+            prefNotifiche ?? { enabled: false, hour: 19, timezone: "Europe/Rome" }
+          }
+        />
+      </section>
 
       <section className="mt-10 border-t border-black/10 pt-6">
         <form action={signOut}>

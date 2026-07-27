@@ -108,3 +108,13 @@ export function CircleIcon({ className }: Props) {
     </svg>
   );
 }
+
+/** Campanella del centro notifiche. */
+export function BellIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M18 9.5a6 6 0 1 0-12 0c0 4.2-1.4 5.6-1.9 6.1a.6.6 0 0 0 .4 1h15a.6.6 0 0 0 .4-1c-.5-.5-1.9-1.9-1.9-6.1" />
+      <path d="M10.2 19.5a2.1 2.1 0 0 0 3.6 0" />
+    </svg>
+  );
+}

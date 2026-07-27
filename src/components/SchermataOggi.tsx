@@ -16,11 +16,12 @@ import {
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import { Bity, type BityMood } from "@/components/Bity";
-import { ExerciseIcon } from "@/components/icons";
+import { BellIcon, ExerciseIcon } from "@/components/icons";
+import { contaNonLette } from "@/app/notifiche/actions";
 import type { Exercise, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
-  const data = await getProgressData();
+  const [data, nonLette] = await Promise.all([getProgressData(), contaNonLette()]);
   if (!data) redirect("/benvenuto");
 
   const { profile, best } = data;
@@ -53,7 +54,7 @@ export async function SchermataOggi() {
           float
           className="shrink-0"
         />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
             Ciao, {name}
           </h1>
@@ -77,6 +78,26 @@ export async function SchermataOggi() {
             </Link>
           ) : null}
         </div>
+
+        {/* Campanella: il pallino è l'unico segnale che c'è qualcosa da
+            leggere, quindi il conteggio va anche nel nome accessibile. */}
+        <Link
+          href="/notifiche"
+          aria-label={
+            nonLette > 0
+              ? `Notifiche, ${nonLette} da leggere`
+              : "Notifiche, nessuna da leggere"
+          }
+          className="tappable relative flex h-11 w-11 shrink-0 items-center justify-center self-start rounded-full border border-black/10 bg-white active:bg-black/5"
+        >
+          <BellIcon className="h-5 w-5 text-ink-muted" />
+          {nonLette > 0 ? (
+            <span
+              aria-hidden="true"
+              className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white bg-blush-deep"
+            />
+          ) : null}
+        </Link>
       </header>
 
       <section className="card-dark mb-6 p-5 md:p-6">
