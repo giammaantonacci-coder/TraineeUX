@@ -89,6 +89,8 @@ export function Bity({
   size = 96,
   float = false,
   pop = false,
+  alive = true,
+  seed = 0,
   label,
   className = "",
 }: {
@@ -101,6 +103,11 @@ export function Bity({
   float?: boolean;
   /** comparsa a molla, per i momenti di premio */
   pop?: boolean;
+  /** respiro e battito di palpebre. Si spegne dove Bity è un pittogramma. */
+  alive?: boolean;
+  /** sfasa respiro e palpebre: più Bity nella stessa schermata non devono
+   *  battere le palpebre all'unisono, che è la cosa che le fa sembrare finte */
+  seed?: number;
   /** nome accessibile. Senza, Bity è decorativa e sparisce agli screen reader. */
   label?: string;
   className?: string;
@@ -112,6 +119,11 @@ export function Bity({
   const motion = [float ? "animate-bity-float" : "", pop ? "animate-bity-pop" : ""]
     .filter(Boolean)
     .join(" ");
+
+  // Occhi chiusi o ad arco non hanno palpebre da chiudere.
+  const battePalpebre =
+    alive && (face.eyes === "aperti" || face.eyes === "spalancati" || face.eyes === "laterali" || face.eyes === "bassi");
+  const ritardo = `${((seed * 1.37) % 4.6).toFixed(2)}s`;
 
   return (
     <svg
@@ -132,27 +144,45 @@ export function Bity({
 
       {face.sparkles ? <Sparkles color={deep} /> : null}
 
+      {/* Due gruppi annidati e non uno: la deformazione dell'umore sta
+          nell'attributo transform, il respiro in una animazione CSS. Sullo
+          stesso elemento la seconda cancellerebbe la prima. */}
       <g transform={`translate(60 ${62 + ty}) scale(${sx} ${sy}) translate(-60 -62)`}>
-        {/* Volume in tre strati invece di un gradiente: il lato in ombra è il
-            corpo scuro che sporge da sotto quello chiaro, spostato in alto a
-            sinistra verso la luce. */}
-        <ellipse cx="60" cy="62" rx="42" ry="41" fill={deep} />
-        <ellipse cx="57.5" cy="59" rx="39.5" ry="38.5" fill={base} />
-        <ellipse
-          cx="45"
-          cy="43"
-          rx="14"
-          ry="9.5"
-          fill="#ffffff"
-          opacity="0.45"
-          transform="rotate(-28 45 43)"
-        />
-        <circle cx="64" cy="34" r="2.6" fill="#ffffff" opacity="0.32" />
+        <g
+          className={alive ? "bity-respiro" : undefined}
+          style={alive ? { animationDelay: ritardo } : undefined}
+        >
+          {/* Volume in tre strati invece di un gradiente: il lato in ombra è il
+              corpo scuro che sporge da sotto quello chiaro, spostato in alto a
+              sinistra verso la luce. */}
+          <ellipse cx="60" cy="62" rx="42" ry="41" fill={deep} />
+          <ellipse cx="57.5" cy="59" rx="39.5" ry="38.5" fill={base} />
+          <ellipse
+            cx="45"
+            cy="43"
+            rx="14"
+            ry="9.5"
+            fill="#ffffff"
+            opacity="0.45"
+            transform="rotate(-28 45 43)"
+          />
+          <circle cx="64" cy="34" r="2.6" fill="#ffffff" opacity="0.32" />
 
-        {face.brows ? <Brows kind={face.brows} /> : null}
-        <Eye cx={47} cy={60} kind={face.eyes} />
-        <Eye cx={73} cy={60} kind={face.eyes} />
-        <Mouth kind={face.mouth} />
+          {face.brows ? <Brows kind={face.brows} /> : null}
+          <g
+            className={battePalpebre ? "bity-occhio" : undefined}
+            style={battePalpebre ? { animationDelay: ritardo } : undefined}
+          >
+            <Eye cx={47} cy={60} kind={face.eyes} />
+          </g>
+          <g
+            className={battePalpebre ? "bity-occhio" : undefined}
+            style={battePalpebre ? { animationDelay: ritardo } : undefined}
+          >
+            <Eye cx={73} cy={60} kind={face.eyes} />
+          </g>
+          <Mouth kind={face.mouth} />
+        </g>
       </g>
     </svg>
   );

@@ -198,37 +198,32 @@ export function ExerciseRunner({
 
     return (
       <div ref={resultRef} tabIndex={-1} className="outline-none">
-        <div className="card-dark p-6 md:p-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              {/* Bity non ha nome accessibile: la sua espressione ripete il
-                  verdetto e il punteggio che stanno qui accanto, e annunciarla
-                  due volte sarebbe rumore. */}
-              <Bity
-                mood={moodForScore(grade.scorePct)}
-                level={levelId}
-                size={54}
-                pop
-                className="shrink-0"
-              />
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
-                  {v.title}
-                </p>
-                <p className="mt-1 text-2xl font-extrabold">
-                  {grade.score} / {grade.maxScore} punti
-                </p>
-              </div>
-            </div>
-            <ScoreRing value={grade.scorePct} size={76} />
+        <div className="card-dark p-6 text-center md:p-8">
+          {/* La consegna è il momento in cui Bity ha più diritto di stare
+              grande: la schermata è arrivata a destinazione e non c'è nulla in
+              gara con lei. Nessun nome accessibile, perché l'espressione ripete
+              il verdetto e il punteggio scritti qui sotto. */}
+          <Bity
+            mood={moodForScore(grade.scorePct)}
+            level={levelId}
+            size={128}
+            pop
+            className="mx-auto"
+          />
+          <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-white/50">
+            {v.title}
+          </p>
+          <div className="mt-3 flex items-center justify-center gap-4">
+            <p className="text-2xl font-extrabold">
+              {grade.score} / {grade.maxScore} punti
+            </p>
+            <ScoreRing value={grade.scorePct} size={64} onDark />
           </div>
-          {/* A tutta larghezza: accanto all'anello, su telefono, si riduceva a
-              una colonna da sette righe. */}
-          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
+          <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
             {v.body}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 border-t border-white/10 pt-5">
             <Pill tone="mint">+{result.xpAwarded} XP</Pill>
             <Pill className="bg-white/10 text-white">{result.totalXp} XP totali</Pill>
             <Pill className="bg-white/10 text-white">🔥 serie di {result.streak}</Pill>

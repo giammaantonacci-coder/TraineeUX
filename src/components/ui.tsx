@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Bity, type BityMood, type BityTint } from "@/components/Bity";
+import type { LevelId } from "@/lib/types";
 
 export const ACCENT_BG: Record<string, string> = {
   mint: "bg-mint",
@@ -45,10 +47,14 @@ export function ScoreRing({
   value,
   size = 64,
   label,
+  onDark = false,
 }: {
   value: number;
   size?: number;
   label?: string;
+  /** Su fondo scuro la traccia nera sparisce: a punteggio zero restava un
+   *  numero sospeso senza cerchio attorno. */
+  onDark?: boolean;
 }) {
   const stroke = size >= 56 ? 7 : 5;
   const radius = (size - stroke) / 2;
@@ -71,7 +77,7 @@ export function ScoreRing({
           fill="none"
           stroke="currentColor"
           strokeWidth={stroke}
-          className="text-black/10"
+          className={onDark ? "text-white/20" : "text-black/10"}
         />
         <circle
           cx={size / 2}
@@ -150,21 +156,46 @@ export function PageHeader({
   eyebrow,
   title,
   subtitle,
+  bity,
+  bityLabel,
 }: {
   eyebrow?: string;
   title: string;
   subtitle?: string;
+  /** Bity accanto all'occhiello: la sua espressione dice a colpo d'occhio
+   *  come sta andando questa sezione. Omettila e l'intestazione resta nuda. */
+  bity?: { mood?: BityMood; tint?: BityTint; level?: LevelId };
+  /** Da passare solo dove il colore di Bity porta informazione che non è
+   *  scritta altrove nella pagina; senza, resta decorativa e muta. */
+  bityLabel?: string;
 }) {
   return (
     <header className="mb-6">
-      {eyebrow ? (
-        <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">
-          {eyebrow}
-        </p>
-      ) : null}
-      <h1 className="text-[28px] font-extrabold leading-tight tracking-tight md:text-4xl">
-        {title}
-      </h1>
+      <div className="flex items-center gap-3">
+        {bity ? (
+          <Bity
+            mood={bity.mood}
+            tint={bity.tint}
+            level={bity.level}
+            /* seed scelto per non cadere sullo stesso ritardo delle Bity
+               di livello nel percorso, che usano gli indici da 1 a 5 */
+            size={44}
+            seed={9}
+            label={bityLabel}
+            className="shrink-0"
+          />
+        ) : null}
+        <div className="min-w-0">
+          {eyebrow ? (
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1 className="text-[28px] font-extrabold leading-tight tracking-tight md:text-4xl">
+            {title}
+          </h1>
+        </div>
+      </div>
       {subtitle ? (
         <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
           {subtitle}
@@ -248,11 +279,22 @@ export function SkeletonCard({ lines = 3 }: { lines?: number }) {
   );
 }
 
-/** Involucro con l'annuncio di caricamento per chi usa uno screen reader. */
+/**
+ * Involucro con l'annuncio di caricamento per chi usa uno screen reader.
+ *
+ * Bity aspetta insieme a chi guarda, nella stessa posizione in cui comparirà
+ * poi nell'intestazione: quando i dati arrivano non salta da nessuna parte,
+ * cambia solo espressione. È il momento in cui la mascotte serve di più,
+ * perché è l'unico in cui non c'è altro da guardare.
+ */
 export function LoadingShell({ children }: { children: ReactNode }) {
   return (
     <div role="status" aria-busy="true" aria-live="polite">
       <span className="sr-only">Caricamento in corso</span>
+      <div className="mb-4 flex items-center gap-3">
+        <Bity mood="pensieroso" size={44} float className="shrink-0" />
+        <Skeleton className="h-3 w-28" />
+      </div>
       {children}
     </div>
   );

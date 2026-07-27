@@ -40,24 +40,15 @@ export default async function ProfiloPage() {
     <div className="animate-rise">
       <PageHeader
         eyebrow="Profilo"
+        bity={{ mood: doneCount === 0 ? "curioso" : "felice", level: reachedLevel }}
+        bityLabel={`Bity nel colore del livello ${levelMeta(reachedLevel).name}`}
         title={profile?.display_name ?? data.email ?? "Il tuo profilo"}
         subtitle={data.email ?? undefined}
       />
 
       <section className="card-dark p-6 md:p-7">
         <div className="flex items-start justify-between gap-5">
-          <div className="flex min-w-0 items-start gap-3.5">
-            {/* Il colore di Bity è il livello più alto in cui hai messo piede:
-                è l'unico posto dell'app dove quel dato è visibile. Per questo
-                qui ha un nome accessibile, mentre altrove è decorativa. */}
-            <Bity
-              level={reachedLevel}
-              mood={doneCount === 0 ? "curioso" : "felice"}
-              size={56}
-              className="shrink-0"
-              label={`Bity nel colore del livello ${levelMeta(reachedLevel).name}`}
-            />
-            <div className="min-w-0">
+          <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
               Grado
             </p>
@@ -65,7 +56,6 @@ export default async function ProfiloPage() {
             <p className="mt-2 max-w-md text-[15px] leading-relaxed text-white/70">
               {rank.current.description}
             </p>
-            </div>
           </div>
           <p className="shrink-0 text-right">
             <span className="block text-3xl font-extrabold">{xp}</span>

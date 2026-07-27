@@ -131,6 +131,42 @@ body {
   animation: bity-float 3.4s ease-in-out infinite;
 }
 
+/* Respiro: due punti percentuali di scala su quasi quattro secondi. Sotto la
+   soglia di ciò che si nota leggendo, sopra quella di ciò che sembra morto. */
+@keyframes bity-respiro {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.018);
+  }
+}
+.bity-respiro {
+  animation: bity-respiro 3.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Palpebre: chiuse per un ventesimo del ciclo. È il dettaglio che distingue
+   un personaggio da un bollino, e va speso tutto lì. */
+@keyframes bity-palpebre {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96%,
+  97.5% {
+    transform: scaleY(0.06);
+  }
+}
+.bity-occhio {
+  animation: bity-palpebre 5.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 /* Comparsa dopo la consegna di un esercizio: una molla corta, non un rimbalzo
    lungo, perché arriva insieme al punteggio e non deve rubargli la scena. */
 @keyframes bity-pop {

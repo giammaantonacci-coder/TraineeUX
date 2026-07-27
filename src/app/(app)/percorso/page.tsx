@@ -5,6 +5,7 @@ import { MODULES } from "@/content";
 import {
   exercisesDoneInModule,
   getProgressData,
+  highestLevelReached,
   moduleBestPct,
 } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
@@ -23,17 +24,22 @@ export default async function PercorsoPage() {
   const data = await getProgressData();
   if (!data) redirect("/benvenuto");
   const { best } = data;
+  const livelloRaggiunto = highestLevelReached(best);
+  const tuttoFatto = MODULES.every(
+    (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
+  );
 
   return (
     <div className="animate-rise">
       <PageHeader
         eyebrow="Percorso"
+        bity={{ mood: tuttoFatto ? "esulta" : "felice", level: livelloRaggiunto }}
         title="Dal mestiere al giudizio"
         subtitle="Cinque livelli, dodici moduli. Ogni livello non aggiunge strumenti: allarga l'ambito su cui decidi. Puoi affrontarli nell'ordine che preferisci, ma i moltiplicatori di XP crescono con il livello."
       />
 
       <div className="space-y-10">
-        {LEVELS.map((level) => {
+        {LEVELS.map((level, i) => {
           const modules = MODULES.filter((m) => m.level === level.id);
           const mastered = modules.filter(
             (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
@@ -51,6 +57,7 @@ export default async function PercorsoPage() {
                   level={level.id}
                   mood={levelMood(mastered, modules.length, touched)}
                   size={46}
+                  seed={i + 1}
                   className="-mt-1 shrink-0"
                 />
                 <div className="min-w-0">

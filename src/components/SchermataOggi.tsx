@@ -10,11 +10,12 @@ import {
   bestPctPerExercise,
   getProgressData,
   moduleBestPct,
+  highestLevelReached,
   totalExercisesDone,
 } from "@/lib/data";
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
-import { Bity } from "@/components/Bity";
+import { Bity, type BityMood } from "@/components/Bity";
 import { ExerciseIcon } from "@/components/icons";
 import type { Exercise, Module } from "@/lib/types";
 
@@ -29,6 +30,7 @@ export async function SchermataOggi() {
   const rank = rankForXp(xp);
   const bestPct = bestPctPerExercise(best);
   const doneCount = totalExercisesDone(best);
+  const reachedLevel = highestLevelReached(best);
 
   const suggestions = buildSuggestions(bestPct, best.length === 0);
   const [primary, ...rest] = suggestions;
@@ -39,38 +41,42 @@ export async function SchermataOggi() {
 
   return (
     <div className="animate-rise">
-      <header className="mb-6 flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-start gap-3">
-          {/* Solo al primo accesso: qui la riga contiene già saluto, sottotitolo
-              e il contatore della serie, e su 390px la mascotte toglierebbe
-              larghezza al testo ogni giorno per dire qualcosa che il resto
-              della schermata dice meglio. Al primo accesso invece è l'unico
-              momento in cui presentarsi vale lo spazio. */}
-          {doneCount === 0 ? (
-            <Bity mood="curioso" size={48} float className="-mt-1 shrink-0" />
+      {/* Bity apre la giornata a grandezza piena: è la prima cosa che si vede
+          aprendo l'app, e il suo umore riassume lo stato prima che si legga
+          una riga. Il contatore della serie è sceso dentro la colonna di
+          testo, perché a destra toglieva a Bity lo spazio per essere grande. */}
+      <header className="mb-6 flex items-center gap-4">
+        <Bity
+          mood={saluto(doneCount, streak)}
+          level={reachedLevel}
+          size={92}
+          float
+          className="shrink-0"
+        />
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
+            Ciao, {name}
+          </h1>
+          <p className="mt-1 text-sm leading-snug text-ink-muted">
+            {streak > 0
+              ? "Non spezzare la serie oggi."
+              : "Un esercizio oggi vale più di cinque domenica prossima."}
+          </p>
+          {streak > 0 ? (
+            <Link
+              href="/profilo"
+              className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
+            >
+              <span aria-hidden="true">🔥</span>
+              <span aria-hidden="true">
+                {streak} {streak === 1 ? "giorno" : "giorni"}
+              </span>
+              <span className="sr-only">
+                Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
+              </span>
+            </Link>
           ) : null}
-          <div className="min-w-0">
-            <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
-              Ciao, {name}
-            </h1>
-            <p className="mt-1 text-sm text-ink-muted">
-              {streak > 0
-                ? `Serie di ${streak} ${streak === 1 ? "giorno" : "giorni"}. Non spezzarla oggi.`
-                : "Un esercizio oggi vale più di cinque domenica prossima."}
-            </p>
-          </div>
         </div>
-        <Link
-          href="/profilo"
-          className="tappable flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-2 text-xs font-bold active:bg-black/5"
-        >
-          <span aria-hidden="true">🔥</span>
-          <span aria-hidden="true">{streak}</span>
-          {/* Senza questo il nome accessibile del link era il solo numero. */}
-          <span className="sr-only">
-            Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
-          </span>
-        </Link>
       </header>
 
       <section className="card-dark mb-6 p-5 md:p-6">
@@ -175,6 +181,17 @@ export async function SchermataOggi() {
       </section>
     </div>
   );
+}
+
+/**
+ * L'umore del saluto. Non aggiunge informazione che non ci sia già scritta:
+ * la ripete in un canale che si legge prima delle parole.
+ */
+function saluto(svolti: number, serie: number): BityMood {
+  if (svolti === 0) return "curioso";
+  if (serie >= 7) return "esulta";
+  if (serie > 0) return "felice";
+  return "assonnato";
 }
 
 function MiniStat({
