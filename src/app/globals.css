@@ -220,18 +220,42 @@ body {
   inset-inline: 0;
   top: 0;
   z-index: 30;
-  height: calc(env(safe-area-inset-top) + 1.5rem);
+  /* Più alto di prima: la sfumatura ha bisogno di spazio per essere una
+     sfumatura. Su una fascia corta qualsiasi gradiente sembra un bordo. */
+  height: calc(env(safe-area-inset-top) + 3rem);
   pointer-events: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* La sfocatura è ciò che lo fa leggere come vetro invece che come vernice:
+     il contenuto sotto si intuisce ancora, non sparisce. */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  /* Nessuno stop arriva al bianco pieno: il massimo è l'82%, così anche in
+     cima si percepisce che sotto c'è qualcosa. */
   background: linear-gradient(
     to bottom,
-    var(--color-canvas) 0%,
-    color-mix(in srgb, var(--color-canvas) 70%, transparent) 55%,
+    color-mix(in srgb, var(--color-canvas) 82%, transparent) 0%,
+    color-mix(in srgb, var(--color-canvas) 64%, transparent) 38%,
+    color-mix(in srgb, var(--color-canvas) 32%, transparent) 68%,
+    color-mix(in srgb, var(--color-canvas) 10%, transparent) 86%,
     transparent 100%
   );
-  mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+  /* La maschera spegne anche la sfocatura in modo graduale. Con quattro
+     passaggi invece di due non si vede la riga dove finisce. */
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.82) 42%,
+    rgba(0, 0, 0, 0.42) 70%,
+    rgba(0, 0, 0, 0.14) 87%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.82) 42%,
+    rgba(0, 0, 0, 0.42) 70%,
+    rgba(0, 0, 0, 0.14) 87%,
+    transparent 100%
+  );
 }
 
 /* Collegamento per saltare la navigazione, visibile solo da tastiera. */
