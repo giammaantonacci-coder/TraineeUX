@@ -233,9 +233,11 @@ body {
      safe-area-inset-top vale zero anche se il contenuto scorre sotto
      l'orologio — la fascia risultava alta zero e invisibile. Il minimo fisso
      copre la barra di stato comunque, e dove l'area riservata viene dichiarata
-     davvero è quella a vincere. Sbagliare in eccesso costa qualche pixel di
-     bianco, sbagliare in difetto rimette le scritte sopra l'orologio. */
-  height: max(env(safe-area-inset-top), 2.5rem);
+     davvero è quella a vincere.
+     2.25rem è il minimo difendibile: misurato su iPhone, l'orologio finisce a
+     circa ventotto pixel dal bordo, quindi trentasei lo coprono con otto pixel
+     di margine. Sotto, le scritte tornano a toccarlo. */
+  height: max(env(safe-area-inset-top), 2.25rem);
   background: var(--color-canvas);
   pointer-events: none;
 }
