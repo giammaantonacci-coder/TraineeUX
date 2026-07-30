@@ -41,6 +41,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Il margine predefinito di figure va azzerato, altrimenti il browser gli
+   mette quaranta pixel per lato. Ma va fatto in @layer base, non con una
+   classe m-0 sull'elemento né con una regola fuori dai layer: in entrambi i
+   casi vincerebbe sulle utility di spaziatura, e space-y-* non riuscirebbe
+   più a distanziarlo — il mock di una critique finiva incollato alla card
+   delle domande. */
+@layer base {
+  figure {
+    margin: 0;
+  }
+}
+
 body {
   min-height: 100dvh;
 }
@@ -93,14 +105,18 @@ body {
   display: none;
 }
 
+/* Solo opacità, nessuno spostamento.
+   Con "both" la trasformazione dell'ultimo fotogramma resta applicata anche a
+   animazione finita, e un antenato con una trasformazione diventa il
+   riferimento degli elementi in posizione fissa: la barra di consegna
+   risultava ancorata alla pagina invece che alla finestra, e finiva piantata a
+   metà schermo. Sei pixel di movimento non valgono quel difetto. */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -193,6 +209,29 @@ body {
 }
 .animate-bity-pop {
   animation: bity-pop 0.42s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+/* Velo sfocato sopra la barra di stato.
+   Alto quanto l'area riservata più un margine, sfuma verso il basso su due
+   canali insieme: il colore di fondo e la maschera, così anche la sfocatura
+   svanisce e non resta una linea di taglio dove finisce. */
+.velo-alto {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 30;
+  height: calc(env(safe-area-inset-top) + 1.5rem);
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(
+    to bottom,
+    var(--color-canvas) 0%,
+    color-mix(in srgb, var(--color-canvas) 70%, transparent) 55%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
 }
 
 /* Collegamento per saltare la navigazione, visibile solo da tastiera. */

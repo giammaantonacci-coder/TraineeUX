@@ -11,7 +11,7 @@ function Frame({ title, children }: { title: string; children: ReactNode }) {
     /* È un'illustrazione, non un'interfaccia: i pulsanti finti non sono
        pulsanti. Dichiararlo evita che uno screen reader annunci controlli
        inesistenti come se fossero utilizzabili. */
-    <figure className="m-0 overflow-hidden rounded-3xl border border-black/10 bg-white">
+    <figure className="overflow-hidden rounded-3xl border border-black/10 bg-white">
       <figcaption className="sr-only">
         Simulazione statica di uno schermo da esaminare. Gli elementi non sono
         interattivi: fanno parte dell&apos;esercizio.

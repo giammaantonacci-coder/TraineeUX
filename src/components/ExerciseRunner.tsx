@@ -643,9 +643,22 @@ export function ExerciseRunner({
         </p>
       ) : null}
 
+      {/* Riserva lo spazio che la barra occupava quando stava nel flusso: da
+          fissa non ne occupa più, e senza questo coprirebbe l'ultima risposta. */}
       {!(exercise.type === "brief" && briefStage === "write") ? (
-        <div className="sticky bottom-[calc(6.25rem+env(safe-area-inset-bottom))] z-30 mt-6 md:bottom-6">
-          <div className="flex items-center gap-3 rounded-full border border-black/10 bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_18px_36px_-20px_rgba(15,17,23,0.65)]">
+        <div aria-hidden="true" className="h-24 md:h-20" />
+      ) : null}
+
+      {/* Fissa e non sticky: su iOS lo scorrimento a inerzia ridisegna un
+          elemento sticky nel punto sbagliato, e la barra restava piantata a
+          metà schermo. Fissa non dipende dallo scorrimento.
+          L'incolonnamento con il contenuto va rifatto a mano, perché un
+          elemento fisso è ancorato alla finestra e non alla colonna. */}
+      {!(exercise.type === "brief" && briefStage === "write") ? (
+        <div className="fixed inset-x-0 bottom-[calc(6.25rem+env(safe-area-inset-bottom))] z-30 px-4 md:bottom-6 md:px-6">
+          {/* max-w-5xl e il rientro da desktop replicano la colonna del
+              contenuto: 224px di barra laterale più 32px di stacco. */}
+          <div className="mx-auto flex max-w-5xl items-center gap-3 rounded-full border border-black/10 bg-white p-2 pl-4 shadow-[0_2px_8px_rgba(15,17,23,0.08),0_18px_36px_-20px_rgba(15,17,23,0.65)] md:ml-[calc(50%-32rem+16rem)]">
             <div className="min-w-0 flex-1">
               {/* Il conteggio cambia a ogni risposta: senza regione live, chi
                   usa uno screen reader non sa di aver completato. */}
