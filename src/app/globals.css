@@ -211,51 +211,27 @@ body {
   animation: bity-pop 0.42s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
-/* Velo sfocato sopra la barra di stato.
-   Alto quanto l'area riservata più un margine, sfuma verso il basso su due
-   canali insieme: il colore di fondo e la maschera, così anche la sfocatura
-   svanisce e non resta una linea di taglio dove finisce. */
-.velo-alto {
+/**
+ * Fascia opaca sopra la barra di stato.
+ *
+ * Alta esattamente quanto l'area riservata dell'iPhone, del colore del fondo:
+ * il contenuto che scorre le sparisce dietro in modo netto e orologio e
+ * batteria restano sempre su bianco pieno.
+ *
+ * Prima era un velo sfumato e sfocato, ed era sbagliato per due motivi: la
+ * sfumatura scendeva sotto il punto in cui comincia il contenuto, quindi la
+ * cima del saluto risultava mezza sbiadita già a pagina ferma; e una
+ * sfocatura sotto la barra di stato è un effetto che si nota, mentre qui
+ * l'unica cosa che serve è che le scritte non si sovrappongano.
+ */
+.barra-stato {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 30;
-  /* Più alto di prima: la sfumatura ha bisogno di spazio per essere una
-     sfumatura. Su una fascia corta qualsiasi gradiente sembra un bordo. */
-  height: calc(env(safe-area-inset-top) + 3rem);
+  height: env(safe-area-inset-top);
+  background: var(--color-canvas);
   pointer-events: none;
-  /* La sfocatura è ciò che lo fa leggere come vetro invece che come vernice:
-     il contenuto sotto si intuisce ancora, non sparisce. */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  /* Nessuno stop arriva al bianco pieno: il massimo è l'82%, così anche in
-     cima si percepisce che sotto c'è qualcosa. */
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--color-canvas) 82%, transparent) 0%,
-    color-mix(in srgb, var(--color-canvas) 64%, transparent) 38%,
-    color-mix(in srgb, var(--color-canvas) 32%, transparent) 68%,
-    color-mix(in srgb, var(--color-canvas) 10%, transparent) 86%,
-    transparent 100%
-  );
-  /* La maschera spegne anche la sfocatura in modo graduale. Con quattro
-     passaggi invece di due non si vede la riga dove finisce. */
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.82) 42%,
-    rgba(0, 0, 0, 0.42) 70%,
-    rgba(0, 0, 0, 0.14) 87%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.82) 42%,
-    rgba(0, 0, 0, 0.42) 70%,
-    rgba(0, 0, 0, 0.14) 87%,
-    transparent 100%
-  );
 }
 
 /* Collegamento per saltare la navigazione, visibile solo da tastiera. */
