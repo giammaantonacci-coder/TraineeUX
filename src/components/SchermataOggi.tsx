@@ -147,7 +147,12 @@ export async function SchermataOggi() {
 
       {primary ? (
         <section className="mb-8">
-          <SectionTitle>Riprendi da qui</SectionTitle>
+          {/* "Riprendi" presuppone che ci sia qualcosa da riprendere: al primo
+              accesso non c'è, e l'invito suonava come il riferimento a un
+              passato che non esiste. */}
+          <SectionTitle>
+            {doneCount === 0 ? "Comincia da qui" : "Riprendi da qui"}
+          </SectionTitle>
           <SuggestionCard suggestion={primary} featured />
         </section>
       ) : null}
@@ -155,7 +160,7 @@ export async function SchermataOggi() {
       {rest.length > 0 ? (
         <section className="mb-8">
           <SectionTitle action={{ href: "/percorso", label: "Tutto il percorso" }}>
-            Consigliati per te
+            {doneCount === 0 ? "Poi questi" : "Consigliati per te"}
           </SectionTitle>
           <ul className="space-y-3">
             {rest.map((s) => (
