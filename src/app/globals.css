@@ -235,7 +235,7 @@ body {
      copre la barra di stato comunque, e dove l'area riservata viene dichiarata
      davvero è quella a vincere. Sbagliare in eccesso costa qualche pixel di
      bianco, sbagliare in difetto rimette le scritte sopra l'orologio. */
-  height: max(env(safe-area-inset-top), 3.5rem);
+  height: max(env(safe-area-inset-top), 2.75rem);
   background: var(--color-canvas);
   pointer-events: none;
 }
