@@ -122,11 +122,16 @@ Deno.serve(async (req: Request) => {
       ? `${nome}, ${messaggio.frase}`
       : messaggio.frase.charAt(0).toUpperCase() + messaggio.frase.slice(1);
 
+    // Il tag cambia ogni giorno. Con un tag costante, il promemoria di oggi
+    // prendeva il posto di quello di ieri rimasto nel centro notifiche, e il
+    // telefono lo trattava come un aggiornamento invece che come un avviso
+    // nuovo: nessun suono, nessun banner. Da qui in poi ogni giorno è una
+    // notifica per conto suo.
     const payload = JSON.stringify({
       title: messaggio.titolo,
       body: corpo,
       href: "/",
-      tag: "promemoria",
+      tag: `promemoria-${new Date().toISOString().slice(0, 10)}`,
     });
 
     let almenoUna = false;

@@ -32,6 +32,17 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
   const [stato, setStato] = useState<Stato>("verifico");
   const [errore, setErrore] = useState<string | null>(null);
   const [salvataggio, avvia] = useTransition();
+  /**
+   * La preferenza è accesa nel database ma questo telefono non ha
+   * un'iscrizione viva.
+   *
+   * È lo stato in cui si finisce reinstallando l'app: iOS azzera permesso e
+   * iscrizione, il database no. L'interruttore restava su "Attivi" — vero come
+   * intenzione, falso come fatto — mentre il server continuava a spedire a un
+   * indirizzo che non esisteva più. Nessuna delle due parti aveva modo di
+   * accorgersene, perché il servizio di Apple accetta comunque l'invio.
+   */
+  const [scollegato, setScollegato] = useState(false);
 
   useEffect(() => {
     const supportato =
@@ -55,9 +66,16 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
 
     // Riconciliazione: la preferenza vive nel database, l'iscrizione sul
     // dispositivo. Reinstallando l'app la seconda sparisce e la prima resta
-    // accesa, e i promemoria smetterebbero di arrivare senza che niente lo
-    // dica. Qui l'iscrizione viene ricreata in silenzio.
-    if (!iniziali.enabled || Notification.permission !== "granted") return;
+    // accesa. Dove si può si ricrea in silenzio; dove non si può — perché il
+    // permesso richiede un tocco, e un tocco non si simula — lo si dichiara,
+    // invece di lasciare l'interruttore a dire una cosa non più vera.
+    if (!iniziali.enabled) return;
+
+    if (Notification.permission !== "granted") {
+      setScollegato(true);
+      return;
+    }
+
     (async () => {
       try {
         const reg = await navigator.serviceWorker.register("/sw.js");
@@ -69,15 +87,14 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
             userVisibleOnly: true,
             applicationServerKey: chiaveApplicazione(VAPID_PUBLIC_KEY) as BufferSource,
           }));
-        await registraDispositivo({
+        const r = await registraDispositivo({
           endpoint: iscrizione.endpoint,
           p256dh: inBase64Url(iscrizione.getKey("p256dh")),
           auth: inBase64Url(iscrizione.getKey("auth")),
         });
+        setScollegato(!r.ok);
       } catch {
-        // Silenzio voluto: non è un'azione richiesta da chi guarda, e un
-        // messaggio d'errore su una schermata appena aperta non sarebbe
-        // collegabile a nulla che abbia fatto.
+        setScollegato(true);
       }
     })();
   }, [iniziali.enabled]);
@@ -120,6 +137,7 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
         setErrore(r.error ?? "Non siamo riusciti a registrare il dispositivo.");
         return;
       }
+      setScollegato(false);
 
       scriviPreferenze({
         ...pref,
@@ -137,6 +155,7 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
 
   async function spegni() {
     setErrore(null);
+    setScollegato(false);
     scriviPreferenze({ ...pref, enabled: false });
     try {
       const reg = await navigator.serviceWorker.getRegistration();
@@ -184,11 +203,31 @@ export function ImpostazioniNotifiche({ iniziali }: { iniziali: PrefNotifiche })
         </p>
       ) : null}
 
+      {stato === "pronto" && pref.enabled && scollegato ? (
+        <div className="mt-4 rounded-2xl bg-butter/40 px-4 py-3">
+          <p className="text-[14px] font-semibold leading-relaxed">
+            Questo dispositivo non è collegato.
+          </p>
+          <p className="mt-1 text-[14px] leading-relaxed">
+            I promemoria risultano accesi, ma qui non arrivano: succede dopo aver
+            reinstallato l&apos;app, perché il telefono azzera il permesso.
+            Bastano due tocchi.
+          </p>
+          <button
+            type="button"
+            onClick={accendi}
+            className="tappable mt-3 rounded-full bg-ink px-4 py-2.5 text-[14px] font-bold text-white"
+          >
+            Ricollega questo dispositivo
+          </button>
+        </div>
+      ) : null}
+
       {stato === "pronto" ? (
         <div className="mt-4 space-y-4">
           <div className="flex items-center justify-between gap-4">
             <span className="text-[15px] font-semibold" id="etichetta-promemoria">
-              {pref.enabled ? "Attivi" : "Disattivati"}
+              {pref.enabled ? (scollegato ? "Accesi, ma non qui" : "Attivi") : "Disattivati"}
             </span>
             <button
               type="button"

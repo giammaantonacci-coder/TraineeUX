@@ -31,10 +31,22 @@ self.addEventListener("push", (event) => {
     body: dati.body || "È il momento di allenarti.",
     icon: "/icon-192.png",
     badge: "/icon-192.png",
-    // Stesso tag per i promemoria: se ne arrivano due, il secondo sostituisce
-    // il primo invece di impilarsi.
-    tag: dati.tag || "promemoria",
-    renotify: false,
+    // Un tag diverso ogni giorno, e renotify acceso.
+    //
+    // Prima il tag era la costante "promemoria" con renotify spento, e questo
+    // è il motivo per cui i promemoria smettevano di farsi sentire: due
+    // notifiche con lo stesso tag non convivono, la seconda prende il posto
+    // della prima — e con renotify spento quel ricambio avviene in silenzio,
+    // senza suono né banner. Bastava non aver cancellato il promemoria del
+    // giorno prima dal centro notifiche perché tutti quelli successivi
+    // arrivassero muti. Il server continuava a segnalare consegne riuscite,
+    // perché dal suo lato lo erano.
+    //
+    // Il tag serviva a evitare che due avvisi si impilassero, ma di avvisi ne
+    // parte uno al giorno: quel raggruppamento non ha mai avuto niente da
+    // raggruppare.
+    tag: dati.tag || `promemoria-${new Date().toISOString().slice(0, 10)}`,
+    renotify: true,
     data: { href: dati.href || "/" },
   };
 
