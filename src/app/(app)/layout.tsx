@@ -1,4 +1,5 @@
 import { BottomNav, SideNav } from "@/components/Nav";
+import { RiconciliaPush } from "@/components/RiconciliaPush";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Il padding in cima ripete la stessa misura della fascia bianca — se i due
@@ -28,6 +29,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <BottomNav />
+
+      {/* Non disegna nulla: all'apertura ricontrolla che l'indirizzo push del
+          dispositivo sia ancora quello registrato. Sta qui e non su Profilo
+          perché un indirizzo scaduto non dà segno di sé da nessuna parte, e
+          aspettare che qualcuno passi dalle impostazioni voleva dire lasciarlo
+          scaduto per giorni. */}
+      <RiconciliaPush />
     </div>
   );
 }
