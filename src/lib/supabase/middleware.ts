@@ -3,12 +3,28 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
 
 /**
- * Il manifest è elencato anche qui, oltre che escluso dal matcher: è la risorsa
- * da cui iOS ricava display e scope dell'app installata, e se un domani il
- * matcher venisse riscritto, un suo redirect rimanderebbe l'app in Safari
- * senza che nulla nell'interfaccia lo faccia sospettare.
+ * Il manifest e il service worker sono elencati anche qui, oltre che esclusi
+ * dal matcher.
+ *
+ * Il manifest è la risorsa da cui iOS ricava display e scope dell'app
+ * installata: un suo redirect rimanda l'app in Safari senza che nulla
+ * nell'interfaccia lo faccia sospettare, ed è già successo.
+ *
+ * sw.js è lo stesso tipo di risorsa e per un po' è passato di qui protetto. Ha
+ * funzionato lo stesso perché il browser lo scarica con i cookie e chi lo
+ * registra ha una sessione — ma il controllo di aggiornamento che il browser
+ * fa per conto suo, a sessione scaduta, avrebbe ricevuto la pagina di
+ * benvenuto al posto del codice. Un service worker che non si aggiorna smette
+ * di consegnare le notifiche senza segnalare niente, che è esattamente il
+ * guasto da cui veniamo.
  */
-const PUBLIC_PATHS = ["/login", "/auth", "/benvenuto", "/manifest.webmanifest"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/auth",
+  "/benvenuto",
+  "/manifest.webmanifest",
+  "/sw.js",
+];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
