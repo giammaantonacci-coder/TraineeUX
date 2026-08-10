@@ -121,7 +121,7 @@ export default async function ProfiloPage() {
             letta da sola, "serie" non direbbe se e' quella in corso o il
             record, ed e' esattamente il motivo per cui il testo esteso non
             sparisce ma cambia solo canale. */}
-        <dl className="mt-5 grid grid-cols-5 gap-2 border-t border-white/10 pt-4">
+        <dl className="mt-5 grid grid-cols-5 border-t border-white/10 pt-4">
           <MiniStat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi" full="esercizi svolti" />
           <MiniStat value={`${mastered.length}/${MODULES.length}`} label="moduli" full="moduli padroneggiati" />
           <MiniStat value={`${totalAttempts(best)}`} label="tentativi" full="tentativi totali" />
@@ -303,7 +303,12 @@ function MiniStat({
   full: string;
 }) {
   return (
-    <div className="min-w-0">
+    /* Il filo verticale ha lo stesso colore della riga sopra, e separa una
+       voce dall'altra invece di lasciarle affiancate a distanza. Sul primo
+       riquadro non c'è, o segnerebbe il bordo interno della card; il rientro
+       cade sul primo a sinistra e sull'ultimo a destra, così i cinque numeri
+       restano incolonnati con il resto del contenuto. */
+    <div className="min-w-0 border-l border-white/10 px-1.5 first:border-l-0 first:pl-0 last:pr-0">
       <dt className="sr-only">{full}</dt>
       <dd>
         <span className="block text-[15px] font-extrabold leading-tight">{value}</span>
