@@ -92,6 +92,70 @@ Deno.serve(async (req: Request) => {
   webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
   const db = createClient(SUPABASE_URL, SERVICE_KEY);
 
+  /**
+   * Modalità di prova: manda subito a un utente indicato, ignorando l'orario,
+   * il "già inviato oggi" e il "non si è ancora allenato".
+   *
+   * Serve perché quelle tre condizioni sono giuste ma rendono impossibile
+   * verificare la consegna quando serve: l'unico modo era falsificare
+   * last_active_date, che è il campo su cui si calcola la serie. Qui non si
+   * tocca niente — nessuna riga nel centro notifiche, nessun last_sent_on — e
+   * l'unica cosa che succede è che il telefono suona o non suona.
+   *
+   * La protezione è la stessa della chiamata normale: senza il segreto
+   * condiviso non si arriva nemmeno qui.
+   */
+  const corpoRichiesta = await req.json().catch(() => ({}));
+  const prova = typeof corpoRichiesta?.prova === "string" ? corpoRichiesta.prova : null;
+
+  if (prova) {
+    const { data: iscrizioni, error: erroreProva } = await db
+      .from("push_subscriptions")
+      .select("endpoint, p256dh, auth")
+      .eq("user_id", prova);
+    if (erroreProva) {
+      return new Response(JSON.stringify({ error: erroreProva.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const payloadProva = JSON.stringify({
+      title: "Prova di consegna",
+      body: "Se leggi questo, le notifiche funzionano su questo dispositivo.",
+      href: "/",
+      // Marca temporale nel tag: due prove di fila devono suonare due volte,
+      // non sostituirsi a vicenda.
+      tag: `prova-${Date.now()}`,
+    });
+
+    let inviate = 0;
+    let scartate = 0;
+    const errori: string[] = [];
+    for (const s of iscrizioni ?? []) {
+      try {
+        await webpush.sendNotification(
+          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+          payloadProva,
+        );
+        inviate++;
+      } catch (e) {
+        const stato = (e as { statusCode?: number }).statusCode;
+        if (stato === 404 || stato === 410) {
+          await db.rpc("scarta_iscrizione", { p_endpoint: s.endpoint });
+          scartate++;
+        } else {
+          errori.push(`${stato ?? "?"}: ${(e as Error).message}`.slice(0, 120));
+        }
+      }
+    }
+
+    return new Response(
+      JSON.stringify({ prova: true, dispositivi: (iscrizioni ?? []).length, inviate, scartate, errori }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }
+
   const { data, error } = await db.rpc("promemoria_dovuti");
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
