@@ -119,7 +119,16 @@ export async function SchermataOggi() {
       </header>
 
       <section className="card-dark mb-6 p-5 md:p-6">
-        <div className="flex items-baseline justify-between gap-4">
+        {/* items-start e non items-baseline.
+            Allineando le linee di base, "320" — grande tre volte l'occhiello
+            accanto — svettava sopra di esso e apriva a sinistra una fascia
+            vuota alta quindici pixel: lo spazio che serviva a lui e che
+            all'altra colonna non serviva. Partendo dall'alto le due colonne
+            cominciano insieme e quella fascia sparisce.
+            leading-none sul numero perché la sua riga smetta di essere più
+            alta del glifo: senza, il numero resterebbe comunque un paio di
+            pixel più in basso dell'occhiello. */}
+        <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
               Grado attuale
@@ -129,10 +138,22 @@ export async function SchermataOggi() {
               {rank.current.description}
             </p>
           </div>
-          <p className="shrink-0 text-right">
-            <span className="block text-3xl font-extrabold">{xp}</span>
-            <span className="text-xs font-semibold text-white/50">XP</span>
-          </p>
+          {/* Numero e unità sono due blocchi, non un blocco e un testo in
+              linea: così si appoggiano allo stesso bordo destro invece che
+              a due bordi calcolati in modi diversi. */}
+          <div className="shrink-0 text-right">
+            {/* Due pixel e mezzo di scarto misurati sull'inchiostro, non sulla
+                riga: a interlinea nulla il numero comincia sopra il bordo del
+                suo blocco, l'occhiello accanto no. Senza questo compenso il
+                numero resta appena più alto, cioè il difetto di prima in
+                piccolo. */}
+            <span className="mt-[2.5px] block text-3xl font-extrabold leading-none">
+              {xp}
+            </span>
+            <span className="mt-1.5 block text-xs font-semibold leading-none text-white/50">
+              XP
+            </span>
+          </div>
         </div>
 
         <div className="mt-4">
