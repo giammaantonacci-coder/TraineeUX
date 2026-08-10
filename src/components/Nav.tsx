@@ -115,7 +115,19 @@ export function BottomNav() {
         className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-canvas via-canvas/85 to-transparent md:hidden"
       />
       <div className="fixed inset-x-0 bottom-0 z-40 px-5 pb-[max(1.15rem,env(safe-area-inset-bottom))] md:hidden">
-        <nav aria-label="Navigazione principale" className="mx-auto max-w-sm">
+        {/* Da compatta la barra si stringe oltre che abbassarsi: senza, restava
+            una fascia larga quanto lo schermo e il rimpicciolimento si leggeva
+            come uno schiacciamento invece che come un ritirarsi. La larghezza è
+            in percentuale e non in pixel perché la transizione parta dalla
+            larghezza vera: passando da 24rem a un valore fisso, il primo tratto
+            sarebbe stato invisibile — la barra è già limitata dallo schermo — e
+            il movimento sarebbe sembrato partire in ritardo. */}
+        <nav
+          aria-label="Navigazione principale"
+          className={`mx-auto max-w-sm transition-[width] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            compatta ? "w-[72%]" : "w-full"
+          }`}
+        >
           {/* Quattro colonne uguali. Prima l'etichetta compariva solo sulla voce
               attiva, quindi le larghezze cambiavano a ogni passaggio: la pillola
               andava misurata dopo il render e di nuovo a transizione conclusa, e
@@ -159,10 +171,14 @@ export function BottomNav() {
                       compatta ? "gap-0 py-2" : "gap-1 py-2"
                     } ${i === attivo ? "text-white" : "text-ink-muted"}`}
                   >
+                    {/* L'icona rimpicciolisce con la barra: lasciandola a 22px
+                        dentro una barra più stretta e più bassa sarebbe
+                        diventata la cosa più grande rimasta, e la barra
+                        compatta avrebbe pesato più di quella distesa. */}
                     <Icon
-                      className={`h-[22px] w-[22px] shrink-0 transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        i === attivo ? "scale-110" : "scale-100"
-                      }`}
+                      className={`shrink-0 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        compatta ? "h-5 w-5" : "h-[22px] w-[22px]"
+                      } ${i === attivo ? "scale-110" : "scale-100"}`}
                     />
                     {/* Il nome resta lì dove serve: si legge a barra ferma o
                         risalendo, e si ritira scorrendo verso il basso, dove
