@@ -43,9 +43,13 @@ export async function SchermataOggi() {
           La campanella non sta più qui: le notifiche si raggiungono dal
           profilo, dove stanno anche le loro impostazioni.
           Il margine negativo porta Bity a filo del margine destro: il suo
-          riquadro è 64 ma la palla ne occupa il 70% centrato, quindi senza
-          compenso resterebbe rientrata di dieci pixel rispetto alle card
-          sotto. */}
+          riquadro è 56 ma la palla ne occupa il 70% centrato, quindi senza
+          compenso resterebbe rientrata rispetto alle card sotto.
+          I tre pixel di discesa sono un allineamento ottico: "items-center"
+          incolonna i riquadri, ma l'inchiostro del nome non è centrato nel
+          suo — sotto la linea di base ci sono le discendenti, sopra no — e
+          senza compenso la palla risultava più alta della parola. Misurati
+          sull'inchiostro vero, non sulla riga di testo. */}
       <header className="mb-6">
         <div className="flex items-center justify-between gap-3">
           <h1 className="min-w-0 text-2xl font-extrabold tracking-tight md:text-3xl">
@@ -54,9 +58,9 @@ export async function SchermataOggi() {
           <Bity
             mood={saluto(doneCount, streak)}
             level={reachedLevel}
-            size={64}
+            size={56}
             float
-            className="-mr-2.5 shrink-0"
+            className="-mr-2 shrink-0 translate-y-[3px]"
           />
         </div>
 
