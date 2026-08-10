@@ -100,12 +100,20 @@ export async function SchermataOggi() {
             ) : null}
           </div>
 
+          {/* Il margine negativo incolonna Bity con la campanella.
+              Il riquadro di Bity è 64 ma la palla ne occupa il 70% centrato,
+              quindi il suo centro cade a 32px dal bordo destro mentre quello
+              della campanella cade a 22: dieci pixel di scarto, abbastanza da
+              vedersi come un difetto di allineamento. Portando fuori il
+              riquadro di quei dieci pixel i due centri coincidono, e la palla
+              — che a questa misura è larga quasi quanto il pulsante della
+              campanella — finisce a filo del margine come lei. */}
           <Bity
             mood={saluto(doneCount, streak)}
             level={reachedLevel}
             size={64}
             float
-            className="shrink-0"
+            className="-mr-2.5 shrink-0"
           />
         </div>
       </header>

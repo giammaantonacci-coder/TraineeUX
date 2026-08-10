@@ -140,19 +140,53 @@ body {
   transform: scale(0.985);
 }
 
-/* Bity, la mascotte. Il galleggiamento è lento e di pochi pixel: deve dare
-   segno di vita senza tirare l'occhio via dal contenuto. */
+/* Bity, la mascotte. Il galleggiamento è lento e di poco: deve dare segno di
+   vita senza tirare l'occhio via dal contenuto.
+
+   Ora l'animazione sta su un gruppo dentro l'SVG e non più sull'SVG intero,
+   perché l'ombra deve restare a terra. Lì dentro i pixel sono unità del
+   disegno, non pixel di schermo: 5 su un riquadro da 120 valgono il 4% della
+   figura a qualunque dimensione, mentre i 4 pixel fissi di prima erano un
+   movimento vistoso su una Bity piccola e impercettibile su una grande. */
 @keyframes bity-float {
   0%,
   100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
   }
 }
 .animate-bity-float {
   animation: bity-float 3.4s ease-in-out infinite;
+}
+
+/* L'ombra non sale con il corpo: resta inchiodata al suolo e cambia misura.
+   Corpo su, ombra stretta; corpo giù, ombra larga.
+
+   Durata e passo sono gli stessi del galleggiamento e nessuna delle due porta
+   un ritardo: sfasate anche di poco, l'ombra sembrerebbe appartenere a
+   qualcos'altro. La scala è attorno al centro del solo riquadro dell'ombra —
+   che sta sulla linea di terra — così stringendosi non si stacca dal suolo.
+
+   L'opacità accompagna la scala di poco: un'ombra che si stringe restando
+   della stessa intensità sembra un oggetto che rimpicciolisce, non uno che
+   si allontana. */
+@keyframes bity-ombra {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.72;
+  }
+}
+.bity-ombra {
+  animation: bity-ombra 3.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /* Respiro: due punti percentuali di scala su quasi quattro secondi. Sotto la
