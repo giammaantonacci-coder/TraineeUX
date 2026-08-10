@@ -16,12 +16,12 @@ import {
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import { Bity, type BityMood } from "@/components/Bity";
-import { BellIcon, ExerciseIcon } from "@/components/icons";
-import { contaNonLette } from "@/app/notifiche/actions";
+import { ExerciseIcon } from "@/components/icons";
+import { nomeDiBattesimo } from "@/lib/labels";
 import type { Exercise, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
-  const [data, nonLette] = await Promise.all([getProgressData(), contaNonLette()]);
+  const data = await getProgressData();
   if (!data) redirect("/benvenuto");
 
   const { profile, best } = data;
@@ -44,70 +44,18 @@ export async function SchermataOggi() {
 
   return (
     <div className="animate-rise">
-      {/* Due righe invece di tre colonne.
-          Prima Bity stava a sinistra e la campanella a destra, e il testo
-          viveva nella colonna stretta rimasta in mezzo: un nome intero ci
-          andava a capo. Ora il testo comincia dal bordo sinistro e ha tutta la
-          larghezza, la campanella sta in linea con il nome, e Bity — più
-          piccola — accompagna la riga di sotto, quella della serie. */}
+      {/* Il saluto e Bity sulla stessa riga, il resto sotto a tutta larghezza.
+          La campanella non sta più qui: le notifiche si raggiungono dal
+          profilo, dove stanno anche le loro impostazioni.
+          Il margine negativo porta Bity a filo del margine destro: il suo
+          riquadro è 64 ma la palla ne occupa il 70% centrato, quindi senza
+          compenso resterebbe rientrata di dieci pixel rispetto alle card
+          sotto. */}
       <header className="mb-6">
         <div className="flex items-center justify-between gap-3">
           <h1 className="min-w-0 text-2xl font-extrabold tracking-tight md:text-3xl">
             Ciao, {name}
           </h1>
-
-          {/* Campanella: il pallino è l'unico segnale che c'è qualcosa da
-              leggere, quindi il conteggio va anche nel nome accessibile. */}
-          <Link
-            href="/notifiche"
-            aria-label={
-              nonLette > 0
-                ? `Notifiche, ${nonLette} da leggere`
-                : "Notifiche, nessuna da leggere"
-            }
-            className="tappable relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white active:bg-black/5"
-          >
-            <BellIcon className="h-5 w-5 text-ink-muted" />
-            {nonLette > 0 ? (
-              <span
-                aria-hidden="true"
-                className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white bg-blush-deep"
-              />
-            ) : null}
-          </Link>
-        </div>
-
-        <div className="mt-1 flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-sm leading-snug text-ink-muted">
-              {streak > 0
-                ? "Non spezzare la serie oggi."
-                : "Un esercizio oggi vale più di cinque domenica prossima."}
-            </p>
-            {streak > 0 ? (
-              <Link
-                href="/profilo"
-                className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
-              >
-                <span aria-hidden="true">🔥</span>
-                <span aria-hidden="true">
-                  {streak} {streak === 1 ? "giorno" : "giorni"}
-                </span>
-                <span className="sr-only">
-                  Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
-                </span>
-              </Link>
-            ) : null}
-          </div>
-
-          {/* Il margine negativo incolonna Bity con la campanella.
-              Il riquadro di Bity è 64 ma la palla ne occupa il 70% centrato,
-              quindi il suo centro cade a 32px dal bordo destro mentre quello
-              della campanella cade a 22: dieci pixel di scarto, abbastanza da
-              vedersi come un difetto di allineamento. Portando fuori il
-              riquadro di quei dieci pixel i due centri coincidono, e la palla
-              — che a questa misura è larga quasi quanto il pulsante della
-              campanella — finisce a filo del margine come lei. */}
           <Bity
             mood={saluto(doneCount, streak)}
             level={reachedLevel}
@@ -116,6 +64,26 @@ export async function SchermataOggi() {
             className="-mr-2.5 shrink-0"
           />
         </div>
+
+        <p className="mt-1 text-sm leading-snug text-ink-muted">
+          {streak > 0
+            ? "Non spezzare la serie oggi."
+            : "Un esercizio oggi vale più di cinque domenica prossima."}
+        </p>
+        {streak > 0 ? (
+          <Link
+            href="/profilo"
+            className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
+          >
+            <span aria-hidden="true">🔥</span>
+            <span aria-hidden="true">
+              {streak} {streak === 1 ? "giorno" : "giorni"}
+            </span>
+            <span className="sr-only">
+              Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
+            </span>
+          </Link>
+        ) : null}
       </header>
 
       <section className="card-dark mb-6 p-5 md:p-6">
@@ -246,21 +214,6 @@ export async function SchermataOggi() {
       </section>
     </div>
   );
-}
-
-/**
- * Solo il nome di battesimo nel saluto.
- *
- * Il nome intero mandava "Ciao, Gianmarco Antonacci" a capo su due righe, e
- * un saluto spezzato in due è la prima cosa che si vede aprendo l'app. È la
- * stessa scelta già fatta per i testi delle notifiche.
- *
- * Un token solo — un indirizzo email senza spazi, o un nome di una parola —
- * resta intero: non c'è niente da accorciare.
- */
-function nomeDiBattesimo(completo: string): string {
-  const primo = completo.trim().split(/\s+/)[0];
-  return primo.length > 1 ? primo : completo;
 }
 
 /**

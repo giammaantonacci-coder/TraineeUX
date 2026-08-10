@@ -11,18 +11,21 @@ import {
   totalAttempts,
   totalExercisesDone,
 } from "@/lib/data";
-import { MASTERY_THRESHOLD, RANKS, levelMeta, rankForXp } from "@/lib/progression";
+import { MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
+import { nomeDiBattesimo } from "@/lib/labels";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 import { Bity } from "@/components/Bity";
+import { BellIcon } from "@/components/icons";
 import { ImpostazioniNotifiche } from "@/components/ImpostazioniNotifiche";
-import { leggiPreferenze } from "@/app/notifiche/actions";
+import { contaNonLette, leggiPreferenze } from "@/app/notifiche/actions";
 
 export const metadata: Metadata = { title: "Profilo" };
 
 export default async function ProfiloPage() {
-  const [data, prefNotifiche] = await Promise.all([
+  const [data, prefNotifiche, nonLette] = await Promise.all([
     getProfileData(),
     leggiPreferenze(),
+    contaNonLette(),
   ]);
   if (!data) redirect("/benvenuto");
 
@@ -47,8 +50,32 @@ export default async function ProfiloPage() {
         eyebrow="Profilo"
         bity={{ mood: doneCount === 0 ? "curioso" : "felice", level: reachedLevel }}
         bityLabel={`Bity nel colore del livello ${levelMeta(reachedLevel).name}`}
-        title={profile?.display_name ?? data.email ?? "Il tuo profilo"}
+        title={nomeDiBattesimo(profile?.display_name ?? data.email ?? "Il tuo profilo")}
         subtitle={data.email ?? undefined}
+        /* La campanella vive qui e non più sulla home: il centro notifiche e
+           le sue impostazioni stanno nella stessa sezione, e la home resta
+           una schermata di sole cose da fare.
+           Il pallino è l'unico segnale che c'è qualcosa da leggere, quindi il
+           conteggio va anche nel nome accessibile. */
+        azione={
+          <Link
+            href="/notifiche"
+            aria-label={
+              nonLette > 0
+                ? `Notifiche, ${nonLette} da leggere`
+                : "Notifiche, nessuna da leggere"
+            }
+            className="tappable relative flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white active:bg-black/5"
+          >
+            <BellIcon className="h-5 w-5 text-ink-muted" />
+            {nonLette > 0 ? (
+              <span
+                aria-hidden="true"
+                className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white bg-blush-deep"
+              />
+            ) : null}
+          </Link>
+        }
       />
 
       <section className="card-dark p-6 md:p-7">
@@ -62,10 +89,18 @@ export default async function ProfiloPage() {
               {rank.current.description}
             </p>
           </div>
-          <p className="shrink-0 text-right">
-            <span className="block text-3xl font-extrabold">{xp}</span>
-            <span className="text-xs font-semibold text-white/50">XP</span>
-          </p>
+          {/* Stesso trattamento della card sulla home: numero e unità sono due
+              blocchi appoggiati allo stesso bordo destro, e il numero scende
+              di due pixel e mezzo — misurati sull'inchiostro, non sulla riga —
+              per mettersi alla stessa altezza dell'occhiello accanto. */}
+          <div className="shrink-0 text-right">
+            <span className="mt-[2.5px] block text-3xl font-extrabold leading-none">
+              {xp}
+            </span>
+            <span className="mt-1.5 block text-xs font-semibold leading-none text-white/50">
+              XP
+            </span>
+          </div>
         </div>
         <div className="mt-5">
           <ProgressBar value={rank.progress} tone="light" />
@@ -75,19 +110,6 @@ export default async function ProfiloPage() {
               : "Grado massimo raggiunto."}
           </p>
         </div>
-        <ol className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
-          {RANKS.map((r) => (
-            <li key={r.id}>
-              <span
-                className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                  xp >= r.minXp ? "bg-white text-ink" : "bg-white/10 text-white/50"
-                }`}
-              >
-                {r.name}
-              </span>
-            </li>
-          ))}
-        </ol>
       </section>
 
       <section className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">

@@ -20,6 +20,22 @@ export const EXERCISE_TYPE_DESCRIPTION: Record<ExerciseType, string> = {
   brief: "Scrivi la tua risposta, poi confrontala",
 };
 
+/**
+ * Solo il nome di battesimo.
+ *
+ * Il nome intero manda a capo i titoli — sia il saluto sulla home sia
+ * l'intestazione del profilo — e un titolo spezzato in due è la prima cosa che
+ * si vede aprendo la schermata. È la stessa scelta già fatta per i testi delle
+ * notifiche.
+ *
+ * Un token solo — un indirizzo email senza spazi, o un nome di una parola —
+ * resta intero: non c'è niente da accorciare.
+ */
+export function nomeDiBattesimo(completo: string): string {
+  const primo = completo.trim().split(/\s+/)[0];
+  return primo.length > 1 ? primo : completo;
+}
+
 /** Punteggio massimo ottenibile in un esercizio, in punti grezzi. */
 export function maxScoreFor(exercise: Exercise): number {
   switch (exercise.type) {

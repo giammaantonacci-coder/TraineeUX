@@ -158,6 +158,7 @@ export function PageHeader({
   subtitle,
   bity,
   bityLabel,
+  azione,
 }: {
   eyebrow?: string;
   title: string;
@@ -168,6 +169,10 @@ export function PageHeader({
   /** Da passare solo dove il colore di Bity porta informazione che non è
    *  scritta altrove nella pagina; senza, resta decorativa e muta. */
   bityLabel?: string;
+  /** Comando in fondo alla riga del titolo, appoggiato al margine destro.
+   *  Serve a una sezione che ha una sua azione ricorrente — la campanella sul
+   *  profilo — senza costringere ogni pagina a rifarsi l'intestazione. */
+  azione?: ReactNode;
 }) {
   return (
     <header className="mb-6">
@@ -185,7 +190,7 @@ export function PageHeader({
             className="shrink-0"
           />
         ) : null}
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">
               {eyebrow}
@@ -195,6 +200,7 @@ export function PageHeader({
             {title}
           </h1>
         </div>
+        {azione ? <div className="shrink-0">{azione}</div> : null}
       </div>
       {subtitle ? (
         <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
