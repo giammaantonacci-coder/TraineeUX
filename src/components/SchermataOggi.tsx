@@ -27,7 +27,9 @@ export async function SchermataOggi() {
   const { profile, best } = data;
   const xp = profile?.xp ?? 0;
   const streak = profile?.streak_count ?? 0;
-  const name = profile?.display_name ?? data.email?.split("@")[0] ?? "designer";
+  const name = nomeDiBattesimo(
+    profile?.display_name ?? data.email?.split("@")[0] ?? "designer",
+  );
   const rank = rankForXp(xp);
   const bestPct = bestPctPerExercise(best);
   const doneCount = totalExercisesDone(best);
@@ -42,62 +44,70 @@ export async function SchermataOggi() {
 
   return (
     <div className="animate-rise">
-      {/* Bity apre la giornata a grandezza piena: è la prima cosa che si vede
-          aprendo l'app, e il suo umore riassume lo stato prima che si legga
-          una riga. Il contatore della serie è sceso dentro la colonna di
-          testo, perché a destra toglieva a Bity lo spazio per essere grande. */}
-      <header className="mb-6 flex items-center gap-4">
-        <Bity
-          mood={saluto(doneCount, streak)}
-          level={reachedLevel}
-          size={92}
-          float
-          className="shrink-0"
-        />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-extrabold tracking-tight md:text-3xl">
+      {/* Due righe invece di tre colonne.
+          Prima Bity stava a sinistra e la campanella a destra, e il testo
+          viveva nella colonna stretta rimasta in mezzo: un nome intero ci
+          andava a capo. Ora il testo comincia dal bordo sinistro e ha tutta la
+          larghezza, la campanella sta in linea con il nome, e Bity — più
+          piccola — accompagna la riga di sotto, quella della serie. */}
+      <header className="mb-6">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="min-w-0 text-2xl font-extrabold tracking-tight md:text-3xl">
             Ciao, {name}
           </h1>
-          <p className="mt-1 text-sm leading-snug text-ink-muted">
-            {streak > 0
-              ? "Non spezzare la serie oggi."
-              : "Un esercizio oggi vale più di cinque domenica prossima."}
-          </p>
-          {streak > 0 ? (
-            <Link
-              href="/profilo"
-              className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
-            >
-              <span aria-hidden="true">🔥</span>
-              <span aria-hidden="true">
-                {streak} {streak === 1 ? "giorno" : "giorni"}
-              </span>
-              <span className="sr-only">
-                Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
-              </span>
-            </Link>
-          ) : null}
+
+          {/* Campanella: il pallino è l'unico segnale che c'è qualcosa da
+              leggere, quindi il conteggio va anche nel nome accessibile. */}
+          <Link
+            href="/notifiche"
+            aria-label={
+              nonLette > 0
+                ? `Notifiche, ${nonLette} da leggere`
+                : "Notifiche, nessuna da leggere"
+            }
+            className="tappable relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white active:bg-black/5"
+          >
+            <BellIcon className="h-5 w-5 text-ink-muted" />
+            {nonLette > 0 ? (
+              <span
+                aria-hidden="true"
+                className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white bg-blush-deep"
+              />
+            ) : null}
+          </Link>
         </div>
 
-        {/* Campanella: il pallino è l'unico segnale che c'è qualcosa da
-            leggere, quindi il conteggio va anche nel nome accessibile. */}
-        <Link
-          href="/notifiche"
-          aria-label={
-            nonLette > 0
-              ? `Notifiche, ${nonLette} da leggere`
-              : "Notifiche, nessuna da leggere"
-          }
-          className="tappable relative flex h-11 w-11 shrink-0 items-center justify-center self-start rounded-full border border-black/10 bg-white active:bg-black/5"
-        >
-          <BellIcon className="h-5 w-5 text-ink-muted" />
-          {nonLette > 0 ? (
-            <span
-              aria-hidden="true"
-              className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white bg-blush-deep"
-            />
-          ) : null}
-        </Link>
+        <div className="mt-1 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-sm leading-snug text-ink-muted">
+              {streak > 0
+                ? "Non spezzare la serie oggi."
+                : "Un esercizio oggi vale più di cinque domenica prossima."}
+            </p>
+            {streak > 0 ? (
+              <Link
+                href="/profilo"
+                className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
+              >
+                <span aria-hidden="true">🔥</span>
+                <span aria-hidden="true">
+                  {streak} {streak === 1 ? "giorno" : "giorni"}
+                </span>
+                <span className="sr-only">
+                  Serie di {streak} {streak === 1 ? "giorno" : "giorni"}. Vai al profilo.
+                </span>
+              </Link>
+            ) : null}
+          </div>
+
+          <Bity
+            mood={saluto(doneCount, streak)}
+            level={reachedLevel}
+            size={64}
+            float
+            className="shrink-0"
+          />
+        </div>
       </header>
 
       <section className="card-dark mb-6 p-5 md:p-6">
@@ -207,6 +217,21 @@ export async function SchermataOggi() {
       </section>
     </div>
   );
+}
+
+/**
+ * Solo il nome di battesimo nel saluto.
+ *
+ * Il nome intero mandava "Ciao, Gianmarco Antonacci" a capo su due righe, e
+ * un saluto spezzato in due è la prima cosa che si vede aprendo l'app. È la
+ * stessa scelta già fatta per i testi delle notifiche.
+ *
+ * Un token solo — un indirizzo email senza spazi, o un nome di una parola —
+ * resta intero: non c'è niente da accorciare.
+ */
+function nomeDiBattesimo(completo: string): string {
+  const primo = completo.trim().split(/\s+/)[0];
+  return primo.length > 1 ? primo : completo;
 }
 
 /**
