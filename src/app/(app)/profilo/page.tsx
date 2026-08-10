@@ -110,26 +110,24 @@ export default async function ProfiloPage() {
               : "Grado massimo raggiunto."}
           </p>
         </div>
-      </section>
 
-      {/* Cinque numeri, non quattro: "moduli padroneggiati" stava solo nella
-          card della home, che ora porta il grado e basta. Senza spostarlo qui
-          sarebbe sparito dall'app — è l'unico dei tre che il profilo non
-          aveva già.
-          Il primo occupa due colonne e gli altri quattro si dispongono a
-          griglia sotto: cinque riquadri uguali su due colonne lascerebbero un
-          buco in fondo, e la stessa disposizione dà al numero principale il
-          rilievo che merita. Da schermo largo tornano cinque colonne pari. */}
-      <section className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-5">
-        <Stat
-          value={`${doneCount}/${TOTAL_EXERCISES}`}
-          label="esercizi svolti"
-          className="col-span-2 md:col-span-1"
-        />
-        <Stat value={`${mastered.length}/${MODULES.length}`} label="moduli padroneggiati" />
-        <Stat value={`${totalAttempts(best)}`} label="tentativi totali" />
-        <Stat value={`${profile?.streak_count ?? 0}`} label="serie attuale" />
-        <Stat value={`${profile?.longest_streak ?? 0}`} label="serie record" />
+        {/* I numeri stanno dentro la card, sotto una riga, come stavano in
+            quella della home.
+            Cinque colonne su un telefono lasciano una sessantina di pixel per
+            voce, quindi le etichette sono al minimo — "moduli" invece di
+            "moduli padroneggiati" — e la versione per esteso vive nel dt, che
+            si vede solo con uno screen reader. La forma abbreviata e' leggibile
+            perche' i cinque numeri si leggono insieme e si spiegano a vicenda;
+            letta da sola, "serie" non direbbe se e' quella in corso o il
+            record, ed e' esattamente il motivo per cui il testo esteso non
+            sparisce ma cambia solo canale. */}
+        <dl className="mt-5 grid grid-cols-5 gap-2 border-t border-white/10 pt-4">
+          <MiniStat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi" full="esercizi svolti" />
+          <MiniStat value={`${mastered.length}/${MODULES.length}`} label="moduli" full="moduli padroneggiati" />
+          <MiniStat value={`${totalAttempts(best)}`} label="tentativi" full="tentativi totali" />
+          <MiniStat value={`${profile?.streak_count ?? 0}`} label="serie" full="serie attuale" />
+          <MiniStat value={`${profile?.longest_streak ?? 0}`} label="record" full="serie record" />
+        </dl>
       </section>
 
       <section className="mt-8">
@@ -287,19 +285,32 @@ export default async function ProfiloPage() {
   );
 }
 
-function Stat({
+/**
+ * Un numero dentro la card scura.
+ *
+ * L'etichetta visibile è abbreviata per stare in una colonna da sessanta
+ * pixel; quella per esteso sta nel dt, che è nascosto alla vista ma non agli
+ * screen reader — la lista resta comprensibile anche letta una voce alla
+ * volta, dove "serie" da sola non direbbe se è quella in corso o il record.
+ */
+function MiniStat({
   value,
   label,
-  className = "",
+  full,
 }: {
   value: string;
   label: string;
-  className?: string;
+  full: string;
 }) {
   return (
-    <div className={`card-light p-4 ${className}`}>
-      <p className="text-xl font-extrabold">{value}</p>
-      <p className="text-[12px] font-semibold leading-tight text-ink-muted">{label}</p>
+    <div className="min-w-0">
+      <dt className="sr-only">{full}</dt>
+      <dd>
+        <span className="block text-[15px] font-extrabold leading-tight">{value}</span>
+        <span className="block truncate text-[10px] font-semibold leading-tight text-white/50">
+          {label}
+        </span>
+      </dd>
     </div>
   );
 }
