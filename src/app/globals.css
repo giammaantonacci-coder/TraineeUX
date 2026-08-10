@@ -276,6 +276,17 @@ body {
   pointer-events: none;
 }
 
+/* Sulla barra di navigazione la pressione prolungata è un gesto nostro: serve
+   a prendere l'indicatore e trascinarlo. Su iOS, tenendo premuto un
+   collegamento, Safari apre l'anteprima del link — che qui comparirebbe
+   esattamente nel momento in cui il dito comincia a trascinare, coprendo la
+   barra e interrompendo il gesto. */
+@layer components {
+  .nav-trascinabile a {
+    -webkit-touch-callout: none;
+  }
+}
+
 /* Collegamento per saltare la navigazione, visibile solo da tastiera. */
 .skip-link {
   position: fixed;

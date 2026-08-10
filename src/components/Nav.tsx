@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const ITEMS = [
   { href: "/", label: "Oggi", icon: HomeIcon },
@@ -102,9 +102,108 @@ function useCompatta(): boolean {
   return compatta;
 }
 
+/**
+ * Trascinamento dell'indicatore a pressione prolungata.
+ *
+ * Tenendo premuto sulla barra, la pillola si ingrandisce e da lì in poi segue
+ * il dito fra le quattro voci; al rilascio si ferma su quella sotto il dito e
+ * ci naviga. È un modo di cambiare sezione senza sollevare il dito, e soprattutto
+ * è reversibile: si può scorrere avanti e indietro e tornare da dove si era
+ * partiti, cosa che un tocco secco non permette.
+ *
+ * Il ritardo prima di entrare in trascinamento è quello che tiene separati i
+ * due gesti: sotto quella soglia resta un tocco normale, e il collegamento fa
+ * il suo lavoro come sempre. Un movimento prima dello scadere annulla l'attesa,
+ * perché a quel punto il dito sta cercando di scorrere la pagina, non di
+ * trascinare la pillola.
+ */
+const ATTESA_MS = 320;
+const TOLLERANZA_PX = 8;
+
+function useTrascinamento(vaiA: (i: number) => void) {
+  const [posizione, setPosizione] = useState<number | null>(null);
+  const lista = useRef<HTMLUListElement>(null);
+  const attesa = useRef<number | null>(null);
+  const partenza = useRef<{ x: number; y: number } | null>(null);
+  /** Alza la mano al click successivo: dopo un trascinamento non deve navigare
+   *  il collegamento su cui il dito era sceso, ma quello dove è stato lasciato. */
+  const appenaTrascinato = useRef(false);
+
+  function posizioneDaX(clientX: number): number {
+    const ul = lista.current;
+    if (!ul) return 0;
+    const r = ul.getBoundingClientRect();
+    // 12px = il padding di 6 per lato del contenitore.
+    const colonna = (r.width - 12) / 4;
+    const grezza = (clientX - r.left - 6 - colonna / 2) / colonna;
+    return Math.min(3, Math.max(0, grezza));
+  }
+
+  function ferma() {
+    if (attesa.current !== null) window.clearTimeout(attesa.current);
+    attesa.current = null;
+    partenza.current = null;
+  }
+
+  function giu(e: React.PointerEvent<HTMLUListElement>) {
+    const x = e.clientX;
+    const bersaglio = e.currentTarget;
+    const puntatore = e.pointerId;
+    partenza.current = { x, y: e.clientY };
+    appenaTrascinato.current = false;
+    ferma();
+    attesa.current = window.setTimeout(() => {
+      appenaTrascinato.current = true;
+      // La cattura tiene i movimenti su questo elemento anche quando il dito
+      // esce dalla barra: senza, uscendo di un pixel la pillola si pianta.
+      try {
+        bersaglio.setPointerCapture(puntatore);
+      } catch {
+        /* il puntatore può essere già stato rilasciato */
+      }
+      setPosizione(posizioneDaX(x));
+    }, ATTESA_MS);
+  }
+
+  function muovi(e: React.PointerEvent<HTMLUListElement>) {
+    if (posizione === null) {
+      const p = partenza.current;
+      if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > TOLLERANZA_PX) ferma();
+      return;
+    }
+    setPosizione(posizioneDaX(e.clientX));
+  }
+
+  function su() {
+    if (posizione !== null) {
+      const i = Math.round(posizione);
+      setPosizione(null);
+      vaiA(i);
+    }
+    ferma();
+  }
+
+  function annulla() {
+    setPosizione(null);
+    ferma();
+  }
+
+  return { posizione, lista, appenaTrascinato, giu, muovi, su, annulla };
+}
+
 export function BottomNav() {
   const [attivo, reale, prevedi] = useActiveIndex();
   const compatta = useCompatta();
+  const router = useRouter();
+
+  const t = useTrascinamento((i) => {
+    prevedi(i);
+    router.push(ITEMS[i].href);
+  });
+
+  // Durante il trascinamento comanda il dito: la voce evidenziata è quella
+  // sotto di lui, non quella della schermata aperta.
+  const indice = t.posizione !== null ? Math.round(t.posizione) : attivo;
 
   return (
     <>
@@ -133,19 +232,43 @@ export function BottomNav() {
               andava misurata dopo il render e di nuovo a transizione conclusa, e
               quei due passaggi erano il "si sposta e poi si riempie". Con le
               colonne fisse la geometria si ricava dall'indice, la pillola deve
-              solo traslare, e il movimento è uno solo. */}
-          <ul className="relative grid grid-cols-4 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
+              solo traslare, e il movimento è uno solo.
+
+              touch-pan-y lascia allo schermo lo scorrimento verticale e tiene
+              per noi quello orizzontale, che è la direzione del trascinamento:
+              così un dito che scorre la pagina partendo dalla barra continua a
+              scorrerla, e uno che va di lato muove la pillola.
+              select-none perché la pressione prolungata non selezioni le
+              etichette invece di afferrare l'indicatore. */}
+          <ul
+            ref={t.lista}
+            onPointerDown={t.giu}
+            onPointerMove={t.muovi}
+            onPointerUp={t.su}
+            onPointerCancel={t.annulla}
+            className="nav-trascinabile relative grid touch-pan-y select-none grid-cols-4 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl"
+          >
             {/* La pillola scura scorre da una colonna all'altra. La larghezza
                 toglie il padding del contenitore, così un passo di traslazione
                 è esattamente una colonna. Fuori dalle quattro sezioni sparisce
                 invece di restare accesa su una voce a caso: resta al suo posto
-                e riappare da lì al primo tocco. */}
+                e riappare da lì al primo tocco.
+
+                Sotto il dito la transizione scende a 120ms: a 300 la pillola
+                arriverebbe visibilmente in ritardo rispetto al dito, a zero
+                seguirebbe ogni tremolio della mano. */}
             <li
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink transition-[transform,opacity] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                attivo < 0 ? "opacity-0" : "opacity-100"
-              }`}
-              style={{ transform: `translateX(${Math.max(0, attivo) * 100}%)` }}
+              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                t.posizione !== null
+                  ? "shadow-[0_6px_18px_rgba(15,17,23,0.35)] transition-transform duration-[120ms]"
+                  : "transition-[transform,opacity] duration-[300ms]"
+              } ${attivo < 0 && t.posizione === null ? "opacity-0" : "opacity-100"}`}
+              style={{
+                transform: `translateX(${(t.posizione ?? Math.max(0, attivo)) * 100}%) scale(${
+                  t.posizione !== null ? 1.08 : 1
+                })`,
+              }}
             />
 
             {ITEMS.map((item, i) => {
@@ -166,10 +289,21 @@ export function BottomNav() {
                        da compatta l'etichetta è alta zero pixel, e il nome
                        accessibile non deve rimpicciolirsi con lei. */
                     aria-label={item.label}
-                    onClick={() => prevedi(i)}
+                    onClick={(e) => {
+                      // Dopo un trascinamento il click arriva comunque, e
+                      // arriva sul collegamento dove il dito era sceso: se lo
+                      // lasciassimo passare navigherebbe alla voce di partenza
+                      // annullando lo spostamento appena fatto.
+                      if (t.appenaTrascinato.current) {
+                        e.preventDefault();
+                        t.appenaTrascinato.current = false;
+                        return;
+                      }
+                      prevedi(i);
+                    }}
                     className={`tappable flex flex-col items-center rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       compatta ? "gap-0 py-2" : "gap-1 py-2"
-                    } ${i === attivo ? "text-white" : "text-ink-muted"}`}
+                    } ${i === indice ? "text-white" : "text-ink-muted"}`}
                   >
                     {/* L'icona rimpicciolisce con la barra: lasciandola a 22px
                         dentro una barra più stretta e più bassa sarebbe
