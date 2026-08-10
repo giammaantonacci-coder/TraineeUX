@@ -4,7 +4,6 @@ import {
   EXERCISE_TYPE_DESCRIPTION,
   EXERCISE_TYPE_LABEL,
   MODULES,
-  TOTAL_EXERCISES,
 } from "@/content";
 import {
   bestPctPerExercise,
@@ -37,10 +36,6 @@ export async function SchermataOggi() {
 
   const suggestions = buildSuggestions(bestPct, best.length === 0);
   const [primary, ...rest] = suggestions;
-
-  const masteredCount = MODULES.filter(
-    (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
-  ).length;
 
   return (
     <div className="animate-rise">
@@ -86,6 +81,12 @@ export async function SchermataOggi() {
         ) : null}
       </header>
 
+      {/* Versione breve. La stessa card sul profilo portava, identiche, la
+          descrizione del grado e i tre numeri in fondo: una schermata li
+          ripeteva all'altra senza aggiungere niente.
+          Qui resta quello che serve ad aprire l'app e decidere se allenarsi
+          oggi — a che punto sei e quanto manca al passo dopo. Il resoconto sta
+          nel profilo, che è la schermata dove si va apposta per guardarlo. */}
       <section className="card-dark mb-6 p-5 md:p-6">
         {/* items-start e non items-baseline.
             Allineando le linee di base, "320" — grande tre volte l'occhiello
@@ -102,9 +103,6 @@ export async function SchermataOggi() {
               Grado attuale
             </p>
             <p className="mt-1 text-2xl font-extrabold">{rank.current.name}</p>
-            <p className="mt-1 max-w-sm text-sm leading-relaxed text-white/60">
-              {rank.current.description}
-            </p>
           </div>
           {/* Numero e unità sono due blocchi, non un blocco e un testo in
               linea: così si appoggiano allo stesso bordo destro invece che
@@ -133,23 +131,6 @@ export async function SchermataOggi() {
           </p>
         </div>
 
-        <dl className="mt-4 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
-          <MiniStat
-            value={`${doneCount}/${TOTAL_EXERCISES}`}
-            label="esercizi"
-            full="esercizi svolti"
-          />
-          <MiniStat
-            value={`${masteredCount}/${MODULES.length}`}
-            label="moduli"
-            full="moduli padroneggiati"
-          />
-          <MiniStat
-            value={`${profile?.longest_streak ?? 0}`}
-            label="record"
-            full="serie record"
-          />
-        </dl>
       </section>
 
       {primary ? (
@@ -225,28 +206,6 @@ function saluto(svolti: number, serie: number): BityMood {
   if (serie >= 7) return "esulta";
   if (serie > 0) return "felice";
   return "assonnato";
-}
-
-function MiniStat({
-  value,
-  label,
-  full,
-}: {
-  value: string;
-  label: string;
-  full: string;
-}) {
-  return (
-    <div>
-      <dt className="sr-only">{full}</dt>
-      <dd>
-        <span className="block text-lg font-extrabold leading-tight">{value}</span>
-        <span className="text-[11px] font-semibold leading-tight text-white/50">
-          {label}
-        </span>
-      </dd>
-    </div>
-  );
 }
 
 interface Suggestion {

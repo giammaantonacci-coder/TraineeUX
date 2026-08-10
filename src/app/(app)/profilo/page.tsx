@@ -112,8 +112,21 @@ export default async function ProfiloPage() {
         </div>
       </section>
 
-      <section className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi svolti" />
+      {/* Cinque numeri, non quattro: "moduli padroneggiati" stava solo nella
+          card della home, che ora porta il grado e basta. Senza spostarlo qui
+          sarebbe sparito dall'app — è l'unico dei tre che il profilo non
+          aveva già.
+          Il primo occupa due colonne e gli altri quattro si dispongono a
+          griglia sotto: cinque riquadri uguali su due colonne lascerebbero un
+          buco in fondo, e la stessa disposizione dà al numero principale il
+          rilievo che merita. Da schermo largo tornano cinque colonne pari. */}
+      <section className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-5">
+        <Stat
+          value={`${doneCount}/${TOTAL_EXERCISES}`}
+          label="esercizi svolti"
+          className="col-span-2 md:col-span-1"
+        />
+        <Stat value={`${mastered.length}/${MODULES.length}`} label="moduli padroneggiati" />
         <Stat value={`${totalAttempts(best)}`} label="tentativi totali" />
         <Stat value={`${profile?.streak_count ?? 0}`} label="serie attuale" />
         <Stat value={`${profile?.longest_streak ?? 0}`} label="serie record" />
@@ -274,9 +287,17 @@ export default async function ProfiloPage() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function Stat({
+  value,
+  label,
+  className = "",
+}: {
+  value: string;
+  label: string;
+  className?: string;
+}) {
   return (
-    <div className="card-light p-4">
+    <div className={`card-light p-4 ${className}`}>
       <p className="text-xl font-extrabold">{value}</p>
       <p className="text-[12px] font-semibold leading-tight text-ink-muted">{label}</p>
     </div>
