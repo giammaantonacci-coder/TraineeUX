@@ -47,7 +47,16 @@ export default async function PercorsoPage() {
           const touched = modules.some((m) => exercisesDoneInModule(best, m.id) > 0);
 
           return (
-            <section key={level.id} id={level.id} className="scroll-mt-6">
+            /* Il margine di scorrimento ripete l'altezza della fascia di stato,
+               come fa il padding del layout. Con scroll-mt-6 erano 24px contro
+               i 36 della fascia: arrivando qui da "I tuoi livelli" sulla home,
+               il titolo del livello finiva per un terzo dietro la fascia
+               bianca, e sembrava tagliato. */
+            <section
+              key={level.id}
+              id={level.id}
+              className="scroll-mt-[calc(max(env(safe-area-inset-top),2.25rem)+0.75rem)] md:scroll-mt-8"
+            >
               {/* Bity porta il colore del livello: scorrendo la pagina i cinque
                   livelli diventano cinque tinte, e lo stato di ciascuno si legge
                   dall'espressione prima che dalle pillole. Decorativa: il conteggio

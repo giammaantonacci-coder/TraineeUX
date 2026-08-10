@@ -11,8 +11,18 @@ const ITEMS = [
   { href: "/profilo", label: "Profilo", icon: ProfileIcon },
 ];
 
+/**
+ * Indice della voce corrispondente al percorso, o -1 se non ce n'è una.
+ *
+ * Prima il -1 veniva riportato a 0, cioè a "Oggi". Ma le rotte fuori dalla
+ * barra esistono — un esercizio, il centro notifiche, la pagina aziende — e su
+ * quelle la barra accendeva Oggi e ci metteva pure aria-current="page":
+ * indicava una schermata su cui non eri e lo annunciava come un fatto a chi
+ * naviga con uno screen reader. Non essere in nessuna delle quattro sezioni è
+ * uno stato legittimo, e ora la barra lo rappresenta invece di inventare.
+ */
 function indexOfPath(pathname: string): number {
-  const i = ITEMS.findIndex((item) =>
+  return ITEMS.findIndex((item) =>
     // La radice va confrontata per intero: con startsWith sarebbe attiva
     // ovunque. "/oggi" è il vecchio indirizzo della stessa schermata e resta
     // vivo per le installazioni già presenti su qualche telefono.
@@ -20,7 +30,6 @@ function indexOfPath(pathname: string): number {
       ? pathname === "/" || pathname === "/oggi"
       : pathname.startsWith(item.href),
   );
-  return Math.max(0, i);
 }
 
 /**
@@ -64,11 +73,15 @@ export function BottomNav() {
           <ul className="relative grid grid-cols-4 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
             {/* La pillola scura scorre da una colonna all'altra. La larghezza
                 toglie il padding del contenitore, così un passo di traslazione
-                è esattamente una colonna. */}
+                è esattamente una colonna. Fuori dalle quattro sezioni sparisce
+                invece di restare accesa su una voce a caso: resta al suo posto
+                e riappare da lì al primo tocco. */}
             <li
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{ transform: `translateX(${attivo * 100}%)` }}
+              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink transition-[transform,opacity] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                attivo < 0 ? "opacity-0" : "opacity-100"
+              }`}
+              style={{ transform: `translateX(${Math.max(0, attivo) * 100}%)` }}
             />
 
             {ITEMS.map((item, i) => {

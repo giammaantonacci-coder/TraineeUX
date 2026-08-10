@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { leggiNotifiche, segnaTutteLette } from "@/app/notifiche/actions";
+import { leggiNotifiche, leggiPreferenze, segnaTutteLette } from "@/app/notifiche/actions";
 import { requireUser } from "@/lib/data";
 import { PageHeader } from "@/components/ui";
 import { Bity } from "@/components/Bity";
@@ -12,7 +12,11 @@ export default async function NotifichePage() {
   const user = await requireUser();
   if (!user) redirect("/benvenuto");
 
-  const notifiche = await leggiNotifiche();
+  // Il fuso serve a datare le notifiche. Questa pagina è renderizzata sul
+  // server, che gira a UTC: senza, un promemoria ricevuto alle 14:00 italiane
+  // veniva mostrato come "12:00", cioè un'ora a cui non è successo niente.
+  const [notifiche, pref] = await Promise.all([leggiNotifiche(), leggiPreferenze()]);
+  const fuso = pref?.timezone || "Europe/Rome";
   const daLeggere = notifiche.filter((n) => !n.read_at).length;
 
   return (
@@ -64,7 +68,7 @@ export default async function NotifichePage() {
               <div className="flex items-baseline justify-between gap-3">
                 <p className="text-[15px] font-bold leading-snug">{n.title}</p>
                 <span className="shrink-0 text-xs font-semibold text-ink-muted">
-                  {quando(n.created_at)}
+                  {quando(n.created_at, fuso)}
                 </span>
               </div>
               <p className="mt-1 text-[14px] leading-relaxed text-ink-muted">
@@ -89,13 +93,41 @@ export default async function NotifichePage() {
   );
 }
 
-/** Data leggibile e breve: la lista è lunga e l'ora esatta non serve a nulla. */
-function quando(iso: string): string {
+/**
+ * Data leggibile e breve, nel fuso di chi legge.
+ *
+ * Il fuso va passato esplicitamente: qui si renderizza sul server, che gira a
+ * UTC, e le funzioni di formattazione senza timeZone prendono quello. Il
+ * promemoria delle 14:00 italiane risultava mandato alle 12:00, e anche il
+ * confronto con "oggi" cambiava risultato nelle due ore a cavallo della
+ * mezzanotte.
+ */
+function quando(iso: string, fuso: string): string {
   const d = new Date(iso);
-  const oggi = new Date();
-  const stessoGiorno = d.toDateString() === oggi.toDateString();
-  if (stessoGiorno) {
-    return d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+  try {
+    const giorno = (x: Date) =>
+      new Intl.DateTimeFormat("it-IT", {
+        timeZone: fuso,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(x);
+
+    if (giorno(d) === giorno(new Date())) {
+      return new Intl.DateTimeFormat("it-IT", {
+        timeZone: fuso,
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(d);
+    }
+    return new Intl.DateTimeFormat("it-IT", {
+      timeZone: fuso,
+      day: "numeric",
+      month: "short",
+    }).format(d);
+  } catch {
+    // Un fuso non riconosciuto fa lanciare Intl: meglio una data approssimata
+    // che una schermata che non si apre.
+    return new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short" }).format(d);
   }
-  return d.toLocaleDateString("it-IT", { day: "numeric", month: "short" });
 }
