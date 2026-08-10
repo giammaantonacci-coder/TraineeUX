@@ -276,54 +276,6 @@ body {
   pointer-events: none;
 }
 
-/**
- * L'indicatore quando viene preso in mano: vetro scuro invece di nero pieno.
- *
- * Scuro e non chiaro, benché il vetro si faccia di solito chiaro: la voce
- * attiva porta icona ed etichetta bianche, e su un vetro chiaro sparirebbero.
- * Restando scuro il contrasto regge, e la traslucenza si legge lo stesso dove
- * la pillola sporge dalla barra e ha sotto il contenuto della pagina.
- *
- * L'opacità non scende sotto il 66%: più giù il bianco della barra sale
- * attraverso il vetro, il fondo si schiarisce e l'etichetta bianca perde il
- * contrasto proprio nel momento in cui la si sta guardando per decidere dove
- * lasciare il dito.
- */
-@layer components {
-  .vetro-preso {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.62),
-      rgba(255, 255, 255, 0.42)
-    );
-    backdrop-filter: blur(16px) saturate(190%);
-    -webkit-backdrop-filter: blur(16px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow:
-      inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
-      inset 0 -1.5px 2px rgba(255, 255, 255, 0.5),
-      0 2px 6px rgba(15, 17, 23, 0.08),
-      0 14px 30px -8px rgba(15, 17, 23, 0.28);
-  }
-
-  /* Variante più spinta: quasi solo bordo e sfocatura. */
-  .vetro-preso-molto {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.4),
-      rgba(255, 255, 255, 0.2)
-    );
-    backdrop-filter: blur(20px) saturate(200%) brightness(1.06);
-    -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(1.06);
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    box-shadow:
-      inset 0 1.5px 0 rgba(255, 255, 255, 1),
-      inset 0 -1.5px 3px rgba(255, 255, 255, 0.6),
-      0 2px 6px rgba(15, 17, 23, 0.06),
-      0 14px 30px -8px rgba(15, 17, 23, 0.24);
-  }
-}
-
 /* Sulla barra di navigazione la pressione prolungata è un gesto nostro: serve
    a prendere l'indicatore e trascinarlo. Su iOS, tenendo premuto un
    collegamento, Safari apre l'anteprima del link — che qui comparirebbe

@@ -117,10 +117,6 @@ function useCompatta(): boolean {
  * perché a quel punto il dito sta cercando di scorrere la pagina, non di
  * trascinare la pillola.
  */
-/* PROVA: gradazione del vetro, si sceglie da NEXT_PUBLIC_VETRO. */
-const VETRO =
-  process.env.NEXT_PUBLIC_VETRO === "molto" ? "vetro-preso-molto" : "vetro-preso";
-
 const ATTESA_MS = 320;
 const TOLLERANZA_PX = 8;
 
@@ -271,10 +267,10 @@ export function BottomNav() {
                 sparirebbero sul nero. */}
             <li
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 t.posizione !== null
-                  ? `${VETRO} transition-transform duration-[120ms]`
-                  : "bg-ink transition-[transform,opacity] duration-[300ms]"
+                  ? "shadow-[0_12px_28px_rgba(15,17,23,0.42)] transition-transform duration-[120ms]"
+                  : "transition-[transform,opacity] duration-[300ms]"
               } ${attivo < 0 && t.posizione === null ? "opacity-0" : "opacity-100"}`}
               style={{
                 transform: `translateX(${(t.posizione ?? Math.max(0, attivo)) * 100}%) ${
@@ -315,13 +311,7 @@ export function BottomNav() {
                     }}
                     className={`tappable flex flex-col items-center rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       compatta ? "gap-0 py-2" : "gap-1 py-2"
-                    } ${
-                      i !== indice
-                        ? "text-ink-muted"
-                        : t.posizione !== null
-                          ? "text-ink"
-                          : "text-white"
-                    }`}
+                    } ${i === indice ? "text-white" : "text-ink-muted"}`}
                   >
                     {/* L'icona rimpicciolisce con la barra: lasciandola a 22px
                         dentro una barra più stretta e più bassa sarebbe
