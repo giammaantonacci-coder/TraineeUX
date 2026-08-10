@@ -256,18 +256,26 @@ export function BottomNav() {
 
                 Sotto il dito la transizione scende a 120ms: a 300 la pillola
                 arriverebbe visibilmente in ritardo rispetto al dito, a zero
-                seguirebbe ogni tremolio della mano. */}
+                seguirebbe ogni tremolio della mano.
+
+                In presa cresce piu' in altezza che in larghezza, fino a
+                sporgere sopra e sotto il bordo della barra: e' quello che la
+                fa leggere come sollevata e presa in mano, invece che
+                semplicemente piu' grande. La crescita orizzontale resta
+                contenuta perche' una pillola larga quanto una colonna e mezza
+                finirebbe sotto le etichette vicine, che sono grigie e
+                sparirebbero sul nero. */}
             <li
               aria-hidden="true"
               className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 t.posizione !== null
-                  ? "shadow-[0_6px_18px_rgba(15,17,23,0.35)] transition-transform duration-[120ms]"
+                  ? "shadow-[0_12px_28px_rgba(15,17,23,0.42)] transition-transform duration-[120ms]"
                   : "transition-[transform,opacity] duration-[300ms]"
               } ${attivo < 0 && t.posizione === null ? "opacity-0" : "opacity-100"}`}
               style={{
-                transform: `translateX(${(t.posizione ?? Math.max(0, attivo)) * 100}%) scale(${
-                  t.posizione !== null ? 1.08 : 1
-                })`,
+                transform: `translateX(${(t.posizione ?? Math.max(0, attivo)) * 100}%) ${
+                  t.posizione !== null ? "scale(1.1, 1.45)" : "scale(1)"
+                }`,
               }}
             />
 
