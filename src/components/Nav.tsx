@@ -51,8 +51,60 @@ function useActiveIndex(): [number, number, (i: number) => void] {
   return [atteso ?? reale, reale, setAtteso];
 }
 
+/**
+ * Barra compatta mentre si scorre verso il basso, distesa tornando su.
+ *
+ * Scorrendo verso il basso si sta leggendo, e la barra è solo ingombro: perde
+ * le etichette e si abbassa. Scorrendo verso l'alto si sta cercando dove
+ * andare, ed è il momento in cui i nomi servono davvero.
+ *
+ * La soglia evita che il movimento parta per una carezza sullo schermo, e
+ * vicino alla cima la barra resta sempre distesa: lì non c'è niente da
+ * guadagnare, e il cambio di forma si leggerebbe come un tremolio.
+ */
+function useCompatta(): boolean {
+  const [compatta, setCompatta] = useState(false);
+  const pathname = usePathname();
+
+  // Cambiando schermata si riparte dall'alto, quindi anche dalla forma distesa:
+  // senza, la barra restava rimpicciolita su una pagina appena aperta.
+  useEffect(() => setCompatta(false), [pathname]);
+
+  useEffect(() => {
+    let ultimo = Math.max(0, window.scrollY);
+    let inAttesa = false;
+    const SOGLIA = 10;
+
+    function suScorrimento() {
+      // Un fotogramma per volta: su iOS lo scorrimento a inerzia genera molti
+      // più eventi di quanti disegni ci siano da fare.
+      if (inAttesa) return;
+      inAttesa = true;
+      requestAnimationFrame(() => {
+        inAttesa = false;
+        const y = Math.max(0, window.scrollY);
+        const delta = y - ultimo;
+        if (y < 48) {
+          setCompatta(false);
+          ultimo = y;
+          return;
+        }
+        if (Math.abs(delta) < SOGLIA) return;
+        setCompatta(delta > 0);
+        ultimo = y;
+      });
+    }
+
+    window.addEventListener("scroll", suScorrimento, { passive: true });
+    return () => window.removeEventListener("scroll", suScorrimento);
+  }, []);
+
+  return compatta;
+}
+
 export function BottomNav() {
   const [attivo, reale, prevedi] = useActiveIndex();
+  const compatta = useCompatta();
 
   return (
     <>
@@ -98,19 +150,30 @@ export function BottomNav() {
                        l'indicatore può anticipare, l'annuncio "pagina corrente"
                        no, o direbbe il falso finché la pagina non è arrivata. */
                     aria-current={i === reale ? "page" : undefined}
+                    /* Il nome dichiarato non dipende dalla forma della barra:
+                       da compatta l'etichetta è alta zero pixel, e il nome
+                       accessibile non deve rimpicciolirsi con lei. */
+                    aria-label={item.label}
                     onClick={() => prevedi(i)}
-                    className={`tappable flex flex-col items-center gap-1 rounded-full py-2 transition-colors duration-[300ms] ${
-                      i === attivo ? "text-white" : "text-ink-muted"
-                    }`}
+                    className={`tappable flex flex-col items-center rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                      compatta ? "gap-0 py-2" : "gap-1 py-2"
+                    } ${i === attivo ? "text-white" : "text-ink-muted"}`}
                   >
                     <Icon
                       className={`h-[22px] w-[22px] shrink-0 transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         i === attivo ? "scale-110" : "scale-100"
                       }`}
                     />
-                    {/* Sempre visibile: con le colonne fisse c'è lo spazio, e
-                        un'icona con il suo nome accanto non va indovinata. */}
-                    <span className="text-[11px] font-bold leading-none">
+                    {/* Il nome resta lì dove serve: si legge a barra ferma o
+                        risalendo, e si ritira scorrendo verso il basso, dove
+                        l'unica cosa che conta è vedere la pagina. L'altezza è
+                        animata invece che nascosta di colpo, così la barra si
+                        abbassa in un movimento solo insieme all'etichetta. */}
+                    <span
+                      className={`overflow-hidden text-[11px] font-bold leading-none transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        compatta ? "h-0 opacity-0" : "h-[11px] opacity-100"
+                      }`}
+                    >
                       {item.label}
                     </span>
                   </Link>
