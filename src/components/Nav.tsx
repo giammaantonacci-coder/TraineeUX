@@ -267,10 +267,10 @@ export function BottomNav() {
                 sparirebbero sul nero. */}
             <li
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 t.posizione !== null
-                  ? "shadow-[0_12px_28px_rgba(15,17,23,0.42)] transition-transform duration-[120ms]"
-                  : "transition-[transform,opacity] duration-[300ms]"
+                  ? "vetro-preso transition-transform duration-[120ms]"
+                  : "bg-ink transition-[transform,opacity] duration-[300ms]"
               } ${attivo < 0 && t.posizione === null ? "opacity-0" : "opacity-100"}`}
               style={{
                 transform: `translateX(${(t.posizione ?? Math.max(0, attivo)) * 100}%) ${

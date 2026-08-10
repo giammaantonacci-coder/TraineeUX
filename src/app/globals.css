@@ -276,6 +276,36 @@ body {
   pointer-events: none;
 }
 
+/**
+ * L'indicatore quando viene preso in mano: vetro scuro invece di nero pieno.
+ *
+ * Scuro e non chiaro, benché il vetro si faccia di solito chiaro: la voce
+ * attiva porta icona ed etichetta bianche, e su un vetro chiaro sparirebbero.
+ * Restando scuro il contrasto regge, e la traslucenza si legge lo stesso dove
+ * la pillola sporge dalla barra e ha sotto il contenuto della pagina.
+ *
+ * L'opacità non scende sotto il 66%: più giù il bianco della barra sale
+ * attraverso il vetro, il fondo si schiarisce e l'etichetta bianca perde il
+ * contrasto proprio nel momento in cui la si sta guardando per decidere dove
+ * lasciare il dito.
+ */
+@layer components {
+  .vetro-preso {
+    background: linear-gradient(
+      to bottom,
+      rgba(15, 17, 23, 0.74),
+      rgba(15, 17, 23, 0.66)
+    );
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(15, 17, 23, 0.35),
+      0 12px 28px rgba(15, 17, 23, 0.35);
+  }
+}
+
 /* Sulla barra di navigazione la pressione prolungata è un gesto nostro: serve
    a prendere l'indicatore e trascinarlo. Su iOS, tenendo premuto un
    collegamento, Safari apre l'anteprima del link — che qui comparirebbe
