@@ -74,11 +74,11 @@ export default async function ModulePage({
         <div className="mt-4 flex items-start gap-3">
           <span
             aria-hidden="true"
-            className="-mt-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+            className="-mt-1.5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
+            <ModuloIcon moduleId={mod.id} className="h-[30px] w-[30px]" />
           </span>
-          <h1 className="min-w-0 text-[26px] font-extrabold leading-tight tracking-tight md:text-4xl">
+          <h1 className="min-w-0 text-[22px] font-extrabold leading-tight tracking-tight md:text-3xl">
             {mod.title}
           </h1>
         </div>

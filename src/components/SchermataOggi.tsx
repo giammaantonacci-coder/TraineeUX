@@ -292,13 +292,23 @@ function SuggestionCard({
           <Pill className="bg-white/60">{exercise.minutes} min</Pill>
         </div>
         <div className="mt-4 flex items-start gap-3">
+          {/* Titolo piu' piccolo e icona piu' grande, per avvicinare i due pesi:
+              18 pixel di corpo contro un riquadro da 52, cioe' poco piu' di due
+              righe di titolo.
+              Lo scostamento verso l'alto e' quello che restava dopo il cambio
+              di misure: allineando i bordi superiori il centro dell'icona cade
+              sotto la parola, perche' il riquadro e' molto piu' alto della
+              prima riga. Non lo azzero del tutto — servirebbero quindici pixel
+              e l'icona finirebbe addosso alle pillole sopra — ma quel che resta
+              non si nota, perche' a titolo su due righe l'icona si legge come
+              compagna del blocco, non della singola riga. */}
           <span
             aria-hidden="true"
-            className="-mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+            className="-mt-2.5 flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
+            <ModuloIcon moduleId={mod.id} className="h-7 w-7" />
           </span>
-          <h3 className="min-w-0 text-xl font-extrabold leading-tight md:text-2xl">
+          <h3 className="min-w-0 text-lg font-extrabold leading-tight md:text-xl">
             {exercise.title}
           </h3>
         </div>
