@@ -278,35 +278,20 @@ function SuggestionCard({
         href={href}
         className={`block rounded-[28px] ${ACCENT_BG[mod.accent]} tappable p-5 hover:-translate-y-0.5 md:p-6`}
       >
-        {/* L'icona del modulo in linea con i tag, non sopra: sono entrambi
-            etichette di inquadramento — che modulo, che tipo, che livello,
-            quanto dura — e su due righe separate occupavano il doppio dello
-            spazio per dire cose dello stesso rango.
-            Su fondo colorato sta in un riquadro bianco, perche' il tratto
-            scuro sul pastello perderebbe stacco. Il riquadro e' piu' piccolo
-            di quello nel percorso: qui divide la riga con tre pillole, e a 44
-            pixel le spingeva a capo gia' con "Lead / Principal". */}
-        {/* Icona e tag tutti a sinistra, il pulsante in fondo a destra.
-            La card si legge in una diagonale: si parte dall'angolo dove
-            comincia ogni riga di testo e si finisce dove il pollice arriva
-            da solo. I tag stanno sullo stesso bordo del titolo e della
-            descrizione, quindi la colonna sinistra e' una sola invece di
-            due allineamenti opposti che si guardavano da lontano.
-            L'icona non divide la riga con il titolo: li' gli toglieva
-            larghezza e lo mandava a capo prima. */}
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white/70"
-          >
-            <ModuloIcon moduleId={mod.id} className="h-7 w-7" />
-          </span>
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
-            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
-            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
-          </div>
-        </div>
+        {/* In alto solo l'icona del modulo, in basso i tag accanto al
+            pulsante. La card si legge dall'alto in basso senza incontrare
+            nulla che la fermi: icona, titolo, modulo, descrizione. Le
+            etichette scendono in fondo perche' non servono a decidere di
+            leggere — servono a decidere di cominciare, che e' la cosa che
+            si fa in quel punto, con il pollice gia' li'.
+            Su fondo colorato l'icona sta in un riquadro bianco, perche' il
+            tratto scuro sul pastello perderebbe stacco. */}
+        <span
+          aria-hidden="true"
+          className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white/70"
+        >
+          <ModuloIcon moduleId={mod.id} className="h-7 w-7" />
+        </span>
         <h3 className="mt-4 text-xl font-extrabold leading-tight md:text-2xl">
           {exercise.title}
         </h3>
@@ -314,8 +299,17 @@ function SuggestionCard({
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink/80">
           {exercise.description}
         </p>
-        <div className="mt-4 flex justify-end">
-          <span className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white">
+        {/* items-end: i tag vanno a capo su piu' righe, e ad allinearli al
+            centro l'ultima riga non tornava mai sulla stessa linea del
+            pulsante. Appoggiati in basso, l'ultima riga e il pulsante
+            condividono il bordo inferiore comunque vadano a capo. */}
+        <div className="mt-5 flex items-end justify-between gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
+            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
+            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white">
             {reason.startsWith("Chiuso") ? "Riprova" : "Inizia"} ›
           </span>
         </div>
