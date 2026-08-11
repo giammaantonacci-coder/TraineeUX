@@ -10,6 +10,7 @@ import {
 import { bestPctPerExercise, getProgressData, moduleBestPct } from "@/lib/data";
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
+import { ModuloIcon } from "@/components/icone-moduli";
 import { CheckIcon } from "@/components/icons";
 
 export async function generateMetadata({
@@ -53,6 +54,16 @@ export default async function ModulePage({
       </Link>
 
       <header className={`rounded-[28px] ${ACCENT_BG[mod.accent]} p-6 md:p-8`}>
+        {/* La stessa icona della card da cui si arriva: è il segno che dice
+            "sei entrato in quello che avevi toccato". Su fondo colorato sta in
+            un riquadro bianco, perché il tratto scuro sul pastello perderebbe
+            stacco. */}
+        <span
+          aria-hidden="true"
+          className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70"
+        >
+          <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
+        </span>
         <div className="flex flex-wrap items-center gap-2">
           <Pill tone="dark">{level.name}</Pill>
           <Pill className="bg-white/60">{mod.minutes} min</Pill>

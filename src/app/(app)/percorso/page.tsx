@@ -8,7 +8,8 @@ import {
   moduleBestPct,
 } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
-import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { ACCENT_BG, PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { ModuloIcon } from "@/components/icone-moduli";
 import { Bity, type BityMood } from "@/components/Bity";
 
 export const metadata: Metadata = { title: "Percorso" };
@@ -93,19 +94,22 @@ export default async function PercorsoPage() {
                         href={`/percorso/${module.id}`}
                         className="card-light tappable flex h-full flex-col p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
                       >
-                        {/* Niente trattino colorato sopra il titolo. L'accento
-                            del modulo non identifica il modulo — dodici moduli
-                            si dividono quattro colori — e a questa misura non
-                            dava nemmeno atmosfera. Restava un colore senza
-                            significato a otto pixel dal verde, che invece un
-                            significato ce l'ha: chi guarda li legge come lo
-                            stesso codice, e il rosa sembra un avvertimento. */}
+                        {/* L'icona apre la card, il titolo viene sotto a tutta
+                            larghezza. Prima qui c'era un trattino colorato che
+                            non distingueva niente: gli accenti sono quattro e i
+                            moduli dodici. Il disegno invece è diverso per
+                            ciascuno e anticipa il tema.
+                            Il colore resta come fondo del riquadro — lo stesso
+                            trattamento delle card sulla home — e adesso può
+                            farlo senza ambiguità: non è più un segno da
+                            interpretare, è la scatola di un segno che parla. */}
                         <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0">
-                            <h3 className="text-lg font-bold leading-tight">
-                              {module.title}
-                            </h3>
-                          </div>
+                          <span
+                            aria-hidden="true"
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${ACCENT_BG[module.accent]}`}
+                          >
+                            <ModuloIcon moduleId={module.id} className="h-[22px] w-[22px]" />
+                          </span>
                           {done > 0 ? (
                             <ScoreRing
                               value={pct}
@@ -114,6 +118,10 @@ export default async function PercorsoPage() {
                             />
                           ) : null}
                         </div>
+
+                        <h3 className="mt-3 text-lg font-bold leading-tight">
+                          {module.title}
+                        </h3>
 
                         <p className="mt-2 flex-1 text-[14px] leading-relaxed text-ink-muted">
                           {module.tagline}

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
-  EXERCISE_TYPE_DESCRIPTION,
   EXERCISE_TYPE_LABEL,
   MODULES,
 } from "@/content";
@@ -16,6 +15,7 @@ import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/prog
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import { Bity, type BityMood } from "@/components/Bity";
 import { ExerciseIcon } from "@/components/icons";
+import { ModuloIcon } from "@/components/icone-moduli";
 import { nomeDiBattesimo } from "@/lib/labels";
 import type { Exercise, Module } from "@/lib/types";
 
@@ -278,6 +278,15 @@ function SuggestionCard({
         href={href}
         className={`block rounded-[28px] ${ACCENT_BG[mod.accent]} tappable p-5 hover:-translate-y-0.5 md:p-6`}
       >
+        {/* L'icona del modulo, la stessa della sua card nel percorso e della
+            sua testata: chi ha gia' visto il modulo lo riconosce prima di
+            leggere. Su fondo colorato sta in un riquadro bianco. */}
+        <span
+          aria-hidden="true"
+          className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/70"
+        >
+          <ModuloIcon moduleId={mod.id} className="h-[22px] w-[22px]" />
+        </span>
         <div className="flex flex-wrap items-center gap-2">
           <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
           <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
@@ -310,8 +319,13 @@ function SuggestionCard({
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-bold">{exercise.title}</span>
+        {/* Qui il modulo si nomina invece di disegnarsi. L'icona nel riquadro
+            resta quella del tipo di esercizio, perche' da questa card si e' a
+            un tocco dal cominciare e conta sapere che lavoro sara'; il modulo
+            e' contesto, e in parole si legge senza doverlo decifrare. Prima
+            c'era la descrizione del tipo, che l'icona accanto gia' diceva. */}
         <span className="block truncate text-[13px] text-ink-muted">
-          {EXERCISE_TYPE_DESCRIPTION[exercise.type]} · {exercise.minutes} min
+          {mod.title} · {exercise.minutes} min
         </span>
         <span className="mt-1 block truncate text-[12px] font-semibold text-ink-muted">
           {reason}
