@@ -304,10 +304,18 @@ function SuggestionCard({
             pulsante. Appoggiati in basso, l'ultima riga e il pulsante
             condividono il bordo inferiore comunque vadano a capo. */}
         <div className="mt-5 flex items-end justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
-            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
-            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+          {/* Pillole piccole: qui dividono la riga con il pulsante, e a corpo
+              pieno facevano concorrenza a lui invece di accompagnarlo. */}
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+            <Pill tone="dark" size="sm">
+              {EXERCISE_TYPE_LABEL[exercise.type]}
+            </Pill>
+            <Pill size="sm" className="bg-white/60">
+              {levelMeta(mod.level).name}
+            </Pill>
+            <Pill size="sm" className="bg-white/60">
+              {exercise.minutes} min
+            </Pill>
           </div>
           <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white">
             {reason.startsWith("Chiuso") ? "Riprova" : "Inizia"} ›

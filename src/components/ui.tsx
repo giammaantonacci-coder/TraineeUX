@@ -20,10 +20,13 @@ export const ACCENT_TEXT: Record<string, string> = {
 export function Pill({
   children,
   tone = "neutral",
+  size = "md",
   className = "",
 }: {
   children: ReactNode;
   tone?: "neutral" | "dark" | "mint" | "sky" | "blush" | "butter";
+  /** "sm" dove le pillole dividono la riga con qualcos'altro. */
+  size?: "md" | "sm";
   className?: string;
 }) {
   const tones = {
@@ -34,9 +37,17 @@ export function Pill({
     blush: "bg-blush text-ink",
     butter: "bg-butter text-ink",
   };
+  // Corpo e imbottitura stanno qui e non in una classe passata da fuori: due
+  // utility di font-size sullo stesso elemento le risolve l'ordine del foglio
+  // di stile, non l'ordine in cui sono scritte, quindi una sovrascrittura
+  // dall'esterno vince o perde a seconda di come Tailwind emette le regole.
+  const sizes = {
+    md: "px-3 py-1 text-xs",
+    sm: "px-2.5 py-[3px] text-[11px]",
+  };
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${tones[tone]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-semibold ${sizes[size]} ${tones[tone]} ${className}`}
     >
       {children}
     </span>
