@@ -8,7 +8,7 @@ import {
   moduleBestPct,
 } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
-import { ACCENT_BG, PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 import { Bity, type BityMood } from "@/components/Bity";
 
 export const metadata: Metadata = { title: "Percorso" };
@@ -93,12 +93,15 @@ export default async function PercorsoPage() {
                         href={`/percorso/${module.id}`}
                         className="card-light tappable flex h-full flex-col p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
                       >
+                        {/* Niente trattino colorato sopra il titolo. L'accento
+                            del modulo non identifica il modulo — dodici moduli
+                            si dividono quattro colori — e a questa misura non
+                            dava nemmeno atmosfera. Restava un colore senza
+                            significato a otto pixel dal verde, che invece un
+                            significato ce l'ha: chi guarda li legge come lo
+                            stesso codice, e il rosa sembra un avvertimento. */}
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
-                            <span
-                              aria-hidden="true"
-                              className={`mb-3 block h-1.5 w-10 rounded-full ${ACCENT_BG[module.accent]}`}
-                            />
                             <h3 className="text-lg font-bold leading-tight">
                               {module.title}
                             </h3>
