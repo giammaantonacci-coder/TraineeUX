@@ -286,21 +286,22 @@ function SuggestionCard({
             scuro sul pastello perderebbe stacco. Il riquadro e' piu' piccolo
             di quello nel percorso: qui divide la riga con tre pillole, e a 44
             pixel le spingeva a capo gia' con "Lead / Principal". */}
-        {/* Icona a sinistra, tag a destra, titolo sotto a tutta larghezza e a
-            corpo pieno. L'icona non divide piu' la riga con il titolo: li'
-            gli toglieva larghezza e lo mandava a capo prima, e per farcela
-            stare avevo dovuto rimpicciolire il titolo — cioe' indebolire la
-            cosa che si legge per fare posto a quella che accompagna.
-            I tag si allineano a destra anche quando vanno a capo, cosi' le
-            righe restano appoggiate allo stesso bordo. */}
-        <div className="flex items-center justify-between gap-3">
+        {/* Icona e tag tutti a sinistra, il pulsante in fondo a destra.
+            La card si legge in una diagonale: si parte dall'angolo dove
+            comincia ogni riga di testo e si finisce dove il pollice arriva
+            da solo. I tag stanno sullo stesso bordo del titolo e della
+            descrizione, quindi la colonna sinistra e' una sola invece di
+            due allineamenti opposti che si guardavano da lontano.
+            L'icona non divide la riga con il titolo: li' gli toglieva
+            larghezza e lo mandava a capo prima. */}
+        <div className="flex items-center gap-3">
           <span
             aria-hidden="true"
             className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
             <ModuloIcon moduleId={mod.id} className="h-7 w-7" />
           </span>
-          <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
             <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
             <Pill className="bg-white/60">{exercise.minutes} min</Pill>
@@ -313,9 +314,11 @@ function SuggestionCard({
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink/80">
           {exercise.description}
         </p>
-        <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white">
-          {reason.startsWith("Chiuso") ? "Riprova" : "Inizia"} ›
-        </p>
+        <div className="mt-4 flex justify-end">
+          <span className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white">
+            {reason.startsWith("Chiuso") ? "Riprova" : "Inizia"} ›
+          </span>
+        </div>
       </Link>
     );
   }
