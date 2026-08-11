@@ -59,29 +59,30 @@ export default async function ModulePage({
             usavano due disposizioni diverse per lo stesso identico blocco di
             etichette. Su fondo colorato il riquadro e' bianco, perche' il
             tratto scuro sul pastello perderebbe stacco. */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Icona a sinistra, tag a destra, titolo sotto a corpo pieno: la
+            stessa disposizione della card in evidenza sulla home.
+            Lo stacco fra icona e tag e' 8 e non 12: nel caso piu' stretto —
+            "Lead / Principal" piu' "3 esercizi · 60 min", 251 pixel di
+            pillole su 310 di riga — con 12 ne mancava uno solo e i tag
+            andavano a capo, lasciando un vuoto in mezzo alla riga. */}
+        <div className="flex items-center justify-between gap-2">
+          <span
+            aria-hidden="true"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+          >
+            <ModuloIcon moduleId={mod.id} className="h-[26px] w-[26px]" />
+          </span>
+          <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
             <Pill tone="dark">{level.name}</Pill>
-            {/* Esercizi e minuti in una pillola sola: sono la stessa
-                informazione — quanto lavoro e' — e nella lista del percorso
-                erano gia' scritti cosi', "3/3 esercizi · 45 min". Divisi in due
-                pillole costavano quaranta pixel che, con l'icona in linea e un
-                nome di livello lungo, mandavano la riga a capo. */}
             <Pill className="bg-white/60">
               {mod.exercises.length} esercizi · {mod.minutes} min
             </Pill>
             {mastered ? <Pill tone="dark">Padroneggiato</Pill> : null}
+          </div>
         </div>
-        <div className="mt-4 flex items-start gap-3">
-          <span
-            aria-hidden="true"
-            className="-mt-1.5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70"
-          >
-            <ModuloIcon moduleId={mod.id} className="h-[30px] w-[30px]" />
-          </span>
-          <h1 className="min-w-0 text-[22px] font-extrabold leading-tight tracking-tight md:text-3xl">
-            {mod.title}
-          </h1>
-        </div>
+        <h1 className="mt-4 text-[26px] font-extrabold leading-tight tracking-tight md:text-4xl">
+          {mod.title}
+        </h1>
         <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink/80">
           {mod.tagline}
         </p>

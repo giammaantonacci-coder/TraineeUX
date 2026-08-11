@@ -286,32 +286,29 @@ function SuggestionCard({
             scuro sul pastello perderebbe stacco. Il riquadro e' piu' piccolo
             di quello nel percorso: qui divide la riga con tre pillole, e a 44
             pixel le spingeva a capo gia' con "Lead / Principal". */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
-          <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
-          <Pill className="bg-white/60">{exercise.minutes} min</Pill>
-        </div>
-        <div className="mt-4 flex items-start gap-3">
-          {/* Titolo piu' piccolo e icona piu' grande, per avvicinare i due pesi:
-              18 pixel di corpo contro un riquadro da 52, cioe' poco piu' di due
-              righe di titolo.
-              Lo scostamento verso l'alto e' quello che restava dopo il cambio
-              di misure: allineando i bordi superiori il centro dell'icona cade
-              sotto la parola, perche' il riquadro e' molto piu' alto della
-              prima riga. Non lo azzero del tutto — servirebbero quindici pixel
-              e l'icona finirebbe addosso alle pillole sopra — ma quel che resta
-              non si nota, perche' a titolo su due righe l'icona si legge come
-              compagna del blocco, non della singola riga. */}
+        {/* Icona a sinistra, tag a destra, titolo sotto a tutta larghezza e a
+            corpo pieno. L'icona non divide piu' la riga con il titolo: li'
+            gli toglieva larghezza e lo mandava a capo prima, e per farcela
+            stare avevo dovuto rimpicciolire il titolo — cioe' indebolire la
+            cosa che si legge per fare posto a quella che accompagna.
+            I tag si allineano a destra anche quando vanno a capo, cosi' le
+            righe restano appoggiate allo stesso bordo. */}
+        <div className="flex items-center justify-between gap-3">
           <span
             aria-hidden="true"
-            className="-mt-2.5 flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white/70"
+            className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
             <ModuloIcon moduleId={mod.id} className="h-7 w-7" />
           </span>
-          <h3 className="min-w-0 text-lg font-extrabold leading-tight md:text-xl">
-            {exercise.title}
-          </h3>
+          <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
+            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
+            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
+            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+          </div>
         </div>
+        <h3 className="mt-4 text-xl font-extrabold leading-tight md:text-2xl">
+          {exercise.title}
+        </h3>
         <p className="mt-1 text-sm font-semibold text-ink/70">{mod.title}</p>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink/80">
           {exercise.description}
