@@ -286,22 +286,22 @@ function SuggestionCard({
             scuro sul pastello perderebbe stacco. Il riquadro e' piu' piccolo
             di quello nel percorso: qui divide la riga con tre pillole, e a 44
             pixel le spingeva a capo gia' con "Lead / Principal". */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
+          <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
+          <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+        </div>
+        <div className="mt-4 flex items-start gap-3">
           <span
             aria-hidden="true"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+            className="-mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
             <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
           </span>
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
-            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
-            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
-          </div>
+          <h3 className="min-w-0 text-xl font-extrabold leading-tight md:text-2xl">
+            {exercise.title}
+          </h3>
         </div>
-        <h3 className="mt-4 text-xl font-extrabold leading-tight md:text-2xl">
-          {exercise.title}
-        </h3>
         <p className="mt-1 text-sm font-semibold text-ink/70">{mod.title}</p>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink/80">
           {exercise.description}
