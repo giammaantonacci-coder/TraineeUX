@@ -5,7 +5,6 @@ import { MODULES } from "@/content";
 import {
   exercisesDoneInModule,
   getProgressData,
-  highestLevelReached,
   moduleBestPct,
 } from "@/lib/data";
 import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
@@ -24,16 +23,14 @@ export default async function PercorsoPage() {
   const data = await getProgressData();
   if (!data) redirect("/benvenuto");
   const { best } = data;
-  const livelloRaggiunto = highestLevelReached(best);
-  const tuttoFatto = MODULES.every(
-    (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
-  );
 
   return (
     <div className="animate-rise">
+      {/* Senza Bity: sotto, ogni livello ne ha gia' una che ne porta il colore
+          e lo stato. Quella in cima non aggiungeva nulla e faceva partire il
+          titolo rientrato rispetto a tutto il resto della schermata. */}
       <PageHeader
         eyebrow="Percorso"
-        bity={{ mood: tuttoFatto ? "esulta" : "felice", level: livelloRaggiunto }}
         title="Dal mestiere al giudizio"
         subtitle="Cinque livelli, dodici moduli. Ogni livello non aggiunge strumenti: allarga l'ambito su cui decidi. Puoi affrontarli nell'ordine che preferisci, ma i moltiplicatori di XP crescono con il livello."
       />
