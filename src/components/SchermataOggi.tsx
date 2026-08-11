@@ -278,19 +278,26 @@ function SuggestionCard({
         href={href}
         className={`block rounded-[28px] ${ACCENT_BG[mod.accent]} tappable p-5 hover:-translate-y-0.5 md:p-6`}
       >
-        {/* L'icona del modulo, la stessa della sua card nel percorso e della
-            sua testata: chi ha gia' visto il modulo lo riconosce prima di
-            leggere. Su fondo colorato sta in un riquadro bianco. */}
-        <span
-          aria-hidden="true"
-          className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/70"
-        >
-          <ModuloIcon moduleId={mod.id} className="h-[22px] w-[22px]" />
-        </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
-          <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
-          <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+        {/* L'icona del modulo in linea con i tag, non sopra: sono entrambi
+            etichette di inquadramento — che modulo, che tipo, che livello,
+            quanto dura — e su due righe separate occupavano il doppio dello
+            spazio per dire cose dello stesso rango.
+            Su fondo colorato sta in un riquadro bianco, perche' il tratto
+            scuro sul pastello perderebbe stacco. Il riquadro e' piu' piccolo
+            di quello nel percorso: qui divide la riga con tre pillole, e a 44
+            pixel le spingeva a capo gia' con "Lead / Principal". */}
+        <div className="flex items-center gap-2.5">
+          <span
+            aria-hidden="true"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/70"
+          >
+            <ModuloIcon moduleId={mod.id} className="h-[19px] w-[19px]" />
+          </span>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
+            <Pill className="bg-white/60">{levelMeta(mod.level).name}</Pill>
+            <Pill className="bg-white/60">{exercise.minutes} min</Pill>
+          </div>
         </div>
         <h3 className="mt-4 text-xl font-extrabold leading-tight md:text-2xl">
           {exercise.title}
