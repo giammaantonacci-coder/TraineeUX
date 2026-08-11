@@ -54,21 +54,30 @@ export default async function ModulePage({
       </Link>
 
       <header className={`rounded-[28px] ${ACCENT_BG[mod.accent]} p-6 md:p-8`}>
-        {/* La stessa icona della card da cui si arriva: è il segno che dice
-            "sei entrato in quello che avevi toccato". Su fondo colorato sta in
-            un riquadro bianco, perché il tratto scuro sul pastello perderebbe
-            stacco. */}
-        <span
-          aria-hidden="true"
-          className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70"
-        >
-          <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
-        </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <Pill tone="dark">{level.name}</Pill>
-          <Pill className="bg-white/60">{mod.minutes} min</Pill>
-          <Pill className="bg-white/60">{mod.exercises.length} esercizi</Pill>
-          {mastered ? <Pill tone="dark">Padroneggiato</Pill> : null}
+        {/* La stessa icona della card da cui si arriva, e in linea con le
+            pillole come sulla home: prima stava sopra, e le due schermate
+            usavano due disposizioni diverse per lo stesso identico blocco di
+            etichette. Su fondo colorato il riquadro e' bianco, perche' il
+            tratto scuro sul pastello perderebbe stacco. */}
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
+          >
+            <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
+          </span>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <Pill tone="dark">{level.name}</Pill>
+            {/* Esercizi e minuti in una pillola sola: sono la stessa
+                informazione — quanto lavoro e' — e nella lista del percorso
+                erano gia' scritti cosi', "3/3 esercizi · 45 min". Divisi in due
+                pillole costavano quaranta pixel che, con l'icona in linea e un
+                nome di livello lungo, mandavano la riga a capo. */}
+            <Pill className="bg-white/60">
+              {mod.exercises.length} esercizi · {mod.minutes} min
+            </Pill>
+            {mastered ? <Pill tone="dark">Padroneggiato</Pill> : null}
+          </div>
         </div>
         <h1 className="mt-4 text-[26px] font-extrabold leading-tight tracking-tight md:text-4xl">
           {mod.title}

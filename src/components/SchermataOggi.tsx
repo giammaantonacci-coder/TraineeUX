@@ -289,9 +289,9 @@ function SuggestionCard({
         <div className="flex items-center gap-2.5">
           <span
             aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/70"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/70"
           >
-            <ModuloIcon moduleId={mod.id} className="h-[19px] w-[19px]" />
+            <ModuloIcon moduleId={mod.id} className="h-6 w-6" />
           </span>
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             <Pill tone="dark">{EXERCISE_TYPE_LABEL[exercise.type]}</Pill>
