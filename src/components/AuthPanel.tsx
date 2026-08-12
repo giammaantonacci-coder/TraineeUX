@@ -8,8 +8,15 @@ import {
   signUp,
   type AuthResult,
 } from "@/app/actions";
+import { ACCESSI_ESTERNI } from "@/lib/supabase/config";
 
 const initial: AuthResult = {};
+
+/** L'ordine e' quello in cui compaiono; l'elenco acceso arriva dalle env var. */
+const ESTERNI = [
+  { id: "google", etichetta: "Continua con Google", marchio: <MarchioGoogle /> },
+  { id: "apple", etichetta: "Continua con Apple", marchio: <MarchioApple /> },
+];
 
 export function AuthPanel() {
   const [mode, setMode] = useState<"accedi" | "registrati">("registrati");
@@ -24,6 +31,8 @@ export function AuthPanel() {
   // L'errore del provider non appartiene al modulo di sotto: viene da un
   // pulsante diverso e va mostrato dove si e' premuto.
   const erroreProvider = provState.error;
+
+  const esterni = ESTERNI.filter((p) => ACCESSI_ESTERNI.includes(p.id));
 
   return (
     <div className="card-dark p-6 md:p-7">
@@ -61,40 +70,46 @@ export function AuthPanel() {
           non deve leggere tre campi prima di scoprire che non gli servono. Non
           c'e' distinzione fra creare ed entrare, perche' dalla parte del
           provider non esiste: il primo accesso crea l'account, i successivi lo
-          ritrovano. */}
-      <div className="mt-6 space-y-2.5">
-        <form action={provAction}>
-          <input type="hidden" name="provider" value="google" />
-          <BottoneProvider disabled={provPending} etichetta="Continua con Google">
-            <MarchioGoogle />
-          </BottoneProvider>
-        </form>
-        <form action={provAction}>
-          <input type="hidden" name="provider" value="apple" />
-          <BottoneProvider disabled={provPending} etichetta="Continua con Apple">
-            <MarchioApple />
-          </BottoneProvider>
-        </form>
-      </div>
+          ritrovano.
+          Compaiono solo quelli accesi: un pulsante che porta a una schermata di
+          errore vale meno di un pulsante che non c'e'. */}
+      {esterni.length > 0 ? (
+        <>
+          <div className="mt-6 space-y-2.5">
+            {esterni.map((p) => (
+              <form key={p.id} action={provAction}>
+                <input type="hidden" name="provider" value={p.id} />
+                <BottoneProvider disabled={provPending} etichetta={p.etichetta}>
+                  {p.marchio}
+                </BottoneProvider>
+              </form>
+            ))}
+          </div>
 
-      {erroreProvider ? (
-        <p
-          role="alert"
-          className="mt-3 rounded-2xl bg-blush/20 px-4 py-3 text-sm font-medium text-blush"
-        >
-          {erroreProvider}
-        </p>
+          {erroreProvider ? (
+            <p
+              role="alert"
+              className="mt-3 rounded-2xl bg-blush/20 px-4 py-3 text-sm font-medium text-blush"
+            >
+              {erroreProvider}
+            </p>
+          ) : null}
+
+          <div className="my-6 flex items-center gap-3" aria-hidden="true">
+            <span className="h-px flex-1 bg-white/15" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/40">
+              oppure
+            </span>
+            <span className="h-px flex-1 bg-white/15" />
+          </div>
+        </>
       ) : null}
 
-      <div className="my-6 flex items-center gap-3" aria-hidden="true">
-        <span className="h-px flex-1 bg-white/15" />
-        <span className="text-xs font-semibold uppercase tracking-wider text-white/40">
-          oppure
-        </span>
-        <span className="h-px flex-1 bg-white/15" />
-      </div>
-
-      <form key={mode} action={isSignUp ? signUpAction : signInAction} className="space-y-4">
+      <form
+        key={mode}
+        action={isSignUp ? signUpAction : signInAction}
+        className={esterni.length > 0 ? "space-y-4" : "mt-6 space-y-4"}
+      >
         {isSignUp ? (
           <Field
             id="display_name"
