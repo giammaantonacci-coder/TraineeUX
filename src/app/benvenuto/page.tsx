@@ -7,7 +7,31 @@ import { LEVELS } from "@/lib/progression";
 
 export const metadata: Metadata = { title: "Benvenuto" };
 
-export default function BenvenutoPage() {
+/**
+ * Gli inciampi che riportano qui.
+ *
+ * Prima queste rotte rimandavano su /benvenuto con un ?errore= che nessuno
+ * leggeva: chi annullava l'accesso con Google, o apriva un link di conferma
+ * scaduto, tornava su una schermata identica a prima, senza una parola. Sembra
+ * che il tocco non abbia funzionato, e si riprova all'infinito.
+ */
+const ERRORI: Record<string, string> = {
+  "accesso-annullato":
+    "Accesso annullato. Puoi riprovare, oppure entrare con email e password.",
+  "accesso-fallito":
+    "Non siamo riusciti a completare l'accesso. Riprova fra poco: se insiste, entra con email e password.",
+  "link-non-valido":
+    "Questo link di conferma non è più valido: i link scadono, e ognuno si può usare una volta sola. Accedi qui sotto e te ne rimandiamo uno nuovo.",
+};
+
+export default async function BenvenutoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ errore?: string }>;
+}) {
+  const { errore } = await searchParams;
+  const avviso = errore ? ERRORI[errore] : undefined;
+
   return (
     <div className="mx-auto min-h-dvh w-full max-w-5xl px-4 py-8 md:px-6 md:py-14">
       <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-start md:gap-12">
@@ -80,6 +104,14 @@ export default function BenvenutoPage() {
         </div>
 
         <div className="md:sticky md:top-14">
+          {avviso ? (
+            <p
+              role="alert"
+              className="mb-4 rounded-3xl bg-blush/40 px-5 py-4 text-sm font-medium leading-relaxed text-ink"
+            >
+              {avviso}
+            </p>
+          ) : null}
           <AuthPanel />
           {/* Sotto il modulo di iscrizione, dove va letta: e' il momento in
               cui si sta per lasciare un'email a qualcuno. */}

@@ -1,9 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { origineRichiesta } from "@/lib/origine";
 import { getExercise, modulesByLevel } from "@/content";
 import { gradeExercise, type ExerciseAnswer, type GradeResult } from "@/lib/grading";
 import { xpForAttempt } from "@/lib/progression";
@@ -135,14 +135,53 @@ async function syncBadges(
 export interface AuthResult {
   error?: string;
   message?: string;
+  /** Valorizzato quando l'unico ostacolo e' la conferma non ancora aperta. */
+  emailDaConfermare?: string;
 }
 
-/** Origine reale della richiesta: serve per il link di conferma via email. */
-async function siteOrigin(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
+/** I due accessi esterni. L'elenco vive qui e non nel modulo del browser. */
+const PROVIDER = {
+  google: "Google",
+  apple: "Apple",
+} as const;
+
+type ProviderId = keyof typeof PROVIDER;
+
+function isProvider(v: string): v is ProviderId {
+  return Object.hasOwn(PROVIDER, v);
+}
+
+/**
+ * Accesso con Google o con Apple.
+ *
+ * Non facciamo noi il giro: chiediamo a Supabase l'indirizzo del provider e ci
+ * mandiamo il browser. Da li' si torna su /auth/callback con un codice usa e
+ * getta, che diventa una sessione.
+ *
+ * Il provider arriva dal modulo, quindi si controlla contro un elenco chiuso:
+ * `signInWithOAuth` accetta una ventina di provider, e senza controllo
+ * chiunque potrebbe farne partire uno che non abbiamo configurato ne' voluto.
+ */
+export async function accediConProvider(
+  _prev: AuthResult,
+  formData: FormData,
+): Promise<AuthResult> {
+  const scelto = String(formData.get("provider") ?? "");
+  if (!isProvider(scelto)) return { error: "Metodo di accesso non riconosciuto." };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: scelto,
+    options: { redirectTo: `${await origineRichiesta()}/auth/callback` },
+  });
+
+  if (error || !data?.url) {
+    return {
+      error: `Non siamo riusciti ad aprire l'accesso con ${PROVIDER[scelto]}. Riprova, oppure entra con email e password.`,
+    };
+  }
+
+  redirect(data.url);
 }
 
 export async function signIn(_prev: AuthResult, formData: FormData): Promise<AuthResult> {
@@ -153,6 +192,16 @@ export async function signIn(_prev: AuthResult, formData: FormData): Promise<Aut
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
+    // "Email not confirmed" arriva a chi si e' iscritto e non ha ancora aperto
+    // il link. Lasciato in inglese com'e', sembra un guasto: e' invece l'unico
+    // errore di questa schermata che si risolve senza fare niente qui dentro.
+    if (error.message === "Email not confirmed") {
+      return {
+        error:
+          "Devi prima confermare l'indirizzo: apri l'email che ti abbiamo mandato. Se non la trovi, guarda nello spam.",
+        emailDaConfermare: email,
+      };
+    }
     return {
       error:
         error.message === "Invalid login credentials"
@@ -161,6 +210,39 @@ export async function signIn(_prev: AuthResult, formData: FormData): Promise<Aut
     };
   }
   redirect("/");
+}
+
+/**
+ * Rimanda l'email di conferma.
+ *
+ * Serve piu' spesso di quanto sembri: la prima finisce nello spam, oppure si
+ * chiude la scheda prima di aprirla. Senza questo, l'unica via d'uscita e'
+ * iscriversi di nuovo con un altro indirizzo.
+ */
+export async function rimandaConferma(
+  _prev: AuthResult,
+  formData: FormData,
+): Promise<AuthResult> {
+  const email = String(formData.get("email") ?? "").trim();
+  if (!email) return { error: "Manca l'indirizzo a cui rimandarla." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: { emailRedirectTo: `${await origineRichiesta()}/auth/confirm` },
+  });
+
+  // Un errore qui e' quasi sempre il limite di invii ravvicinati. Non si
+  // riporta la frase del server: direbbe "over_email_send_rate_limit".
+  if (error) {
+    return {
+      error:
+        "Abbiamo gia' mandato un'email da poco. Aspetta qualche minuto prima di chiederne un'altra.",
+    };
+  }
+
+  return { message: `Email rimandata a ${email}. Controlla anche lo spam.` };
 }
 
 export async function signUp(_prev: AuthResult, formData: FormData): Promise<AuthResult> {
@@ -178,7 +260,7 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
     password,
     options: {
       data: { display_name: displayName || email.split("@")[0] },
-      emailRedirectTo: `${await siteOrigin()}/auth/confirm`,
+      emailRedirectTo: `${await origineRichiesta()}/auth/confirm`,
     },
   });
 
@@ -188,8 +270,8 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
   if (data.session) redirect("/");
 
   return {
-    message:
-      "Account creato. Ti abbiamo mandato un'email di conferma: aprila e poi accedi qui.",
+    message: `Account creato. Ti abbiamo mandato un'email a ${email}: aprila per confermare l'indirizzo, poi torna qui e accedi.`,
+    emailDaConfermare: email,
   };
 }
 
