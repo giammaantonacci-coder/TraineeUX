@@ -280,6 +280,21 @@ export default async function ProfiloPage() {
             Esci dall&apos;account
           </button>
         </form>
+
+        {/* In fondo e in tono minore, ma raggiungibili senza scrivere a
+            nessuno: l'informativa perche' va potuta leggere anche da dentro,
+            la cancellazione perche' e' un diritto e non una concessione — e
+            perche' un account che si crea con un modulo non puo' richiedere
+            un'email per essere chiuso. */}
+        <p className="mt-6 text-[13px] leading-relaxed text-ink-muted">
+          <Link href="/privacy" className="font-semibold underline">
+            Informativa privacy
+          </Link>
+          <span aria-hidden="true"> · </span>
+          <Link href="/profilo/elimina" className="font-semibold underline">
+            Elimina account
+          </Link>
+        </p>
       </section>
     </div>
   );

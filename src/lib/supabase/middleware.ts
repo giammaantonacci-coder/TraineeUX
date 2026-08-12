@@ -17,11 +17,16 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
  * benvenuto al posto del codice. Un service worker che non si aggiorna smette
  * di consegnare le notifiche senza segnalare niente, che è esattamente il
  * guasto da cui veniamo.
+ *
+ * L'informativa privacy e' qui per un motivo diverso: va letta prima di
+ * iscriversi, quindi da chi un account non ce l'ha ancora, e gli store la
+ * vogliono raggiungibile da un indirizzo pubblico.
  */
 const PUBLIC_PATHS = [
   "/login",
   "/auth",
   "/benvenuto",
+  "/privacy",
   "/manifest.webmanifest",
   "/sw.js",
 ];

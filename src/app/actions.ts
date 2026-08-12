@@ -193,6 +193,50 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
   };
 }
 
+/**
+ * Cancellazione dell'account.
+ *
+ * Il lavoro vero lo fa `elimina_account` dentro Postgres: togliere la riga da
+ * auth.users porta via in cascata profilo, tentativi, progressi, badge,
+ * preferenze, iscrizioni push e notifiche. Qui non si elenca niente, perche'
+ * un elenco scritto in TypeScript resterebbe indietro alla prima tabella
+ * nuova, mentre i vincoli nel database no.
+ *
+ * La funzione non riceve l'identita' da noi: la legge dal token della
+ * sessione. Anche manomettendo il modulo, non c'e' un id di qualcun altro da
+ * mandare.
+ *
+ * La parola da scrivere non e' teatro: questa e' l'unica azione dell'app che
+ * non si puo' annullare, e un pulsante da solo si preme per sbaglio.
+ */
+export async function eliminaAccount(
+  _prev: AuthResult,
+  formData: FormData,
+): Promise<AuthResult> {
+  const conferma = String(formData.get("conferma") ?? "")
+    .trim()
+    .toUpperCase();
+  if (conferma !== "ELIMINA") {
+    return { error: "Per confermare, scrivi ELIMINA nel campo qui sopra." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("elimina_account");
+  if (error) {
+    return {
+      error:
+        "Non siamo riusciti a eliminare l'account. Riprova fra poco: l'account è intatto e non si è perso niente.",
+    };
+  }
+
+  // La sessione punta a un utente che non esiste piu': senza questo, il
+  // cookie resta nel browser e ogni schermata proverebbe a leggere i dati di
+  // un id cancellato.
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  redirect("/benvenuto");
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();

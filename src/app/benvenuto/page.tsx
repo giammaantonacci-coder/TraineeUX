@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AuthPanel } from "@/components/AuthPanel";
 import { Bity } from "@/components/Bity";
 import type { Metadata } from "next";
@@ -80,6 +81,15 @@ export default function BenvenutoPage() {
 
         <div className="md:sticky md:top-14">
           <AuthPanel />
+          {/* Sotto il modulo di iscrizione, dove va letta: e' il momento in
+              cui si sta per lasciare un'email a qualcuno. */}
+          <p className="mt-4 text-center text-[13px] text-ink-muted">
+            Iscrivendoti accetti il trattamento descritto nell&apos;
+            <Link href="/privacy" className="font-semibold underline">
+              informativa privacy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>
