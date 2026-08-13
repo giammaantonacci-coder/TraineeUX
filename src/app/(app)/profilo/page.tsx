@@ -291,6 +291,10 @@ export default async function ProfiloPage() {
             Informativa privacy
           </Link>
           <span aria-hidden="true"> · </span>
+          <Link href="/termini" className="font-semibold underline">
+            Termini di servizio
+          </Link>
+          <span aria-hidden="true"> · </span>
           <Link href="/profilo/elimina" className="font-semibold underline">
             Elimina account
           </Link>

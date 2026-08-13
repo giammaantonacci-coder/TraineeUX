@@ -1,6 +1,5 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { Bity } from "@/components/Bity";
+import { PaginaLegale, Sezione } from "@/components/legale";
 
 export const metadata: Metadata = {
   title: "Informativa privacy",
@@ -16,23 +15,17 @@ const CONTATTO = "giamma.antonacci@gmail.com";
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-2xl px-4 py-8 md:px-6 md:py-14">
-      <div className="mb-8 flex items-center gap-2.5">
-        <Bity size={40} label="Bity, la mascotte di TraineeUX" />
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink-muted">
-          TraineeUX
-        </p>
-      </div>
-
-      <h1 className="text-[32px] font-extrabold leading-[1.08] tracking-tight md:text-4xl">
-        Informativa privacy
-      </h1>
-      <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
-        Aggiornata al {AGGIORNATA}. Questa pagina dice quali dati raccoglie
-        TraineeUX, perché li raccoglie, dove finiscono e come si portano via. È
-        scritta per essere letta, non per essere superata.
-      </p>
-
+    <PaginaLegale
+      titolo="Informativa privacy"
+      aggiornata={AGGIORNATA}
+      intro={
+        <>
+          Questa pagina dice quali dati raccoglie TraineeUX, perché li
+          raccoglie, dove finiscono e come si portano via. È scritta per essere
+          letta, non per essere superata.
+        </>
+      }
+    >
       <Sezione titolo="Chi tratta i dati">
         <p>
           Il titolare del trattamento è {TITOLARE}. Per qualunque domanda o
@@ -172,30 +165,7 @@ export default function PrivacyPage() {
           dati raccolti o le finalità, lo diremo dentro l&apos;app e non solo qui.
         </p>
       </Sezione>
-
-      <div className="mt-10 border-t border-black/10 pt-6 text-sm">
-        <Link href="/" className="font-bold text-ink underline">
-          Torna all&apos;app
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function Sezione({
-  titolo,
-  children,
-}: {
-  titolo: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mt-10">
-      <h2 className="text-xl font-extrabold tracking-tight">{titolo}</h2>
-      <div className="mt-3 text-[15px] leading-relaxed text-ink-muted">
-        {children}
-      </div>
-    </section>
+    </PaginaLegale>
   );
 }
 

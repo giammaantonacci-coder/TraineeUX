@@ -18,15 +18,17 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
  * di consegnare le notifiche senza segnalare niente, che è esattamente il
  * guasto da cui veniamo.
  *
- * L'informativa privacy e' qui per un motivo diverso: va letta prima di
- * iscriversi, quindi da chi un account non ce l'ha ancora, e gli store la
- * vogliono raggiungibile da un indirizzo pubblico.
+ * Privacy e termini sono qui per un motivo diverso: vanno letti prima di
+ * iscriversi, quindi da chi un account non ce l'ha ancora, e sia gli store sia
+ * la schermata di consenso di Google li vogliono raggiungibili da un indirizzo
+ * pubblico.
  */
 const PUBLIC_PATHS = [
   "/login",
   "/auth",
   "/benvenuto",
   "/privacy",
+  "/termini",
   "/manifest.webmanifest",
   "/sw.js",
 ];

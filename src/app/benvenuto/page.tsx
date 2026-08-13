@@ -115,8 +115,12 @@ export default async function BenvenutoPage({
           <AuthPanel />
           {/* Sotto il modulo di iscrizione, dove va letta: e' il momento in
               cui si sta per lasciare un'email a qualcuno. */}
-          <p className="mt-4 text-center text-[13px] text-ink-muted">
-            Iscrivendoti accetti il trattamento descritto nell&apos;
+          <p className="mt-4 text-center text-[13px] leading-relaxed text-ink-muted">
+            Iscrivendoti accetti i{" "}
+            <Link href="/termini" className="font-semibold underline">
+              termini di servizio
+            </Link>{" "}
+            e il trattamento descritto nell&apos;
             <Link href="/privacy" className="font-semibold underline">
               informativa privacy
             </Link>
