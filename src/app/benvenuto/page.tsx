@@ -296,14 +296,22 @@ export default async function BenvenutoPage({
   return <Onboarding passi={passi} partiDa={avviso ? passi.length - 1 : 0} />;
 }
 
+/**
+ * Numero e parola sulla stessa riga.
+ *
+ * Su due righe la card era alta il doppio per dire la stessa cosa. Allineati
+ * sulla linea di base e non al centro: "12" e "moduli" hanno corpi diversi, e
+ * centrandoli verticalmente la parola sembrerebbe scivolata in su.
+ *
+ * Nel documento il termine viene prima del valore, come vuole una lista di
+ * definizioni; l'ordine visivo lo ribalta, perche' a leggere si parte dal
+ * numero.
+ */
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="card-dark px-4 py-3">
-      <dt className="sr-only">{label}</dt>
-      <dd>
-        <span className="block text-2xl font-extrabold">{value}</span>
-        <span className="text-xs font-semibold text-white/60">{label}</span>
-      </dd>
+    <div className="card-dark flex items-baseline justify-center gap-1.5 px-2 py-2.5">
+      <dt className="order-2 text-[11px] font-semibold text-white/60">{label}</dt>
+      <dd className="order-1 text-xl font-extrabold">{value}</dd>
     </div>
   );
 }
