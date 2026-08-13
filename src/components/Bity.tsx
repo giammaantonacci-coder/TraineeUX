@@ -165,6 +165,7 @@ export function Bity({
   size = 96,
   float = false,
   pop = false,
+  lente = false,
   alive = true,
   seed = 0,
   label,
@@ -179,6 +180,8 @@ export function Bity({
   float?: boolean;
   /** comparsa a molla, per i momenti di premio */
   pop?: boolean;
+  /** lente d'ingrandimento appoggiata al corpo: Bity che guarda in giro */
+  lente?: boolean;
   /** respiro e battito di palpebre. Si spegne dove Bity è un pittogramma. */
   alive?: boolean;
   /** sfasa respiro e palpebre: più Bity nella stessa schermata non devono
@@ -268,6 +271,12 @@ export function Bity({
             <Mouth kind={face.mouth} />
           </g>
         </g>
+
+        {/* La lente sta fuori dal gruppo che si deforma, come le stelline: un
+            vetro schiacciato non sarebbe piu' un vetro. Dentro il gruppo che
+            galleggia, invece, perche' Bity la tiene in mano e deve salire e
+            scendere con lei. */}
+        {lente ? <Lente /> : null}
       </g>
     </svg>
   );
@@ -411,6 +420,29 @@ function Mouth({ kind }: { kind: Mouth }) {
     case "riposo":
       return <ellipse cx="60" cy="83" rx="2.6" ry="3.2" fill={INK} />;
   }
+}
+
+/**
+ * La lente d'ingrandimento.
+ *
+ * Poggia sul bordo in basso a destra e sborda dal corpo: appoggiata dentro
+ * sembrerebbe un disegno sulla palla, mentre sporgendo si legge come un
+ * oggetto tenuto in mano. Il vetro è bianco a metà opacità, così sotto si
+ * intravede il colore del livello e non diventa una macchia.
+ */
+function Lente() {
+  return (
+    <g>
+      <circle cx="88" cy="82" r="16" fill="#ffffff" opacity="0.5" />
+      <circle cx="88" cy="82" r="16" fill="none" stroke={INK} strokeWidth="5" />
+      <path
+        d="M99.5 93.5 111 105"
+        stroke={INK}
+        strokeWidth="7.5"
+        strokeLinecap="round"
+      />
+    </g>
+  );
 }
 
 /** Stelline dell'esultanza: fuori dal corpo, così non si deformano con lui. */

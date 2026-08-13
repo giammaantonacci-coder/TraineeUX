@@ -39,7 +39,7 @@ export default async function NewsPage() {
     <div className="animate-rise">
       <PageHeader
         eyebrow="News"
-        bity={{ mood: "curioso", tint: "sky" }}
+        bity={{ mood: "curioso", tint: "sky", lente: true }}
         title="Cosa si muove nel settore"
         subtitle="Aggregato in tempo reale dalle fonti che vale la pena leggere: ricerca applicata, design system, accessibilità e prodotti AI. Aggiornato ogni ora."
       />

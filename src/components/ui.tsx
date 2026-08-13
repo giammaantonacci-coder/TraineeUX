@@ -176,7 +176,7 @@ export function PageHeader({
   subtitle?: string;
   /** Bity accanto all'occhiello: la sua espressione dice a colpo d'occhio
    *  come sta andando questa sezione. Omettila e l'intestazione resta nuda. */
-  bity?: { mood?: BityMood; tint?: BityTint; level?: LevelId };
+  bity?: { mood?: BityMood; tint?: BityTint; level?: LevelId; lente?: boolean };
   /** Da passare solo dove il colore di Bity porta informazione che non è
    *  scritta altrove nella pagina; senza, resta decorativa e muta. */
   bityLabel?: string;
@@ -187,20 +187,27 @@ export function PageHeader({
 }) {
   return (
     <header className="mb-6">
+      {/* Bity sopra il testo e non accanto.
+          Accanto rientrava occhiello e titolo di una cinquantina di pixel,
+          mentre il sottotitolo sotto restava al margine: nella stessa
+          intestazione convivevano due allineamenti a sinistra diversi. Sopra,
+          invece, tutto il testo comincia dove comincia il resto della pagina,
+          e Bity resta la cosa piu' a sinistra di tutte. */}
+      {bity ? (
+        <Bity
+          mood={bity.mood}
+          tint={bity.tint}
+          level={bity.level}
+          lente={bity.lente}
+          /* seed scelto per non cadere sullo stesso ritardo delle Bity
+             di livello nel percorso, che usano gli indici da 1 a 5 */
+          size={44}
+          seed={9}
+          label={bityLabel}
+          className="mb-2 block"
+        />
+      ) : null}
       <div className="flex items-center gap-3">
-        {bity ? (
-          <Bity
-            mood={bity.mood}
-            tint={bity.tint}
-            level={bity.level}
-            /* seed scelto per non cadere sullo stesso ritardo delle Bity
-               di livello nel percorso, che usano gli indici da 1 a 5 */
-            size={44}
-            seed={9}
-            label={bityLabel}
-            className="shrink-0"
-          />
-        ) : null}
         <div className="min-w-0 flex-1">
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">
