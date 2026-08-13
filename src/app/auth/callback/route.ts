@@ -3,6 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import { origineRichiesta } from "@/lib/origine";
 
 /**
+ * Il "next" arriva dall'indirizzo, quindi non e' nostro.
+ *
+ * Va usato solo se e' un percorso interno: "/qualcosa". Un valore assoluto
+ * — "https://altro.example" — concatenato all'origine produce un indirizzo
+ * malformato e fa fallire il redirect con un 500; uno che comincia con due
+ * barre verrebbe letto dal browser come un altro dominio. In entrambi i casi
+ * si ricade sulla home, che e' dove si voleva andare comunque.
+ */
+function destinazioneInterna(valore: string | null): string {
+  if (!valore) return "/";
+  if (!valore.startsWith("/") || valore.startsWith("//")) return "/";
+  return valore;
+}
+
+/**
  * Ritorno da Google e da Apple.
  *
  * Il provider non ci manda una sessione: ci manda un codice usa e getta, che
@@ -18,7 +33,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const origin = await origineRichiesta();
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const next = destinazioneInterna(searchParams.get("next"));
 
   // Due esiti diversi arrivano dallo stesso posto. "access_denied" e' la
   // persona che ha premuto Annulla sulla schermata del provider; qualunque
