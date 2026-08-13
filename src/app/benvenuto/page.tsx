@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { AuthPanel } from "@/components/AuthPanel";
 import { Bity, type BityMood } from "@/components/Bity";
-import { ExerciseIcon } from "@/components/icons";
+import { ExerciseIcon, TrophyIcon, UnlockIcon } from "@/components/icons";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { Onboarding, type Passo } from "@/components/Onboarding";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
@@ -236,14 +236,24 @@ export default async function BenvenutoPage({
             ))}
           </div>
 
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            <Feature
-              title="Progressi e premi"
-              body="XP per esercizio, serie giornaliera, badge e gradi da Praticante a Expert."
+          {/* Queste due non sono modi di allenarsi ma cosa resta dopo, e prima
+              erano le uniche due card senza icona di tutta la schermata: una
+              card spaiata si legge come un pezzo dimenticato, non come una
+              categoria diversa. La distinzione la fa il titolo qui sopra e lo
+              stacco, non l'assenza del disegno. */}
+          <h2 className="mt-9 text-lg font-extrabold tracking-tight">
+            E cosa ti resta
+          </h2>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <Vantaggio
+              icona={<TrophyIcon className="h-[22px] w-[22px]" />}
+              titolo="Progressi e premi"
+              corpo="XP per esercizio, serie giornaliera, badge e gradi da Praticante a Expert."
             />
-            <Feature
-              title="Capacità sbloccate"
-              body="Per ogni modulo padroneggiato vedi cosa puoi fare in concreto sul lavoro, e che segnale di seniority manda."
+            <Vantaggio
+              icona={<UnlockIcon className="h-[22px] w-[22px]" />}
+              titolo="Capacità sbloccate"
+              corpo="Per ogni modulo padroneggiato vedi cosa puoi fare in concreto sul lavoro, e che segnale di seniority manda."
             />
           </div>
         </>
@@ -298,11 +308,28 @@ function Stat({ value, label }: { value: string; label: string }) {
   );
 }
 
-function Feature({ title, body }: { title: string; body: string }) {
+/** Stessa forma delle card dei modi: riquadro neutro a sinistra, testo a destra. */
+function Vantaggio({
+  icona,
+  titolo,
+  corpo,
+}: {
+  icona: React.ReactNode;
+  titolo: string;
+  corpo: string;
+}) {
   return (
-    <div className="card-light p-4">
-      <p className="text-sm font-bold">{title}</p>
-      <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">{body}</p>
+    <div className="card-light flex items-start gap-3.5 p-4">
+      <span
+        aria-hidden="true"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface-muted"
+      >
+        {icona}
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm font-bold">{titolo}</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">{corpo}</p>
+      </div>
     </div>
   );
 }

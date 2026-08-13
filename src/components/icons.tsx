@@ -110,6 +110,30 @@ export function CircleIcon({ className }: Props) {
 }
 
 /** Campanella del centro notifiche. */
+/** Progressi e premi: la coppa. */
+export function TrophyIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M7.6 3.8h8.8v5.1a4.4 4.4 0 0 1-8.8 0z" />
+      <path d="M7.6 5.4H5a2.5 2.5 0 0 0 2.6 3.6" />
+      <path d="M16.4 5.4H19a2.5 2.5 0 0 1-2.6 3.6" />
+      <path d="M12 13.3v3.1" />
+      <path d="M9.6 16.4h4.8l.7 3.8H8.9z" />
+    </svg>
+  );
+}
+
+/** Capacità sbloccate: il lucchetto aperto. */
+export function UnlockIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <rect x="4.2" y="10.4" width="15.6" height="9.8" rx="2.6" />
+      <path d="M8.4 10.4V6.9a3.9 3.9 0 0 1 7.5-1.4" />
+      <circle cx="12" cy="15.3" r="1.3" />
+    </svg>
+  );
+}
+
 export function BellIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
