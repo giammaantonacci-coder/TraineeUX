@@ -40,6 +40,7 @@ export default async function NewsPage() {
       <PageHeader
         eyebrow="News"
         bity={{ mood: "curioso", tint: "sky", lente: true }}
+        bityLato="destra"
         title="Cosa si muove nel settore"
         subtitle="Aggregato in tempo reale dalle fonti che vale la pena leggere: ricerca applicata, design system, accessibilità e prodotti AI. Aggiornato ogni ora."
       />

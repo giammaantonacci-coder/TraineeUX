@@ -169,6 +169,7 @@ export function PageHeader({
   subtitle,
   bity,
   bityLabel,
+  bityLato = "sinistra",
   azione,
 }: {
   eyebrow?: string;
@@ -180,6 +181,9 @@ export function PageHeader({
   /** Da passare solo dove il colore di Bity porta informazione che non è
    *  scritta altrove nella pagina; senza, resta decorativa e muta. */
   bityLabel?: string;
+  /** Da che parte del titolo sta Bity. A destra dove il titolo e' corto e la
+   *  mascotte fa da contrappeso; a sinistra dove apre la lettura. */
+  bityLato?: "sinistra" | "destra";
   /** Comando in fondo alla riga del titolo, appoggiato al margine destro.
    *  Serve a una sezione che ha una sua azione ricorrente — la campanella sul
    *  profilo — senza costringere ogni pagina a rifarsi l'intestazione. */
@@ -187,27 +191,8 @@ export function PageHeader({
 }) {
   return (
     <header className="mb-6">
-      {/* Bity sopra il testo e non accanto.
-          Accanto rientrava occhiello e titolo di una cinquantina di pixel,
-          mentre il sottotitolo sotto restava al margine: nella stessa
-          intestazione convivevano due allineamenti a sinistra diversi. Sopra,
-          invece, tutto il testo comincia dove comincia il resto della pagina,
-          e Bity resta la cosa piu' a sinistra di tutte. */}
-      {bity ? (
-        <Bity
-          mood={bity.mood}
-          tint={bity.tint}
-          level={bity.level}
-          lente={bity.lente}
-          /* seed scelto per non cadere sullo stesso ritardo delle Bity
-             di livello nel percorso, che usano gli indici da 1 a 5 */
-          size={44}
-          seed={9}
-          label={bityLabel}
-          className="mb-2 block"
-        />
-      ) : null}
       <div className="flex items-center gap-3">
+        {bity && bityLato === "sinistra" ? <MascotteTestata bity={bity} label={bityLabel} /> : null}
         <div className="min-w-0 flex-1">
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink-muted">
@@ -218,6 +203,7 @@ export function PageHeader({
             {title}
           </h1>
         </div>
+        {bity && bityLato === "destra" ? <MascotteTestata bity={bity} label={bityLabel} /> : null}
         {azione ? <div className="shrink-0">{azione}</div> : null}
       </div>
       {subtitle ? (
@@ -226,6 +212,29 @@ export function PageHeader({
         </p>
       ) : null}
     </header>
+  );
+}
+
+function MascotteTestata({
+  bity,
+  label,
+}: {
+  bity: { mood?: BityMood; tint?: BityTint; level?: LevelId; lente?: boolean };
+  label?: string;
+}) {
+  return (
+    <Bity
+      mood={bity.mood}
+      tint={bity.tint}
+      level={bity.level}
+      lente={bity.lente}
+      /* seed scelto per non cadere sullo stesso ritardo delle Bity di livello
+         nel percorso, che usano gli indici da 1 a 5 */
+      size={44}
+      seed={9}
+      label={label}
+      className="shrink-0"
+    />
   );
 }
 
