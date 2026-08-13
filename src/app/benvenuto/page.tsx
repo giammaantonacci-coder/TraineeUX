@@ -1,7 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { AuthPanel } from "@/components/AuthPanel";
 import { Bity } from "@/components/Bity";
-import type { Metadata } from "next";
+import { ModuloIcon } from "@/components/icone-moduli";
+import { Onboarding, type Passo } from "@/components/Onboarding";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
 
@@ -32,49 +34,98 @@ export default async function BenvenutoPage({
   const { errore } = await searchParams;
   const avviso = errore ? ERRORI[errore] : undefined;
 
-  return (
-    <div className="mx-auto min-h-dvh w-full max-w-5xl px-4 py-8 md:px-6 md:py-14">
-      <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-start md:gap-12">
-        <div>
-          {/* Marchio: Bity accanto al nome. È il primo schermo dell'app e l'unico
-              posto dove la mascotte si presenta per nome. */}
-          <div className="mb-4 flex items-center gap-2.5">
+  /**
+   * I quattro passi.
+   *
+   * Ognuno risponde a una domanda sola, nell'ordine in cui uno se le fa: cosa
+   * si impara, fino a dove si arriva, come ci si allena, e solo alla fine chi
+   * sei. Prima era tutto su una schermata sola, e la richiesta dell'email
+   * arrivava dopo due schermate di scorrimento, quando la promessa era gia'
+   * evaporata.
+   */
+  const passi: Passo[] = [
+    {
+      id: "moduli",
+      titolo: "Cosa si allena",
+      contenuto: (
+        <>
+          {/* Marchio: Bity accanto al nome. È il primo schermo dell'app e
+              l'unico posto dove la mascotte si presenta per nome. */}
+          <div className="mb-5 flex items-center gap-2.5">
             <Bity size={44} float label="Bity, la mascotte di TraineeUX" />
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink-muted">
               TraineeUX
             </p>
           </div>
-          <h1 className="text-[34px] font-extrabold leading-[1.05] tracking-tight md:text-5xl">
+
+          <h1 className="text-[32px] font-extrabold leading-[1.05] tracking-tight md:text-5xl">
             Allenati sul giudizio,
             <br />
             non sulle schermate.
           </h1>
-          <p className="mt-4 max-w-lg text-[16px] leading-relaxed text-ink-muted">
-            Un percorso di UX e product design che parte da un livello intermedio e
-            arriva a moduli da senior, lead ed expert. Niente teoria da ripetere: casi
-            reali, decisioni con conseguenze, e il confronto tra la tua risposta e
-            quella di chi quel problema l&apos;ha già affrontato.
+          <p className="mt-4 text-[16px] leading-relaxed text-ink-muted">
+            Dodici moduli di UX e product design, dal livello intermedio
+            all&apos;expert. Niente teoria da ripetere: casi reali, decisioni con
+            conseguenze, e il confronto tra la tua risposta e quella di chi quel
+            problema l&apos;ha già affrontato.
           </p>
 
-          <dl className="mt-8 grid grid-cols-3 gap-3">
+          <dl className="mt-7 grid grid-cols-3 gap-3">
             <Stat value={`${MODULES.length}`} label="moduli" />
             <Stat value={`${TOTAL_EXERCISES}`} label="esercizi" />
             <Stat value={`${LEVELS.length}`} label="livelli" />
           </dl>
 
+          {/* I dodici titoli per esteso, non un riassunto: e' la risposta alla
+              domanda "di cosa parla", e a quella domanda un numero non
+              risponde. Le icone sono le stesse che si ritrovano nel percorso,
+              quindi qui si imparano senza doverle studiare. */}
+          <ul className="mt-7 space-y-1.5">
+            {MODULES.map((m) => (
+              <li key={m.id} className="flex items-center gap-3 rounded-2xl bg-surface-muted p-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white"
+                >
+                  <ModuloIcon moduleId={m.id} className="h-[18px] w-[18px]" />
+                </span>
+                <span className="min-w-0 text-[14px] font-semibold leading-snug">
+                  {m.title}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "livelli",
+      titolo: "Fino a dove si arriva",
+      contenuto: (
+        <>
+          <h1 className="text-[28px] font-extrabold leading-tight tracking-tight md:text-4xl">
+            Cinque livelli, che non aggiungono strumenti
+          </h1>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-muted">
+            Allargano l&apos;ambito su cui decidi: dallo schermo che hai davanti
+            alle scelte che reggono per anni. Puoi affrontare i moduli
+            nell&apos;ordine che preferisci — i moltiplicatori di XP crescono con
+            il livello.
+          </p>
+
           {/* Una lista ordinata, non cinque div: la sequenza dei livelli è
-              informazione, e così la riceve anche chi non vede l'impaginazione.
-              Bity prende la tinta del livello, che è la stessa che ritroverà nel
-              percorso: il colore si impara qui. */}
-          <ol className="mt-8 space-y-3">
+              informazione, e così la riceve anche chi non vede
+              l'impaginazione. Bity prende la tinta del livello, che è la stessa
+              che ritroverà nel percorso: il colore si impara qui. */}
+          <ol className="mt-7 space-y-3">
             {LEVELS.map((level) => (
               <li
                 key={level.id}
-                className="flex items-center gap-3 rounded-3xl bg-surface-muted p-3.5"
+                className="flex items-center gap-3 rounded-3xl bg-surface-muted p-4"
               >
-                <Bity level={level.id} size={38} className="shrink-0" />
+                <Bity level={level.id} size={44} className="shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-sm font-bold">{level.name}</p>
+                  <p className="text-[15px] font-bold">{level.name}</p>
                   <p className="text-[13px] leading-snug text-ink-muted">
                     {level.subtitle}
                   </p>
@@ -82,12 +133,42 @@ export default async function BenvenutoPage({
               </li>
             ))}
           </ol>
+        </>
+      ),
+    },
+    {
+      id: "allenamento",
+      titolo: "Come ci si allena",
+      contenuto: (
+        <>
+          <h1 className="text-[28px] font-extrabold leading-tight tracking-tight md:text-4xl">
+            Quattro modi di allenarti
+          </h1>
+          <p className="mt-3 text-[16px] leading-relaxed text-ink-muted">
+            Nessuno dei quattro si supera ricordando una definizione: si supera
+            scegliendo, e motivando la scelta.
+          </p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="mt-7 space-y-3">
             <Feature
-              title="Quattro modi di allenarti"
-              body="Quiz secchi, critique di interfacce reali, scenari con conseguenze, brief a tempo con rubrica di autovalutazione."
+              title="Quiz secchi"
+              body="Domande con una risposta giusta e tre plausibili. Servono a togliere le sviste, non a fare punteggio."
             />
+            <Feature
+              title="Critique di interfacce reali"
+              body="Guardi uno schermo e dici cosa non va e perché, con il vocabolario che useresti in una revisione vera."
+            />
+            <Feature
+              title="Scenari con conseguenze"
+              body="Scegli, e la scelta produce un effetto: il costo di una decisione si vede dopo, come sul lavoro."
+            />
+            <Feature
+              title="Brief a tempo"
+              body="Scrivi la tua proposta col cronometro, poi la confronti con la rubrica e con la risposta di chi quel problema l'ha risolto."
+            />
+          </div>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
             <Feature
               title="Progressi e premi"
               body="XP per esercizio, serie giornaliera, badge e gradi da Praticante a Expert."
@@ -96,14 +177,15 @@ export default async function BenvenutoPage({
               title="Capacità sbloccate"
               body="Per ogni modulo padroneggiato vedi cosa puoi fare in concreto sul lavoro, e che segnale di seniority manda."
             />
-            <Feature
-              title="News e aziende"
-              body="Feed aggiornato dalle fonti che contano e schede sulle aziende del settore, con come ci si entra."
-            />
           </div>
-        </div>
-
-        <div className="md:sticky md:top-14">
+        </>
+      ),
+    },
+    {
+      id: "accesso",
+      titolo: "Crea il tuo account",
+      contenuto: (
+        <>
           {avviso ? (
             <p
               role="alert"
@@ -126,10 +208,14 @@ export default async function BenvenutoPage({
             </Link>
             .
           </p>
-        </div>
-      </div>
-    </div>
-  );
+        </>
+      ),
+    },
+  ];
+
+  // Chi torna qui da un accesso fallito ha gia' visto la presentazione: la cosa
+  // da fare e' riprovare, non ricominciare da capo.
+  return <Onboarding passi={passi} partiDa={avviso ? passi.length - 1 : 0} />;
 }
 
 function Stat({ value, label }: { value: string; label: string }) {
