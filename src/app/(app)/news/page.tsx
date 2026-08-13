@@ -33,6 +33,7 @@ export default async function NewsPage() {
     topicLabel: TOPIC_LABEL[i.topic],
     data: formatDate(i.publishedAt),
     host: dominio(i.link),
+    image: i.image,
   }));
 
   return (

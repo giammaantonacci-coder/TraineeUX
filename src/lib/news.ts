@@ -76,6 +76,48 @@ export interface NewsItem {
   sourceId: string;
   sourceName: string;
   topic: FeedSource["topic"];
+  /** Miniatura dichiarata dal feed, se c'e' e se e' un indirizzo sicuro. */
+  image: string | null;
+}
+
+/**
+ * La miniatura dichiarata dal feed.
+ *
+ * I feed la mettono in almeno quattro posti diversi e nessuno e' obbligatorio:
+ * si guardano tutti nell'ordine in cui sono affidabili, e in fondo si ripiega
+ * sulla prima immagine dentro il testo dell'articolo — che spesso e' quella di
+ * apertura.
+ *
+ * Si accettano solo indirizzi https. Un http farebbe scendere l'intera pagina
+ * a contenuto misto, e un data: o un javascript: dentro un attributo di un
+ * feed altrui e' esattamente il genere di cosa da non passare oltre.
+ */
+function immagineDi(item: Record<string, unknown>): string | null {
+  const candidati: unknown[] = [
+    (item["media:thumbnail"] as Record<string, unknown>)?.["@_url"],
+    ...asArray(item["media:content"] as Record<string, unknown>[]).map(
+      (m) => m?.["@_url"],
+    ),
+    ...asArray(item.enclosure as Record<string, unknown>[])
+      .filter((e) => String(e?.["@_type"] ?? "").startsWith("image/"))
+      .map((e) => e?.["@_url"]),
+    (item["media:group"] as Record<string, Record<string, unknown>>)?.[
+      "media:content"
+    ]?.["@_url"],
+  ];
+
+  for (const c of candidati) {
+    if (typeof c === "string" && c.startsWith("https://")) return c;
+  }
+
+  const corpo =
+    typeof item["content:encoded"] === "string"
+      ? item["content:encoded"]
+      : typeof item.description === "string"
+        ? item.description
+        : "";
+  const dentro = corpo.match(/<img[^>]+src=["'](https:\/\/[^"']+)["']/i);
+  return dentro ? dentro[1] : null;
 }
 
 function stripHtml(input: string): string {
@@ -180,6 +222,7 @@ async function fetchSource(source: FeedSource): Promise<NewsItem[]> {
         sourceId: source.id,
         sourceName: source.name,
         topic: source.topic,
+        image: immagineDi(item),
       } satisfies NewsItem;
     });
   } catch {

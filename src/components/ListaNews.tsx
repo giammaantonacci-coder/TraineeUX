@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Pill } from "@/components/ui";
 import { ExternalIcon } from "@/components/icons";
@@ -28,6 +29,7 @@ export interface Articolo {
   topicLabel: string;
   data: string;
   host: string;
+  image: string | null;
 }
 
 export function ListaNews({
@@ -110,37 +112,24 @@ export function ListaNews({
           </button>
         </div>
       ) : (
-        <ul className="space-y-3">
-          {filtrati.map((a) => (
-            <li key={a.id}>
-              <a
-                href={a.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-light tappable block p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
-              >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <Pill tone="dark">{a.sourceName}</Pill>
-                  <Pill>{a.topicLabel}</Pill>
-                  {a.data ? (
-                    <span className="text-xs font-semibold text-ink-muted">{a.data}</span>
-                  ) : null}
-                </div>
-                <h2 className="text-[17px] font-bold leading-snug">{a.title}</h2>
-                {a.summary ? (
-                  <p className="mt-1.5 text-[14px] leading-relaxed text-ink-muted">
-                    {a.summary}
-                  </p>
-                ) : null}
-                <p className="mt-3 flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted">
-                  Apri su {a.host}
-                  <ExternalIcon className="h-[15px] w-[15px] shrink-0" />
-                  <span className="sr-only"> — si apre in una nuova finestra</span>
-                </p>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <>
+          {/* Il primo articolo grande, gli altri in riga.
+              Prima erano venti card identiche una sotto l'altra: nessuna
+              gerarchia, quindi niente da guardare per primo e niente che
+              distinguesse "appena uscito" da "di sei giorni fa". La novita' e'
+              la cosa che si viene a cercare qui, quindi e' la sola che merita
+              spazio. */}
+          <ArticoloInEvidenza a={filtrati[0]} />
+          {filtrati.length > 1 ? (
+            <ul className="mt-3 space-y-2">
+              {filtrati.slice(1).map((a) => (
+                <li key={a.id}>
+                  <RigaArticolo a={a} />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </>
       )}
 
       {failed.length > 0 ? (
@@ -150,6 +139,94 @@ export function ListaNews({
         </p>
       ) : null}
     </>
+  );
+}
+
+/**
+ * L'articolo piu' recente.
+ *
+ * Con la miniatura quando il feed ne dichiara una, senza quando no: e' il caso
+ * normale, non un ripiego da compensare con un riquadro grigio. Le proporzioni
+ * sono fisse, cosi' la pagina non sobbalza mentre l'immagine arriva.
+ */
+function ArticoloInEvidenza({ a }: { a: Articolo }) {
+  return (
+    <a
+      href={a.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="card-light tappable block overflow-hidden hover:-translate-y-0.5 active:bg-black/[0.02]"
+    >
+      {a.image ? (
+        /* Le proporzioni sono fissate dal contenitore e l'immagine lo riempie:
+           l'altezza e' nota prima che l'immagine arrivi, quindi la pagina non
+           sobbalza a meta' lettura. */
+        <div className="relative aspect-[16/9] w-full bg-surface-muted">
+          <Image
+            src={`/immagine?u=${encodeURIComponent(a.image)}`}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 640px"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
+      <div className="p-5">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <Pill tone="dark">{a.sourceName}</Pill>
+          <Pill>{a.topicLabel}</Pill>
+          {a.data ? (
+            <span className="text-xs font-semibold text-ink-muted">{a.data}</span>
+          ) : null}
+        </div>
+        <h2 className="text-[21px] font-extrabold leading-tight">{a.title}</h2>
+        {a.summary ? (
+          <p className="mt-2 text-[14px] leading-relaxed text-ink-muted">{a.summary}</p>
+        ) : null}
+        <p className="mt-3 flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted">
+          Apri su {a.host}
+          <ExternalIcon className="h-[15px] w-[15px] shrink-0" />
+          <span className="sr-only"> — si apre in una nuova finestra</span>
+        </p>
+      </div>
+    </a>
+  );
+}
+
+/**
+ * Tutti gli altri.
+ *
+ * Titolo e provenienza, niente sommario: da qui si decide se aprire, e per
+ * quella decisione bastano il titolo e chi l'ha scritto. La miniatura sta a
+ * destra e sparisce se non c'e', senza lasciare il buco.
+ */
+function RigaArticolo({ a }: { a: Articolo }) {
+  return (
+    <a
+      href={a.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="card-light tappable flex items-center gap-3 p-3.5 hover:-translate-y-0.5 active:bg-black/[0.02]"
+    >
+      <span className="min-w-0 flex-1">
+        <span className="block text-[15px] font-bold leading-snug">{a.title}</span>
+        <span className="mt-1 block text-[12px] font-semibold text-ink-muted">
+          {a.sourceName}
+          {a.data ? ` · ${a.data}` : ""}
+        </span>
+      </span>
+      {a.image ? (
+        <Image
+          src={`/immagine?u=${encodeURIComponent(a.image)}`}
+          alt=""
+          width={64}
+          height={64}
+          className="h-16 w-16 shrink-0 rounded-xl bg-surface-muted object-cover"
+        />
+      ) : null}
+      <ExternalIcon className="h-4 w-4 shrink-0 text-ink-muted" />
+      <span className="sr-only">Si apre in una nuova finestra</span>
+    </a>
   );
 }
 
