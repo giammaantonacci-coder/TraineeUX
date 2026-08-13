@@ -168,8 +168,16 @@ export async function SchermataOggi() {
         </section>
       ) : null}
 
+      {/* Le due scorciatoie della home portavano tutte e due in cima al
+          percorso, con due nomi diversi per lo stesso posto. Sopra si cercano
+          altri esercizi, e "tutto il percorso" e' il posto giusto; qui si
+          guarda a che punto si e', e la risposta e' il proprio livello — che
+          nel percorso e' un'ancora, non la cima. Ora il nome dice dove porta,
+          e i due collegamenti smettono di essere lo stesso. */}
       <section>
-        <SectionTitle action={{ href: "/percorso", label: "Vedi tutti" }}>
+        <SectionTitle
+          action={{ href: `/percorso#${reachedLevel}`, label: "Il tuo livello" }}
+        >
           I tuoi livelli
         </SectionTitle>
         <div className="grid gap-3 sm:grid-cols-2">
