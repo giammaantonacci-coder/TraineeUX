@@ -119,19 +119,22 @@ export function ModuloCompletato({
       </section>
 
       {/* Il passo dopo, non un vicolo cieco: chi arriva qui ha appena finito
-          qualcosa ed e' il momento in cui e' piu' disposto a ricominciare. */}
-      <div className="mt-8 flex flex-wrap gap-3">
+          qualcosa ed e' il momento in cui e' piu' disposto a ricominciare.
+          Il ritorno al percorso sta sotto e centrato, non affiancato: sono due
+          azioni di peso diverso — una porta avanti, l'altra indietro — e
+          affiancate si contendevano la stessa riga come se pari fossero. */}
+      <div className="mt-8">
         {prossimo ? (
           <Link
             href={`/percorso/${prossimo.id}`}
-            className="tappable flex-1 rounded-full bg-ink px-6 py-3.5 text-center text-sm font-bold text-white"
+            className="tappable block rounded-full bg-ink px-6 py-3.5 text-center text-sm font-bold text-white"
           >
             Vai a {prossimo.title}
           </Link>
         ) : null}
         <Link
           href="/percorso"
-          className="tappable rounded-full border border-black/10 bg-white px-6 py-3.5 text-center text-sm font-bold active:bg-black/5"
+          className="tappable mx-auto mt-3 block w-fit rounded-full px-5 py-2.5 text-center text-sm font-bold text-ink-muted active:bg-black/5"
         >
           Torna al percorso
         </Link>
