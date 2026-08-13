@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AuthPanel } from "@/components/AuthPanel";
-import { Bity, type BityMood } from "@/components/Bity";
+import { BITY_MOOD_BY_LEVEL, Bity } from "@/components/Bity";
 import { ExerciseIcon, TrophyIcon, UnlockIcon } from "@/components/icons";
 import { Onboarding, type Passo } from "@/components/Onboarding";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
@@ -26,15 +26,6 @@ const ERRORI: Record<string, string> = {
   "link-non-valido":
     "Questo link di conferma non è più valido: i link scadono, e ognuno si può usare una volta sola. Accedi qui sotto e te ne rimandiamo uno nuovo.",
 };
-
-/** Da neutro a esultante, un gradino per livello. */
-const SCALA_SICUREZZA: BityMood[] = [
-  "neutro",
-  "felice",
-  "sicuro",
-  "fiero",
-  "trionfante",
-];
 
 /**
  * I quattro modi di allenarsi.
@@ -180,7 +171,7 @@ export default async function BenvenutoPage({
               >
                 <Bity
                   level={level.id}
-                  mood={SCALA_SICUREZZA[n] ?? "felice"}
+                  mood={BITY_MOOD_BY_LEVEL[level.id]}
                   seed={n + 1}
                   size={44}
                   className="shrink-0"

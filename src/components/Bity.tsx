@@ -31,6 +31,33 @@ export type BityMood =
   | "spiacente"
   | "assonnato";
 
+/** La scala, in ordine. Il primo gradino e' il livello d'ingresso. */
+export const SCALA_SICUREZZA: BityMood[] = [
+  "neutro",
+  "felice",
+  "sicuro",
+  "fiero",
+  "trionfante",
+];
+
+/** Il gradino di ciascun livello. Sta qui accanto alle tinte perche' e' la
+ *  stessa cosa detta con un altro canale: il colore dice dove sei, la faccia
+ *  quanto sei padrone di starci. */
+export const BITY_MOOD_BY_LEVEL: Record<LevelId, BityMood> = {
+  intermedio: "neutro",
+  avanzato: "felice",
+  senior: "sicuro",
+  lead: "fiero",
+  expert: "trionfante",
+};
+
+/** Un gradino piu' su, se ce n'e' uno. */
+export function unGradinoSopra(mood: BityMood): BityMood {
+  const i = SCALA_SICUREZZA.indexOf(mood);
+  if (i < 0) return mood;
+  return SCALA_SICUREZZA[Math.min(i + 1, SCALA_SICUREZZA.length - 1)];
+}
+
 export type BityTint = "mint" | "sky" | "butter" | "blush" | "plum";
 
 /** Ogni livello ha la sua tinta: il colore di Bity dice a che punto sei. */

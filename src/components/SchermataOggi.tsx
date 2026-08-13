@@ -13,11 +13,16 @@ import {
 } from "@/lib/data";
 import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
-import { Bity, type BityMood } from "@/components/Bity";
+import {
+  BITY_MOOD_BY_LEVEL,
+  Bity,
+  unGradinoSopra,
+  type BityMood,
+} from "@/components/Bity";
 import { ExerciseIcon } from "@/components/icons";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { nomeDiBattesimo } from "@/lib/labels";
-import type { Exercise, Module } from "@/lib/types";
+import type { Exercise, LevelId, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
   const data = await getProgressData();
@@ -56,7 +61,7 @@ export async function SchermataOggi() {
             Ciao, {name}
           </h1>
           <Bity
-            mood={saluto(doneCount, streak)}
+            mood={saluto(doneCount, streak, reachedLevel)}
             level={reachedLevel}
             size={56}
             float
@@ -202,14 +207,26 @@ export async function SchermataOggi() {
 }
 
 /**
- * L'umore del saluto. Non aggiunge informazione che non ci sia già scritta:
- * la ripete in un canale che si legge prima delle parole.
+ * L'umore del saluto: livello e serie insieme.
+ *
+ * Il colore di Bity dice gia' fin dove sei arrivato, e cambia poche volte in
+ * mesi. La faccia adesso dice la stessa cosa in un secondo canale — la scala
+ * da neutro a trionfante — ma resta reattiva a quello che succede oggi, che e'
+ * cio' per cui la si guarda tutti i giorni.
  */
-function saluto(svolti: number, serie: number): BityMood {
+function saluto(svolti: number, serie: number, livello: LevelId): BityMood {
+  // I due casi limite valgono a qualunque livello, e vincono sul resto: a chi
+  // non ha ancora cominciato non si dice quanto e' bravo, e a chi ha spezzato
+  // la serie serve sapere che si e' fermato — non che tre settimane fa era
+  // arrivato lontano.
   if (svolti === 0) return "curioso";
-  if (serie >= 7) return "esulta";
-  if (serie > 0) return "felice";
-  return "assonnato";
+  if (serie === 0) return "assonnato";
+
+  // Poi comanda il livello, e la serie lunga vale un gradino in piu': la
+  // costanza e' l'unica cosa che qui puo' far sembrare qualcuno piu' padrone
+  // di quanto il percorso da solo dica.
+  const base = BITY_MOOD_BY_LEVEL[livello];
+  return serie >= 7 ? unGradinoSopra(base) : base;
 }
 
 interface Suggestion {
