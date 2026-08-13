@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           </Voce>
           <Voce cosa="Nome visualizzato">
             Quello che scrivi all&apos;iscrizione, usato per il saluto sulla
-            schermata Oggi. Può essere un nome di fantasia.
+            schermata Home. Può essere un nome di fantasia.
           </Voce>
           <Voce cosa="Progressi">
             XP, grado, serie giornaliera e ultimo giorno di attività: sono il

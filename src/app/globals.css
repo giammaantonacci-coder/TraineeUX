@@ -288,3 +288,53 @@ body {
 .skip-link:focus-visible {
   transform: none;
 }
+
+/* La scheda dei livelli.
+
+   Sale dal basso su telefono, dove arriva dal bordo che si tocca, e compare
+   sul posto da desktop, dove il basso dello schermo non vuol dire niente.
+   Il fondo scuro entra a parte: se entrasse insieme, il buio arriverebbe già
+   pieno mentre la scheda è ancora a metà strada. */
+@keyframes scheda-su {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes velo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+dialog[open].scheda {
+  animation: scheda-su 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+dialog[open].scheda::backdrop {
+  animation: velo 0.24s ease-out both;
+}
+
+/* Da desktop la scheda è già centrata da una trasformazione, e animarne
+   un'altra la sposterebbe: qui resta la sola dissolvenza. */
+@media (min-width: 768px) {
+  dialog[open].scheda {
+    animation: velo 0.18s ease-out both;
+  }
+}
+
+/* Chi ha chiesto meno movimento non deve vedere la scheda arrivare da fuori. */
+@media (prefers-reduced-motion: reduce) {
+  dialog[open].scheda,
+  dialog[open].scheda::backdrop {
+    animation: velo 0.12s ease-out both;
+  }
+}

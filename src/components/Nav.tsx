@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ITEMS = [
-  { href: "/", label: "Oggi", icon: HomeIcon },
+  { href: "/", label: "Home", icon: HomeIcon },
   { href: "/percorso", label: "Percorso", icon: PathIcon },
   { href: "/news", label: "News", icon: NewsIcon },
   { href: "/profilo", label: "Profilo", icon: ProfileIcon },
@@ -14,9 +14,9 @@ const ITEMS = [
 /**
  * Indice della voce corrispondente al percorso, o -1 se non ce n'è una.
  *
- * Prima il -1 veniva riportato a 0, cioè a "Oggi". Ma le rotte fuori dalla
+ * Prima il -1 veniva riportato a 0, cioè alla home. Ma le rotte fuori dalla
  * barra esistono — un esercizio, il centro notifiche, la pagina aziende — e su
- * quelle la barra accendeva Oggi e ci metteva pure aria-current="page":
+ * quelle la barra accendeva la home e ci metteva pure aria-current="page":
  * indicava una schermata su cui non eri e lo annunciava come un fatto a chi
  * naviga con uno screen reader. Non essere in nessuna delle quattro sezioni è
  * uno stato legittimo, e ora la barra lo rappresenta invece di inventare.

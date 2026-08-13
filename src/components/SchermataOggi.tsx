@@ -15,11 +15,11 @@ import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/prog
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import {
   BITY_MOOD_BY_LEVEL,
-  Bity,
   unGradinoSopra,
   type BityMood,
 } from "@/components/Bity";
 import { ExerciseIcon, FlameIcon } from "@/components/icons";
+import { LivelliBity } from "@/components/LivelliBity";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { nomeDiBattesimo } from "@/lib/labels";
 import type { Exercise, LevelId, Module } from "@/lib/types";
@@ -60,12 +60,11 @@ export async function SchermataOggi() {
           <h1 className="min-w-0 text-2xl font-extrabold tracking-tight md:text-3xl">
             Ciao, {name}
           </h1>
-          <Bity
+          <LivelliBity
             mood={saluto(doneCount, streak, reachedLevel)}
-            level={reachedLevel}
-            size={56}
-            float
-            className="-mr-2 shrink-0 translate-y-[3px]"
+            livello={reachedLevel}
+            svolti={doneCount}
+            className="-mr-2 translate-y-[3px]"
           />
         </div>
 

@@ -14,7 +14,7 @@ import { SchermataOggi } from "@/components/SchermataOggi";
  * l'app. Servendo la schermata direttamente su "/", il confine diventa la
  * radice e tutto il sito ci sta dentro.
  */
-export const metadata: Metadata = { title: "Oggi" };
+export const metadata: Metadata = { title: "Home" };
 
 export default function HomePage() {
   return <SchermataOggi />;

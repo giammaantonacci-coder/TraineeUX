@@ -10,7 +10,7 @@ import { SchermataOggi } from "@/components/SchermataOggi";
  * contenuto continuano a funzionare come prima, e prendono il confine
  * corretto quando vengono reinstallate.
  */
-export const metadata: Metadata = { title: "Oggi" };
+export const metadata: Metadata = { title: "Home" };
 
 export default function OggiPage() {
   return <SchermataOggi />;
