@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { AuthPanel } from "@/components/AuthPanel";
 import { Bity, type BityMood } from "@/components/Bity";
 import { ExerciseIcon, TrophyIcon, UnlockIcon } from "@/components/icons";
-import { ModuloIcon } from "@/components/icone-moduli";
 import { Onboarding, type Passo } from "@/components/Onboarding";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
@@ -130,23 +129,21 @@ export default async function BenvenutoPage({
 
           {/* I dodici titoli per esteso, non un riassunto: e' la risposta alla
               domanda "di cosa parla", e a quella domanda un numero non
-              risponde. Le icone sono le stesse che si ritrovano nel percorso,
-              quindi qui si imparano senza doverle studiare. */}
-          <ul className="mt-7 space-y-1.5">
-            {MODULES.map((m) => (
-              <li key={m.id} className="flex items-center gap-3 rounded-2xl bg-surface-muted p-3">
-                <span
-                  aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white"
-                >
-                  <ModuloIcon moduleId={m.id} className="h-[18px] w-[18px]" />
-                </span>
-                <span className="min-w-0 text-[14px] font-semibold leading-snug">
-                  {m.title}
-                </span>
-              </li>
-            ))}
-          </ul>
+              risponde.
+              Una card sola invece di dodici: dodici riquadri uguali, uno per
+              riga, facevano sembrare l'elenco un menu di cose da scegliere
+              adesso — e qui non c'e' niente da scegliere, si sta solo
+              guardando cosa c'e' dentro. Il testo e' a peso normale perche'
+              e' un elenco da scorrere con l'occhio, non dodici titoli da
+              pesare uno per uno. */}
+          <div className="mt-7 rounded-3xl bg-surface-muted p-5">
+            <h2 className="text-sm font-bold">I dodici moduli</h2>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[14px] leading-snug text-ink-muted marker:text-ink/25">
+              {MODULES.map((m) => (
+                <li key={m.id}>{m.title}</li>
+              ))}
+            </ul>
+          </div>
         </>
       ),
     },
