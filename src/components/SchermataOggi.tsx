@@ -13,7 +13,13 @@ import {
   totalExercisesDone,
 } from "@/lib/data";
 import { MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
-import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
+import {
+  ACCENT_BG,
+  Pill,
+  ProgressBar,
+  ProgressSegments,
+  SectionTitle,
+} from "@/components/ui";
 import {
   BITY_MOOD_BY_LEVEL,
   unGradinoSopra,
@@ -181,11 +187,13 @@ export async function SchermataOggi() {
           fin dove sei arrivato e ci resta anche a livello finito, questa dice
           cosa hai davanti. */}
       <section>
-        <SectionTitle action={{ href: "/livelli", label: "Tutti i livelli" }}>
-          Il tuo livello
-        </SectionTitle>
+        {/* Niente scorciatoia nel titolo: la card sotto porta gia' alla
+            pagina del livello, ed e' quella la destinazione giusta ora che
+            esiste. Un secondo collegamento allo stesso posto sarebbe
+            esattamente il doppione appena tolto. */}
+        <SectionTitle>Il tuo livello</SectionTitle>
         <Link
-          href={`/percorso#${livelloInCorso}`}
+          href="/livelli"
           className="card-light tappable block p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
         >
           <div className="flex items-baseline justify-between gap-3">
@@ -197,7 +205,12 @@ export async function SchermataOggi() {
           <p className="mt-1 mb-3 text-[13px] leading-snug text-ink-muted">
             {levelMeta(livelloInCorso).subtitle}
           </p>
-          <ProgressBar value={progressoInCorso.pct} tone="mint" />
+          {/* Una tacca per modulo invece di una barra sola: quanti ne restano
+              si conta guardando, senza rileggere il numero accanto. */}
+          <ProgressSegments
+            total={progressoInCorso.total}
+            done={progressoInCorso.mastered}
+          />
         </Link>
       </section>
     </div>

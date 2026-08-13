@@ -132,6 +132,43 @@ export function ProgressBar({
   );
 }
 
+/**
+ * La barra divisa in tacche, una per modulo.
+ *
+ * Una barra continua al 67% dice "sei a due terzi" e basta: per sapere che i
+ * moduli sono tre e che ne restano uno bisogna leggere il numero accanto.
+ * Divisa in tacche il conto si fa guardando — tre segmenti, due pieni — e la
+ * cosa che manca ha una forma, invece di essere lo spazio vuoto dopo il
+ * riempimento.
+ *
+ * Resta decorativa per gli screen reader: il conteggio scritto accanto dice
+ * già la stessa cosa, e letta due volte sarebbe rumore.
+ */
+export function ProgressSegments({
+  total,
+  done,
+  tone = "mint",
+  className = "",
+}: {
+  total: number;
+  done: number;
+  tone?: "mint" | "light";
+  className?: string;
+}) {
+  const pieno = tone === "light" ? "bg-white" : "bg-mint-deep";
+  const vuoto = tone === "light" ? "bg-white/25" : "bg-black/10";
+  return (
+    <div aria-hidden="true" className={`flex gap-1.5 ${className}`}>
+      {Array.from({ length: Math.max(0, total) }, (_, i) => (
+        <span
+          key={i}
+          className={`h-2 flex-1 rounded-full ${i < done ? pieno : vuoto}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function SectionTitle({
   children,
   action,

@@ -1,32 +1,57 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getProgressData, levelInProgress, levelProgress } from "@/lib/data";
-import { LEVELS, MASTERY_THRESHOLD } from "@/lib/progression";
-import { PageHeader, Pill, ProgressBar } from "@/components/ui";
+import { MODULES } from "@/content";
+import {
+  exercisesDoneInModule,
+  getProgressData,
+  levelInProgress,
+  levelProgress,
+  moduleBestPct,
+} from "@/lib/data";
+import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
+import { PageHeader, ProgressSegments } from "@/components/ui";
 import { BITY_MOOD_BY_LEVEL, Bity } from "@/components/Bity";
+import { ModuloIcon } from "@/components/icone-moduli";
+import { CheckIcon } from "@/components/icons";
 
-export const metadata: Metadata = { title: "I tuoi livelli" };
+export const metadata: Metadata = { title: "Il tuo livello" };
 
 /**
- * La scala intera, con i progressi veri.
+ * Il livello che stai chiudendo, per intero.
  *
- * Nasce da una sottrazione alla home: lì c'erano cinque barre, di cui quattro
- * dicevano "non ancora" — e la home è la schermata di cosa fare oggi, non
- * dell'inventario. Ora lì resta la barra che si sta chiudendo, e le altre
- * quattro stanno qui, dove si viene apposta a guardarle.
+ * La prima versione elencava tutti e cinque i livelli con la loro barra, ed
+ * era la stessa cosa che dicono la home, il percorso e la scheda di Bity: un
+ * quarto posto dove leggere "0/3" su cose che non hai ancora toccato. Qui c'è
+ * un livello solo — quello che hai davanti — e le tre domande che ha senso
+ * fargli: a che punto sono, cosa mi manca, cosa ci guadagno a chiuderlo.
  *
- * È cosa diversa dalla scheda che si apre toccando Bity: quella spiega la
- * scala — cosa significa ogni livello e cosa vuol dire il colore della
- * mascotte — e non ha numeri. Questa mostra a che punto sei su ognuno, e da
- * ogni riga si entra nel percorso.
+ * Gli altri livelli non spariscono: stanno nel percorso, che è la schermata
+ * fatta per guardare lontano.
  */
-export default async function LivelliPage() {
+export default async function LivelloPage() {
   const data = await getProgressData();
   if (!data) redirect("/benvenuto");
 
   const { best } = data;
-  const inCorso = levelInProgress(best, MASTERY_THRESHOLD);
+  const livello = levelInProgress(best, MASTERY_THRESHOLD);
+  const meta = levelMeta(livello);
+  const { mastered, total } = levelProgress(best, livello, MASTERY_THRESHOLD);
+
+  const moduli = MODULES.filter((m) => m.level === livello).map((m) => {
+    const pct = moduleBestPct(best, m.id);
+    const svolti = exercisesDoneInModule(best, m.id);
+    return {
+      modulo: m,
+      pct,
+      svolti,
+      padroneggiato: pct >= MASTERY_THRESHOLD,
+      iniziato: svolti > 0,
+    };
+  });
+
+  const mancanti = moduli.filter((m) => !m.padroneggiato);
+  const prossimo = LEVEL_ORDER[LEVEL_ORDER.indexOf(livello) + 1] ?? null;
 
   return (
     <div className="animate-rise">
@@ -38,88 +63,157 @@ export default async function LivelliPage() {
       </Link>
 
       <PageHeader
-        eyebrow="Percorso"
-        title="I tuoi livelli"
-        subtitle="Un livello è padroneggiato quando lo sono tutti i suoi moduli, cioè quando ognuno è chiuso sopra il 70%. Da ogni riga entri nei moduli di quel livello."
+        eyebrow="Livello in corso"
+        title={meta.name}
+        subtitle={meta.subtitle}
       />
 
-      <ul className="space-y-3">
-        {LEVELS.map((l, i) => {
-          const { mastered, total, pct } = levelProgress(best, l.id, MASTERY_THRESHOLD);
-          const qui = l.id === inCorso;
-          const completo = pct === 100;
+      {/* Dove sei, in una card sola: la mascotte del livello, il conteggio e
+          le tacche. È lo stesso blocco che si vede in home, qui a corpo
+          pieno — chi arriva da lì ritrova la cosa che ha toccato. */}
+      <section className="card-dark p-5 md:p-6">
+        <div className="flex items-center gap-4">
+          <Bity
+            mood={BITY_MOOD_BY_LEVEL[livello]}
+            level={livello}
+            size={64}
+            className="shrink-0"
+          />
+          <div className="min-w-0">
+            <p className="text-2xl font-extrabold leading-none">
+              {mastered} <span className="text-white/50">di {total}</span>
+            </p>
+            <p className="mt-1.5 text-sm text-white/60">
+              {total === 1 ? "modulo padroneggiato" : "moduli padroneggiati"}
+            </p>
+          </div>
+        </div>
+        <ProgressSegments className="mt-5" total={total} done={mastered} tone="light" />
+      </section>
 
-          return (
-            <li key={l.id}>
+      <section className="mt-8">
+        <h2 className="mb-1 text-lg font-bold tracking-tight">A che punto sei</h2>
+        <p className="mb-4 text-sm text-ink-muted">
+          Un modulo è padroneggiato quando il tuo miglior punteggio arriva al{" "}
+          {MASTERY_THRESHOLD}%. Sotto, resta provato.
+        </p>
+        <ul className="space-y-3">
+          {moduli.map(({ modulo, pct, svolti, padroneggiato, iniziato }) => (
+            <li key={modulo.id}>
               <Link
-                href={`/percorso#${l.id}`}
-                className={`tappable block rounded-[28px] p-5 hover:-translate-y-0.5 ${
-                  qui
-                    ? "card-dark"
-                    : "card-light active:bg-black/[0.02]"
-                }`}
+                href={`/percorso/${modulo.id}`}
+                className="card-light tappable flex items-center gap-3.5 p-4 hover:-translate-y-0.5 active:bg-black/[0.02]"
               >
-                <div className="flex items-center gap-3">
-                  {/* Colore e faccia del livello, come nella scheda di Bity:
-                      chi ha visto l'una riconosce l'altra senza rileggere. */}
-                  <Bity
-                    mood={BITY_MOOD_BY_LEVEL[l.id]}
-                    level={l.id}
-                    size={44}
-                    seed={i}
-                    className="shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="font-extrabold tracking-tight">{l.name}</h2>
-                      {qui ? <Pill tone="mint">In corso</Pill> : null}
-                      {completo && !qui ? <Pill tone="mint">Completo</Pill> : null}
-                    </div>
-                    <p
-                      className={`mt-0.5 text-[13px] leading-snug ${
-                        qui ? "text-white/60" : "text-ink-muted"
-                      }`}
-                    >
-                      {l.subtitle}
-                    </p>
-                  </div>
-                  {/* Il conteggio a destra e non sotto: incolonnato con quello
-                      delle altre righe si legge come una colonna sola. */}
-                  <span
-                    className={`shrink-0 text-sm font-bold ${
-                      qui ? "text-white" : "text-ink-muted"
-                    }`}
-                  >
-                    {mastered}/{total}
-                  </span>
-                </div>
-
-                <ProgressBar
-                  className="mt-4"
-                  value={pct}
-                  tone={qui ? "light" : "mint"}
-                />
-
-                <p
-                  className={`mt-2.5 text-[13px] ${
-                    qui ? "text-white/60" : "text-ink-muted"
+                {/* Spunta al posto dell'icona quando è chiuso: la fila si
+                    legge dall'alto e le cose fatte si distinguono da quelle da
+                    fare senza leggere una parola. */}
+                <span
+                  aria-hidden="true"
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                    padroneggiato ? "bg-mint text-ink" : "bg-black/[0.04]"
                   }`}
                 >
-                  {mastered === total
-                    ? "Tutti i moduli padroneggiati."
-                    : `${total - mastered} ${total - mastered === 1 ? "modulo" : "moduli"} da padroneggiare` +
-                      /* Il moltiplicatore compare da Avanzato in su: sul primo
-                         livello vale uno, e "×1 XP" e' una riga che occupa
-                         spazio per dire che non succede niente. */
-                      (l.xpMultiplier > 1
-                        ? ` · esercizi ×${l.xpMultiplier.toLocaleString("it-IT")} XP`
-                        : "")}
-                </p>
+                  {padroneggiato ? (
+                    <CheckIcon className="h-5 w-5" />
+                  ) : (
+                    <ModuloIcon moduleId={modulo.id} className="h-[22px] w-[22px]" />
+                  )}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-bold leading-snug">{modulo.title}</span>
+                  <span className="mt-0.5 block text-[13px] text-ink-muted">
+                    {padroneggiato
+                      ? `Padroneggiato · ${pct}%`
+                      : iniziato
+                        ? `Miglior punteggio ${pct}% · ti mancano ${MASTERY_THRESHOLD - pct} punti`
+                        : `Non ancora iniziato · ${modulo.exercises.length} esercizi`}
+                  </span>
+                  {iniziato && !padroneggiato ? (
+                    <span className="mt-1 block text-[13px] text-ink-muted">
+                      {svolti} di {modulo.exercises.length}{" "}
+                      {modulo.exercises.length === 1 ? "esercizio svolto" : "esercizi svolti"}
+                    </span>
+                  ) : null}
+                </span>
+                <span aria-hidden="true" className="shrink-0 font-bold text-ink-muted">
+                  ›
+                </span>
               </Link>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-bold tracking-tight">
+          {mancanti.length === 0 ? "Livello chiuso" : "Cosa manca per chiuderlo"}
+        </h2>
+
+        {mancanti.length === 0 ? (
+          <div className="card-light p-5">
+            <p className="text-[15px] leading-relaxed">
+              Hai padroneggiato tutti i moduli di {meta.name}.{" "}
+              {prossimo
+                ? `Il passo dopo è ${levelMeta(prossimo).name}, dove gli esercizi valgono ×${levelMeta(prossimo).xpMultiplier.toLocaleString("it-IT")} XP.`
+                : "Non c'è un livello sopra: da qui si torna sui moduli per alzare i punteggi."}
+            </p>
+            {prossimo ? (
+              <Link
+                href={`/percorso#${prossimo}`}
+                className="tappable mt-4 inline-block rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white"
+              >
+                Vai a {levelMeta(prossimo).name}
+              </Link>
+            ) : null}
+          </div>
+        ) : (
+          <div className="card-light p-5">
+            {/* La frase concreta, non il conteggio un'altra volta: qui si viene
+                a sapere cosa fare adesso, e "1 modulo" da solo non lo dice. */}
+            <p className="text-[15px] leading-relaxed">
+              {mancanti.length === 1
+                ? `Ti resta un modulo: porta ${mancanti[0].modulo.title} sopra il ${MASTERY_THRESHOLD}% e ${meta.name} è chiuso.`
+                : `Ti restano ${mancanti.length} moduli da portare sopra il ${MASTERY_THRESHOLD}%.`}
+            </p>
+            <ul className="mt-4 space-y-3 border-t border-black/5 pt-4">
+              {mancanti.map(({ modulo, pct, iniziato }) => (
+                <li key={modulo.id} className="flex items-start gap-2.5">
+                  <span
+                    aria-hidden="true"
+                    className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-blush-deep"
+                  />
+                  <p className="text-[14px] leading-relaxed">
+                    <span className="font-semibold">{modulo.title}</span>
+                    {" — "}
+                    {iniziato
+                      ? `rifai l'esercizio che ti è riuscito peggio: da ${pct}% servono ${MASTERY_THRESHOLD - pct} punti.`
+                      : `comincia dal primo dei suoi ${modulo.exercises.length} esercizi.`}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            {prossimo ? (
+              <p className="mt-4 border-t border-black/5 pt-4 text-[14px] leading-relaxed text-ink-muted">
+                Chiudendo {meta.name} il passo dopo è{" "}
+                <span className="font-semibold text-ink">{levelMeta(prossimo).name}</span>,
+                dove gli esercizi valgono ×
+                {levelMeta(prossimo).xpMultiplier.toLocaleString("it-IT")} XP.
+              </p>
+            ) : null}
+          </div>
+        )}
+      </section>
+
+      {/* Gli altri livelli non stanno qui, e vale la pena dirlo: senza, questa
+          pagina sembra sostenere che il percorso finisca con quello che si sta
+          facendo. */}
+      <p className="mt-8 text-sm leading-relaxed text-ink-muted">
+        Gli altri livelli, con tutti i loro moduli, stanno nel{" "}
+        <Link href="/percorso" className="font-semibold text-ink underline">
+          percorso
+        </Link>
+        .
+      </p>
     </div>
   );
 }
