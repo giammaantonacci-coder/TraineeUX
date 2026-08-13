@@ -176,6 +176,22 @@ export function UnlockIcon({ className }: Props) {
   );
 }
 
+/**
+ * La fiamma della serie.
+ *
+ * Sta qui e non fra le icone dei premi perché la serie di giorni si conta in
+ * due posti — la pillola in home e il premio "Sette giorni" — e sono la stessa
+ * cosa: se il disegno fosse doppio, prima o poi divergerebbero.
+ */
+export function FlameIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M12 21c3.4 0 6-2.3 6-5.5 0-4.4-4.3-6.3-4.3-11-3 1.8-5.3 5-5.3 8.2 0 1.3-.8 2-1.6 1.7-.7-.2-1.1-1-1.1-1.9C4.6 14 4 15.4 4 16.9 4 19.3 7 21 12 21Z" />
+      <path d="M12 21c-1.9 0-3.3-1.3-3.3-3 0-2 2-2.8 2.5-5 1.6 1.2 3 3 3 4.9 0 1.8-1.2 3.1-2.2 3.1Z" />
+    </svg>
+  );
+}
+
 /** Campanella del centro notifiche. */
 export function BellIcon({ className }: Props) {
   return (

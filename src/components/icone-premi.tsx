@@ -13,6 +13,8 @@
  * senza bisogno di desaturarle.
  */
 
+import { FlameIcon } from "@/components/icons";
+
 type Props = { className?: string };
 
 const comune = {
@@ -74,16 +76,6 @@ function StellaIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
       <path d="M12 3.4 14.7 9l6 .9-4.35 4.2 1.03 6-5.38-2.83L6.62 20.1l1.03-6L3.3 9.9l6-.9Z" />
-    </svg>
-  );
-}
-
-/** Sette giorni: la fiamma della serie, la stessa che conta in home. */
-function FiammaIcon({ className }: Props) {
-  return (
-    <svg {...comune} className={className}>
-      <path d="M12 21c3.4 0 6-2.3 6-5.5 0-4.4-4.3-6.3-4.3-11-3 1.8-5.3 5-5.3 8.2 0 1.3-.8 2-1.6 1.7-.7-.2-1.1-1-1.1-1.9C4.6 14 4 15.4 4 16.9 4 19.3 7 21 12 21Z" />
-      <path d="M12 21c-1.9 0-3.3-1.3-3.3-3 0-2 2-2.8 2.5-5 1.6 1.2 3 3 3 4.9 0 1.8-1.2 3.1-2.2 3.1Z" />
     </svg>
   );
 }
@@ -172,7 +164,7 @@ const PER_PREMIO: Record<string, (p: Props) => React.ReactElement> = {
   decisore: BussolaIcon,
   "penna-veloce": CronometroIcon,
   perfezione: StellaIcon,
-  "streak-7": FiammaIcon,
+  "streak-7": FlameIcon,
   "streak-30": MontagnaIcon,
   "modulo-padroneggiato": ToccoIcon,
   "livello-avanzato": RazzoIcon,

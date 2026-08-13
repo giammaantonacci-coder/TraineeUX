@@ -10,7 +10,7 @@ import { badgeById } from "@/content/badges";
 import { EXERCISE_TYPE_LABEL, verdict } from "@/lib/labels";
 import { ACCENT_BG, Pill, ProgressBar, Prose, ScoreRing, renderInline } from "@/components/ui";
 import { Bity, moodForScore } from "@/components/Bity";
-import { CheckIcon, CircleIcon, TrophyIcon } from "@/components/icons";
+import { CheckIcon, CircleIcon, FlameIcon, TrophyIcon } from "@/components/icons";
 import { PremioIcon } from "@/components/icone-premi";
 import { Mock } from "@/components/mocks";
 
@@ -227,7 +227,10 @@ export function ExerciseRunner({
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 border-t border-white/10 pt-5">
             <Pill tone="mint">+{result.xpAwarded} XP</Pill>
             <Pill className="bg-white/10 text-white">{result.totalXp} XP totali</Pill>
-            <Pill className="bg-white/10 text-white">🔥 serie di {result.streak}</Pill>
+            <Pill className="inline-flex items-center gap-1.5 bg-white/10 text-white">
+              <FlameIcon className="h-[15px] w-[15px]" />
+              serie di {result.streak}
+            </Pill>
           </div>
         </div>
 

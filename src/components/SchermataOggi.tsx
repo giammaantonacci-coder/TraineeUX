@@ -19,7 +19,7 @@ import {
   unGradinoSopra,
   type BityMood,
 } from "@/components/Bity";
-import { ExerciseIcon } from "@/components/icons";
+import { ExerciseIcon, FlameIcon } from "@/components/icons";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { nomeDiBattesimo } from "@/lib/labels";
 import type { Exercise, LevelId, Module } from "@/lib/types";
@@ -79,7 +79,7 @@ export async function SchermataOggi() {
             href="/profilo"
             className="tappable mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-bold active:bg-black/5"
           >
-            <span aria-hidden="true">🔥</span>
+            <FlameIcon className="h-[15px] w-[15px]" />
             <span aria-hidden="true">
               {streak} {streak === 1 ? "giorno" : "giorni"}
             </span>
