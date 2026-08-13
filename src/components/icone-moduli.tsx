@@ -98,12 +98,15 @@ const DISEGNI: Record<string, ReactNode> = {
     </>
   ),
 
-  /* Un bersaglio: la strategia è scegliere dove colpire. */
+  /* Una bandiera piantata: la strategia è dichiarare dove si va, e restarci.
+     Era un bersaglio a cerchi concentrici, cioè quasi il disegno che l'app usa
+     già per le critique — e due icone identiche su significati diversi sono
+     peggio di nessuna icona. Il bersaglio, per di più, diceva "colpire": la
+     strategia non è la mira, è la scelta del posto. */
   "strategia-prodotto": (
     <>
-      <circle cx="12" cy="12" r="8.2" />
-      <circle cx="12" cy="12" r="4.4" />
-      <circle cx="12" cy="12" r="0.9" />
+      <path d="M6.4 21V3.2" />
+      <path d="M6.4 4.1h11.3l-2.9 3.5 2.9 3.5H6.4z" />
     </>
   ),
 
