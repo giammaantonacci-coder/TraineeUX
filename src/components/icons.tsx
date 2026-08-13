@@ -110,6 +110,31 @@ export function CircleIcon({ className }: Props) {
 }
 
 /** Campanella del centro notifiche. */
+/**
+ * Le frecce dei comandi.
+ *
+ * Disegnate e non i caratteri ‹ ›, per la stessa ragione per cui lo sono i
+ * tipi di esercizio: dentro un cerchio, un glifo si allinea sulla riga di
+ * testo, che ha estensioni sopra e sotto la linea di base e non coincide con
+ * il centro del disegno. Su una griglia 24×24 il centro è geometrico, quindi
+ * la punta cade esattamente al centro del pulsante.
+ */
+export function ChevronLeftIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M14.5 5.5 8 12l6.5 6.5" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M9.5 5.5 16 12l-6.5 6.5" />
+    </svg>
+  );
+}
+
 /** Progressi e premi: la coppa. */
 export function TrophyIcon({ className }: Props) {
   return (
