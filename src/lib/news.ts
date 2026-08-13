@@ -138,7 +138,10 @@ async function fetchSource(source: FeedSource): Promise<NewsItem[]> {
   try {
     const res = await fetch(source.url, {
       headers: {
-        "User-Agent": "TraineeUX/1.0 (+https://traineeux.vercel.app)",
+        // L'indirizzo qui dentro serve a chi gestisce il feed per sapere chi
+        // sta leggendo, quindi deve essere raggiungibile: era scritto senza
+        // trattino, cioe' un dominio che non esiste.
+        "User-Agent": "TraineeUX/1.0 (+https://trainee-ux.vercel.app)",
         Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml",
       },
       // I feed cambiano lentamente: una cache di un'ora è abbondante
