@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/icons";
 
+/** Quanto vicino a un'estremita' si e' "arrivati", in pixel. */
+const SOGLIA = 24;
+
 export interface Passo {
   id: string;
   /** Il titolo del passo, letto dagli screen reader all'arrivo. */
@@ -38,24 +41,41 @@ export function Onboarding({
   const primoRender = useRef(true);
 
   /**
-   * Le parole compaiono risalendo e spariscono scendendo.
+   * Le parole ci sono solo alle due estremita' della pagina.
    *
-   * La soglia non e' un vezzo: senza, il tremolio di un dito appoggiato allo
-   * schermo alterna i due stati piu' volte al secondo e il pulsante lampeggia.
-   * Sopra i primi pixel della pagina si resta sempre estesi, perche' li' non
-   * c'e' niente da cui togliere spazio.
+   * In cima e in fondo il pulsante dice cosa fa; in mezzo si stringe sulla
+   * freccia e sta fuori dai piedi, perche' in mezzo si legge. La direzione non
+   * conta: risalendo resta chiuso finche' non si arriva davvero in cima, che e'
+   * l'unico punto in cui si ha di nuovo finito di leggere.
+   *
+   * Legare lo stato alla posizione e non al verso dello scorrimento toglie
+   * anche il tremolio: la posizione e' un fatto, il verso cambia a ogni
+   * micromovimento del dito.
+   *
+   * Su una pagina che non scorre (un passo corto) restano sempre estesi: non
+   * c'e' nessuna lettura da cui togliere spazio.
    */
   useEffect(() => {
-    let ultimo = window.scrollY;
-    const alloScorrere = () => {
+    const aggiorna = () => {
+      const massimo = document.documentElement.scrollHeight - window.innerHeight;
+      if (massimo <= SOGLIA) {
+        setEspanso(true);
+        return;
+      }
       const y = window.scrollY;
-      if (Math.abs(y - ultimo) < 8) return;
-      setEspanso(y < ultimo || y < 32);
-      ultimo = y;
+      setEspanso(y <= SOGLIA || y >= massimo - SOGLIA);
     };
-    window.addEventListener("scroll", alloScorrere, { passive: true });
-    return () => window.removeEventListener("scroll", alloScorrere);
-  }, []);
+
+    aggiorna();
+    window.addEventListener("scroll", aggiorna, { passive: true });
+    window.addEventListener("resize", aggiorna);
+    return () => {
+      window.removeEventListener("scroll", aggiorna);
+      window.removeEventListener("resize", aggiorna);
+    };
+    // Cambiando passo cambia l'altezza della pagina, quindi anche dove sono le
+    // estremita': va rimisurato, non ereditato dal passo precedente.
+  }, [i]);
 
   // Cambiare passo non ricarica la pagina, quindi chi usa uno screen reader non
   // riceverebbe nessun annuncio: senza questo, il contenuto cambia in silenzio.
@@ -65,8 +85,7 @@ export function Onboarding({
       return;
     }
     titoloRef.current?.focus();
-    setEspanso(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0 });
   }, [i]);
 
   const passo = passi[i];
@@ -132,10 +151,8 @@ export function Onboarding({
           l'ombra, che e' come si comportano i pulsanti mobili ovunque.
           Sono fissi rispetto alla finestra e non alla pagina: restano
           raggiungibili col pollice anche a meta' di una schermata lunga.
-          Scendendo si stringono sulla sola freccia, risalendo tornano con la
-          parola: mentre si legge devono togliere il meno possibile, ma
-          quando si risale — che e' il gesto di chi ha finito di leggere e
-          cerca dove si va — devono dire cosa fanno. */}
+          Portano la parola solo in cima e in fondo alla pagina; in mezzo si
+          stringono sulla freccia, perche' in mezzo si legge. */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20">
         <div className="mx-auto flex max-w-xl items-center justify-between px-4 pb-[max(env(safe-area-inset-bottom),1rem)] md:max-w-2xl">
           {i > 0 ? (
