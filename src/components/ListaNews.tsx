@@ -157,20 +157,7 @@ function ArticoloInEvidenza({ a }: { a: Articolo }) {
       rel="noopener noreferrer"
       className="card-light tappable block overflow-hidden hover:-translate-y-0.5 active:bg-black/[0.02]"
     >
-      {a.image ? (
-        /* Le proporzioni sono fissate dal contenitore e l'immagine lo riempie:
-           l'altezza e' nota prima che l'immagine arrivi, quindi la pagina non
-           sobbalza a meta' lettura. */
-        <div className="relative aspect-[16/9] w-full bg-surface-muted">
-          <Image
-            src={`/immagine?u=${encodeURIComponent(a.image)}`}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 640px"
-            className="object-cover"
-          />
-        </div>
-      ) : null}
+      <Miniatura src={a.image} forma="apertura" />
       <div className="p-5">
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <Pill tone="dark">{a.sourceName}</Pill>
@@ -215,18 +202,54 @@ function RigaArticolo({ a }: { a: Articolo }) {
           {a.data ? ` · ${a.data}` : ""}
         </span>
       </span>
-      {a.image ? (
-        <Image
-          src={`/immagine?u=${encodeURIComponent(a.image)}`}
-          alt=""
-          width={64}
-          height={64}
-          className="h-16 w-16 shrink-0 rounded-xl bg-surface-muted object-cover"
-        />
-      ) : null}
+      <Miniatura src={a.image} forma="riga" />
       <ExternalIcon className="h-4 w-4 shrink-0 text-ink-muted" />
       <span className="sr-only">Si apre in una nuova finestra</span>
     </a>
+  );
+}
+
+/**
+ * La miniatura, con la sua via d'uscita.
+ *
+ * Un feed puo' dichiarare un'immagine che non esiste piu', che sta su un
+ * dominio che non passiamo, o che non risponde: in tutti quei casi il browser
+ * disegna il quadratino dell'immagine rotta, che e' peggio di non avere
+ * l'immagine. Qui il primo errore la fa sparire, e la card torna alla forma
+ * senza immagine — che e' gia' prevista e sta bene.
+ *
+ * Le proporzioni sono fissate dal contenitore: l'altezza e' nota prima che
+ * l'immagine arrivi, quindi la pagina non sobbalza a meta' lettura.
+ */
+function Miniatura({ src, forma }: { src: string | null; forma: "apertura" | "riga" }) {
+  const [rotta, setRotta] = useState(false);
+  if (!src || rotta) return null;
+  const indirizzo = `/immagine?u=${encodeURIComponent(src)}`;
+
+  if (forma === "apertura") {
+    return (
+      <div className="relative aspect-[16/9] w-full bg-surface-muted">
+        <Image
+          src={indirizzo}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 640px"
+          className="object-cover"
+          onError={() => setRotta(true)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={indirizzo}
+      alt=""
+      width={64}
+      height={64}
+      className="h-16 w-16 shrink-0 rounded-xl bg-surface-muted object-cover"
+      onError={() => setRotta(true)}
+    />
   );
 }
 

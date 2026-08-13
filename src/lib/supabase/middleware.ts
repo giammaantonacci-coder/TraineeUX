@@ -22,6 +22,14 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
  * iscriversi, quindi da chi un account non ce l'ha ancora, e sia gli store sia
  * la schermata di consenso di Google li vogliono raggiungibili da un indirizzo
  * pubblico.
+ *
+ * /immagine e' di nuovo il primo caso, ed e' costato un rilascio: le miniature
+ * delle news passano da li', ma a scaricarle non e' il browser di chi legge —
+ * e' l'ottimizzatore di Vercel, che chiama il nostro server per conto suo e
+ * senza cookie. Protetta, quella chiamata riceveva la pagina di benvenuto al
+ * posto dei byte dell'immagine, e in pagina compariva il quadratino
+ * dell'immagine rotta. Aprirla non espone niente: la rotta accetta solo un
+ * elenco chiuso di domini e restituisce solo immagini.
  */
 const PUBLIC_PATHS = [
   "/login",
@@ -29,6 +37,7 @@ const PUBLIC_PATHS = [
   "/benvenuto",
   "/privacy",
   "/termini",
+  "/immagine",
   "/manifest.webmanifest",
   "/sw.js",
 ];
