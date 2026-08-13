@@ -11,10 +11,21 @@ import type { LevelId } from "@/lib/types";
  * Nessun "use client": sono forme e animazioni CSS, niente stato.
  */
 
+/**
+ * I primi cinque umori sono anche una scala.
+ *
+ * neutro → felice → sicuro → fiero → esulta e' una progressione di sicurezza,
+ * e la usa la presentazione dei livelli: la faccia dice quanto sei padrone
+ * della materia prima che tu abbia letto il nome del livello. Fuori di li'
+ * restano umori qualsiasi, usabili da soli.
+ */
 export type BityMood =
+  | "neutro"
   | "felice"
-  | "curioso"
+  | "sicuro"
+  | "fiero"
   | "esulta"
+  | "curioso"
   | "pensieroso"
   | "spiacente"
   | "assonnato";
@@ -41,7 +52,15 @@ const TINTS: Record<BityTint, { base: string; deep: string }> = {
 const INK = "#0f1117";
 
 type Eyes = "aperti" | "spalancati" | "felici" | "chiusi" | "laterali" | "bassi";
-type Mouth = "sorriso" | "cerchietto" | "aperta" | "linea" | "incerta" | "riposo";
+type Mouth =
+  | "sorriso"
+  | "cerchietto"
+  | "aperta"
+  | "linea"
+  | "dritta"
+  | "sghemba"
+  | "incerta"
+  | "riposo";
 type Brows = "alzato" | "preoccupate";
 
 interface Face {
@@ -59,7 +78,25 @@ interface Face {
  * incuriosito.
  */
 const FACES: Record<BityMood, Face> = {
+  /* Il gradino zero: nessuna emozione, non un'emozione triste. Bocca dritta e
+     corpo fermo — se fosse anche solo un po' curva sembrerebbe contento, e la
+     scala partirebbe dal secondo gradino. */
+  neutro: { squash: [1, 1, 0], eyes: "aperti", mouth: "dritta" },
   felice: { squash: [1, 1, 0], eyes: "aperti", mouth: "sorriso" },
+  /* Sicuro di se': il sorriso storto e il sopracciglio alzato. L'asimmetria e'
+     tutta la differenza fra "contento" e "so quello che faccio" — un sorriso
+     simmetrico non ha mai fatto quell'effetto. Il corpo si tira su di mezzo
+     punto, che a 44 pixel non si nota da solo ma si somma. */
+  sicuro: {
+    squash: [0.985, 1.025, -1],
+    eyes: "aperti",
+    mouth: "sghemba",
+    brows: "alzato",
+  },
+  /* Fiero: petto in fuori e occhi ad arco. Un gradino sopra il sorriso storto,
+     uno sotto l'esultanza — qui la sicurezza si vede da come sta, non da cosa
+     fa. */
+  fiero: { squash: [1.03, 1.05, -3], eyes: "felici", mouth: "sorriso" },
   curioso: {
     squash: [0.975, 1.035, -1],
     eyes: "spalancati",
@@ -294,6 +331,30 @@ function Mouth({ kind }: { kind: Mouth }) {
           d="M 54 84 L 66 80.5"
           stroke={INK}
           strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+        />
+      );
+    case "dritta":
+      /* Orizzontale e centrata, a differenza di "linea" che è inclinata: quella
+         legge come perplessità, questa come assenza di espressione. */
+      return (
+        <path
+          d="M 53.5 81.5 L 66.5 81.5"
+          stroke={INK}
+          strokeWidth="3"
+          strokeLinecap="round"
+          fill="none"
+        />
+      );
+    case "sghemba":
+      /* Un angolo sale e l'altro no. La curva parte bassa a sinistra e finisce
+         alta a destra, così il sorriso resta mezzo. */
+      return (
+        <path
+          d="M 51.5 80 Q 59 87.5 68 77"
+          stroke={INK}
+          strokeWidth="3.4"
           strokeLinecap="round"
           fill="none"
         />
