@@ -266,6 +266,43 @@ export function totalAttempts(best: ExerciseBest[]): number {
  * Bity: il colore della mascotte dice fin dove sei arrivato, non quanto hai
  * fatto in totale, quindi basta aver messo piede nel livello.
  */
+/** Quanti moduli di un livello sono padroneggiati, e quanti sono in tutto. */
+export function levelProgress(
+  best: ExerciseBest[],
+  level: LevelId,
+  threshold: number,
+): { mastered: number; total: number; pct: number } {
+  const modules = MODULES.filter((m) => m.level === level);
+  const mastered = modules.filter((m) => moduleBestPct(best, m.id) >= threshold).length;
+  return {
+    mastered,
+    total: modules.length,
+    pct: modules.length > 0 ? Math.round((mastered / modules.length) * 100) : 0,
+  };
+}
+
+/**
+ * Il livello su cui si sta lavorando: la barra che sta per completarsi.
+ *
+ * Non è sempre lo stesso che colora Bity. Bity dice fin dove sei arrivato, e
+ * ci resta anche a livello finito; qui serve invece la cosa che hai davanti,
+ * cioè quella che ha ancora un pezzo da chiudere.
+ *
+ * Si parte dal livello raggiunto e si sale finché non se ne trova uno
+ * incompleto: chi ha appena chiuso l'Intermedio deve vedere l'Avanzato, non
+ * una barra piena che non chiede niente. Se è tutto padroneggiato resta
+ * l'ultimo, perché una schermata deve pur mostrare qualcosa.
+ */
+export function levelInProgress(best: ExerciseBest[], threshold: number): LevelId {
+  const raggiunto = highestLevelReached(best);
+  const da = LEVEL_ORDER.indexOf(raggiunto);
+  for (let i = da; i < LEVEL_ORDER.length; i++) {
+    const l = LEVEL_ORDER[i];
+    if (levelProgress(best, l, threshold).pct < 100) return l;
+  }
+  return LEVEL_ORDER[LEVEL_ORDER.length - 1];
+}
+
 export function highestLevelReached(best: ExerciseBest[]): LevelId {
   const done = new Set(best.map((b) => b.module_id));
   let reached: LevelId = "intermedio";

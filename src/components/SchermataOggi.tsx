@@ -7,11 +7,12 @@ import {
 import {
   bestPctPerExercise,
   getProgressData,
-  moduleBestPct,
+  levelInProgress,
+  levelProgress,
   highestLevelReached,
   totalExercisesDone,
 } from "@/lib/data";
-import { LEVEL_ORDER, MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
+import { MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { ACCENT_BG, Pill, ProgressBar, SectionTitle } from "@/components/ui";
 import {
   BITY_MOOD_BY_LEVEL,
@@ -38,6 +39,8 @@ export async function SchermataOggi() {
   const bestPct = bestPctPerExercise(best);
   const doneCount = totalExercisesDone(best);
   const reachedLevel = highestLevelReached(best);
+  const livelloInCorso = levelInProgress(best, MASTERY_THRESHOLD);
+  const progressoInCorso = levelProgress(best, livelloInCorso, MASTERY_THRESHOLD);
 
   const suggestions = buildSuggestions(bestPct, best.length === 0);
   const [primary, ...rest] = suggestions;
@@ -168,46 +171,34 @@ export async function SchermataOggi() {
         </section>
       ) : null}
 
-      {/* Le due scorciatoie della home portavano tutte e due in cima al
-          percorso, con due nomi diversi per lo stesso posto. Sopra si cercano
-          altri esercizi, e "tutto il percorso" e' il posto giusto; qui si
-          guarda a che punto si e', e la risposta e' il proprio livello — che
-          nel percorso e' un'ancora, non la cima. Ora il nome dice dove porta,
-          e i due collegamenti smettono di essere lo stesso. */}
+      {/* Una barra sola, non cinque.
+          Cinque significava che quattro dicevano "non ancora": in fondo alla
+          schermata di cosa fare oggi c'era un inventario, e la riga che
+          contava davvero — quella che si sta chiudendo — pesava un quinto di
+          quello spazio. Qui resta lei sola, e le altre stanno nella pagina dei
+          livelli, dove si va apposta a guardarle.
+          Il livello mostrato non e' sempre quello che colora Bity: Bity dice
+          fin dove sei arrivato e ci resta anche a livello finito, questa dice
+          cosa hai davanti. */}
       <section>
-        <SectionTitle
-          action={{ href: `/percorso#${reachedLevel}`, label: "Il tuo livello" }}
-        >
-          I tuoi livelli
+        <SectionTitle action={{ href: "/livelli", label: "Tutti i livelli" }}>
+          Il tuo livello
         </SectionTitle>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {LEVEL_ORDER.map((levelId) => {
-            const meta = levelMeta(levelId);
-            const modules = MODULES.filter((m) => m.level === levelId);
-            const mastered = modules.filter(
-              (m) => moduleBestPct(best, m.id) >= MASTERY_THRESHOLD,
-            ).length;
-            const pct = Math.round((mastered / modules.length) * 100);
-            return (
-              <Link
-                key={levelId}
-                href={`/percorso#${levelId}`}
-                className="card-light tappable block p-4 hover:-translate-y-0.5 active:bg-black/[0.02]"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <p className="font-bold">{meta.name}</p>
-                  <span className="text-xs font-semibold text-ink-muted">
-                    {mastered}/{modules.length}
-                  </span>
-                </div>
-                <p className="mt-1 mb-3 text-[13px] leading-snug text-ink-muted">
-                  {meta.subtitle}
-                </p>
-                <ProgressBar value={pct} tone="mint" />
-              </Link>
-            );
-          })}
-        </div>
+        <Link
+          href={`/percorso#${livelloInCorso}`}
+          className="card-light tappable block p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
+        >
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="font-bold">{levelMeta(livelloInCorso).name}</p>
+            <span className="text-xs font-semibold text-ink-muted">
+              {progressoInCorso.mastered}/{progressoInCorso.total}
+            </span>
+          </div>
+          <p className="mt-1 mb-3 text-[13px] leading-snug text-ink-muted">
+            {levelMeta(livelloInCorso).subtitle}
+          </p>
+          <ProgressBar value={progressoInCorso.pct} tone="mint" />
+        </Link>
       </section>
     </div>
   );
