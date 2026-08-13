@@ -50,7 +50,9 @@ export function Onboarding({
   const ultimo = i === passi.length - 1;
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4 py-6 md:max-w-2xl md:py-10">
+    /* Il fondo lascia posto ai pulsanti che galleggiano: senza, l'ultima riga
+       di ogni passo finirebbe sotto di loro una volta arrivati in fondo. */
+    <div className="mx-auto w-full max-w-xl px-4 pb-28 pt-6 md:max-w-2xl md:py-10 md:pb-32">
       {/* La barra: un segmento per passo, non una barra continua. Con quattro
           tappe il riempimento progressivo direbbe "sei a poco piu' di meta'"
           quando invece sei "al terzo di quattro", che e' un'informazione piu'
@@ -71,7 +73,7 @@ export function Onboarding({
         </p>
       </div>
 
-      <div className="flex-1">
+      <div>
         <h2 ref={titoloRef} tabIndex={-1} className="sr-only">
           {passo.titolo} — passo {i + 1} di {passi.length}
         </h2>
@@ -82,41 +84,55 @@ export function Onboarding({
         </div>
       </div>
 
-      <div className="sticky bottom-0 -mx-4 mt-8 bg-gradient-to-t from-surface via-surface to-transparent px-4 pb-2 pt-6">
-        <div className="flex items-center gap-3">
+      {/* Chi ha gia' un account non deve attraversare la presentazione per
+          rientrare: qui ci si arriva anche a sessione scaduta, e in quel caso
+          tre schermate di spiegazioni sono tre ostacoli. Sta in fondo al
+          contenuto e scorre con lui: e' una via di fuga, non un comando che
+          deve stare sempre sotto il pollice. */}
+      {ultimo ? null : (
+        <button
+          type="button"
+          onClick={() => setI(passi.length - 1)}
+          className="mt-8 block w-full py-1 text-center text-[13px] font-semibold text-ink-muted underline underline-offset-2"
+        >
+          Ho già un account, accedi
+        </button>
+      )}
+
+      {/* I due comandi galleggiano sul contenuto, senza fascia e senza
+          sfumatura sotto. Il velo bianco serviva a staccarli da quello che
+          scorre dietro; tolto quello, il distacco lo fanno la forma tonda e
+          l'ombra, che e' come si comportano i pulsanti mobili ovunque.
+          Sono fissi rispetto alla finestra e non alla pagina: restano
+          raggiungibili col pollice anche a meta' di una schermata lunga. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20">
+        <div className="mx-auto flex max-w-xl items-center justify-between px-4 pb-[max(env(safe-area-inset-bottom),1rem)] md:max-w-2xl">
           {i > 0 ? (
             <button
               type="button"
               onClick={() => setI(i - 1)}
-              className="tappable shrink-0 rounded-full border border-black/10 bg-white px-5 py-3.5 text-sm font-bold active:bg-black/5"
+              aria-label="Torna al passo precedente"
+              className="tappable pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white text-xl font-bold shadow-[0_8px_24px_rgba(15,17,23,0.16)] active:bg-black/5"
             >
-              <span aria-hidden="true">‹</span> Indietro
+              <span aria-hidden="true">‹</span>
             </button>
-          ) : null}
+          ) : (
+            /* Segnaposto: senza, al primo passo il pulsante Avanti scivolerebbe
+               a sinistra e tornerebbe a destra al secondo. */
+            <span aria-hidden="true" className="h-14 w-14" />
+          )}
 
           {ultimo ? null : (
             <button
               type="button"
               onClick={() => setI(i + 1)}
-              className="tappable flex-1 rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white"
+              aria-label="Vai al passo successivo"
+              className="tappable pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-ink text-2xl font-bold text-white shadow-[0_10px_30px_rgba(15,17,23,0.28)]"
             >
-              Avanti <span aria-hidden="true">›</span>
+              <span aria-hidden="true">›</span>
             </button>
           )}
         </div>
-
-        {/* Chi ha gia' un account non deve attraversare la presentazione per
-            rientrare: qui ci si arriva anche a sessione scaduta, e in quel caso
-            tre schermate di spiegazioni sono tre ostacoli. */}
-        {ultimo ? null : (
-          <button
-            type="button"
-            onClick={() => setI(passi.length - 1)}
-            className="mt-3 block w-full py-1 text-center text-[13px] font-semibold text-ink-muted underline underline-offset-2"
-          >
-            Ho già un account, accedi
-          </button>
-        )}
       </div>
     </div>
   );
