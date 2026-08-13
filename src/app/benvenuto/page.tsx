@@ -5,7 +5,6 @@ import { Bity, type BityMood } from "@/components/Bity";
 import { ExerciseIcon } from "@/components/icons";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { Onboarding, type Passo } from "@/components/Onboarding";
-import { ACCENT_BG } from "@/components/ui";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
 import type { ExerciseType } from "@/lib/types";
@@ -38,37 +37,41 @@ const SCALA_SICUREZZA: BityMood[] = [
   "esulta",
 ];
 
-/** I quattro modi di allenarsi, con l'icona e l'accento del loro tipo. */
+/**
+ * I quattro modi di allenarsi.
+ *
+ * Senza colore. Nel resto dell'app il fondo di quel riquadro e' l'accento del
+ * modulo — sulla home, dentro un riquadro colorato ci sta l'icona del tipo di
+ * esercizio, e il colore viene dal modulo che lo contiene. Qui i moduli non ci
+ * sono ancora, quindi un colore per tipo sarebbe stato inventato: avrebbe
+ * insegnato "azzurro = quiz" nel primo minuto, e l'app lo avrebbe smentito al
+ * primo quiz dentro un modulo verde.
+ */
 const MODI: {
   tipo: ExerciseType;
-  accento: string;
   titolo: string;
   corpo: string;
 }[] = [
   {
     tipo: "quiz",
-    accento: "sky",
     titolo: "Quiz secchi",
     corpo:
       "Domande con una risposta giusta e tre plausibili. Servono a togliere le sviste, non a fare punteggio.",
   },
   {
     tipo: "critique",
-    accento: "mint",
     titolo: "Critique di interfacce reali",
     corpo:
       "Guardi uno schermo e dici cosa non va e perché, con il vocabolario che useresti in una revisione vera.",
   },
   {
     tipo: "scenario",
-    accento: "butter",
     titolo: "Scenari con conseguenze",
     corpo:
       "Scegli, e la scelta produce un effetto: il costo di una decisione si vede dopo, come sul lavoro.",
   },
   {
     tipo: "brief",
-    accento: "blush",
     titolo: "Brief a tempo",
     corpo:
       "Scrivi la tua proposta col cronometro, poi la confronti con la rubrica e con la risposta di chi quel problema l'ha risolto.",
@@ -210,8 +213,7 @@ export default async function BenvenutoPage({
             scegliendo, e motivando la scelta.
           </p>
 
-          {/* Un'icona per modo, nel colore che quel tipo di esercizio ha in
-              tutta l'app: sono le stesse che compaiono sulle card dei
+          {/* Un'icona per modo: sono le stesse che compaiono sulle card dei
               consigli, quindi qui si imparano e dopo si riconoscono. Quattro
               blocchi di solo testo, invece, si distinguevano solo leggendoli
               tutti e quattro. */}
@@ -220,7 +222,7 @@ export default async function BenvenutoPage({
               <div key={m.tipo} className="card-light flex items-start gap-3.5 p-4">
                 <span
                   aria-hidden="true"
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${ACCENT_BG[m.accento]}`}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface-muted"
                 >
                   <ExerciseIcon type={m.tipo} className="h-[22px] w-[22px]" />
                 </span>
