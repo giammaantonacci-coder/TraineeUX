@@ -16,7 +16,7 @@ import {
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
 import { ModuloIcon } from "@/components/icone-moduli";
-import { CheckIcon } from "@/components/icons";
+import { CheckIcon, TrophyIcon } from "@/components/icons";
 
 export async function generateMetadata({
   params,
@@ -103,8 +103,11 @@ export default async function ModulePage({
           href={`/percorso/${mod.id}/completato`}
           className="tappable mt-4 flex items-center gap-3 rounded-[28px] border border-black/10 bg-white p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
         >
-          <span aria-hidden="true" className="text-2xl">
-            🎉
+          <span
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black/[0.04]"
+          >
+            <TrophyIcon className="h-[22px] w-[22px]" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-bold">Modulo completato</span>

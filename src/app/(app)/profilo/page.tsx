@@ -16,6 +16,7 @@ import { nomeDiBattesimo } from "@/lib/labels";
 import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
 import { Bity } from "@/components/Bity";
 import { BellIcon } from "@/components/icons";
+import { PremioIcon } from "@/components/icone-premi";
 import { ImpostazioniNotifiche } from "@/components/ImpostazioniNotifiche";
 import { contaNonLette, leggiPreferenze } from "@/app/notifiche/actions";
 
@@ -233,17 +234,7 @@ export default async function ProfiloPage() {
                 key={badge.id}
                 className={`card-light flex items-center gap-3 p-4 ${has ? "" : "opacity-55"}`}
               >
-                {/* Riquadro di larghezza fissa: le emoji hanno ciascuna la
-                    propria larghezza, e lasciate libere nel flusso facevano
-                    partire il testo da un punto diverso a ogni riga. */}
-                <span
-                  aria-hidden="true"
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black/[0.04] text-xl leading-none ${
-                    has ? "" : "grayscale"
-                  }`}
-                >
-                  {badge.emoji}
-                </span>
+                <PremioIcon id={badge.id} />
                 <span className="min-w-0">
                   <span className="block font-bold">{badge.name}</span>
                   <span className="block text-[13px] leading-snug text-ink-muted">

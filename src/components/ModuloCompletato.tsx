@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Bity } from "@/components/Bity";
 import { CheckIcon, CircleIcon } from "@/components/icons";
+import { PremioIcon } from "@/components/icone-premi";
 import { Pill, ScoreRing } from "@/components/ui";
 import { MASTERY_THRESHOLD } from "@/lib/progression";
 import type { Badge, Capability, LevelId } from "@/lib/types";
@@ -97,9 +98,7 @@ export function ModuloCompletato({
           <ul className="grid gap-3 sm:grid-cols-2">
             {premi.map((b) => (
               <li key={b.id} className="card-light flex items-center gap-3 p-4">
-                <span aria-hidden="true" className="text-2xl">
-                  {b.emoji}
-                </span>
+                <PremioIcon id={b.id} />
                 <span className="min-w-0">
                   <span className="block font-bold">{b.name}</span>
                   <span className="block text-[13px] leading-snug text-ink-muted">

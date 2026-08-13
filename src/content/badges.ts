@@ -6,73 +6,61 @@ export const BADGES: Badge[] = [
     id: "primo-passo",
     name: "Primo passo",
     description: "Hai completato il tuo primo esercizio.",
-    emoji: "🌱",
   },
   {
     id: "occhio-critico",
     name: "Occhio critico",
     description: "5 critique completate: inizi a vedere i difetti prima degli altri.",
-    emoji: "🔍",
   },
   {
     id: "decisore",
     name: "Decisore",
     description: "5 scenari risolti con almeno il 70%.",
-    emoji: "🧭",
   },
   {
     id: "penna-veloce",
     name: "Penna veloce",
     description: "3 brief a tempo consegnati.",
-    emoji: "✍️",
   },
   {
     id: "perfezione",
     name: "Punteggio pieno",
     description: "Un esercizio chiuso al 100%.",
-    emoji: "💯",
   },
   {
     id: "streak-7",
     name: "Sette giorni",
     description: "Una settimana di allenamento senza saltare un giorno.",
-    emoji: "🔥",
   },
   {
     id: "streak-30",
     name: "Trenta giorni",
     description: "Un mese di costanza. Qui la competenza diventa abitudine.",
-    emoji: "🏔️",
   },
   {
     id: "modulo-padroneggiato",
     name: "Padronanza",
     description: "Primo modulo chiuso sopra il 70%.",
-    emoji: "🎯",
   },
   {
     id: "livello-avanzato",
     name: "Oltre le basi",
     description: "Tutti i moduli del livello Intermedio padroneggiati.",
-    emoji: "🚀",
   },
   {
     id: "livello-senior",
     name: "Mentalità senior",
     description: "Tutti i moduli del livello Senior padroneggiati.",
-    emoji: "👑",
   },
   {
     id: "ricercatore",
     name: "Metodo",
     description: "Almeno un esercizio in 8 moduli diversi.",
-    emoji: "🧪",
   },
   {
     id: "maratoneta",
     name: "Maratoneta",
     description: "50 esercizi completati in totale.",
-    emoji: "🏅",
   },
 ];
 

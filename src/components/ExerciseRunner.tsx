@@ -10,7 +10,8 @@ import { badgeById } from "@/content/badges";
 import { EXERCISE_TYPE_LABEL, verdict } from "@/lib/labels";
 import { ACCENT_BG, Pill, ProgressBar, Prose, ScoreRing, renderInline } from "@/components/ui";
 import { Bity, moodForScore } from "@/components/Bity";
-import { CheckIcon, CircleIcon } from "@/components/icons";
+import { CheckIcon, CircleIcon, TrophyIcon } from "@/components/icons";
+import { PremioIcon } from "@/components/icone-premi";
 import { Mock } from "@/components/mocks";
 
 type Phase = "intro" | "run" | "done";
@@ -239,8 +240,11 @@ export function ExerciseRunner({
             href={`/percorso/${moduleId}/completato`}
             className="tappable mt-4 flex items-center gap-3 rounded-[28px] bg-mint p-5 hover:-translate-y-0.5"
           >
-            <span aria-hidden="true" className="text-2xl">
-              🎉
+            <span
+              aria-hidden="true"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/50"
+            >
+              <TrophyIcon className="h-[22px] w-[22px]" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block font-bold">Hai completato {moduleTitle}</span>
@@ -261,9 +265,7 @@ export function ExerciseRunner({
             <ul className="grid gap-3 sm:grid-cols-2">
               {newBadges.map((b) => (
                 <li key={b.id} className="card-light flex items-center gap-3 p-4">
-                  <span aria-hidden="true" className="text-2xl">
-                    {b.emoji}
-                  </span>
+                  <PremioIcon id={b.id} />
                   <span>
                     <span className="block font-bold">{b.name}</span>
                     <span className="block text-[13px] text-ink-muted">

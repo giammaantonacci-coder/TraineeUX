@@ -141,7 +141,8 @@ export interface Badge {
   id: string;
   name: string;
   description: string;
-  emoji: string;
+  /** Il disegno sta in icone-premi.tsx, associato per id: qui non c'è più
+   *  un'emoji, perché a disegnarla era il sistema operativo e non noi. */
 }
 
 export interface ProfileRow {
