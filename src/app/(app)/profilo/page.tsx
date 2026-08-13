@@ -324,15 +324,13 @@ function MiniStat({
   return (
     /* Il filo verticale ha lo stesso colore della riga sopra, e separa una
        voce dall'altra invece di lasciarle affiancate a distanza. Sul primo
-       riquadro non c'è, o segnerebbe il bordo interno della card; il rientro
-       cade sul primo a sinistra e sull'ultimo a destra, così i cinque numeri
-       restano incolonnati con il resto del contenuto.
-       L'ultimo allinea il testo a destra. Togliere il rientro non bastava: la
-       colonna arrivava al bordo ma il testo dentro restava a sinistra e
-       finiva una cinquantina di pixel prima di "320 XP", che è l'unica cosa
-       con cui deve incolonnarsi. A sinistra il problema non c'era perché
-       lì testo e colonna cominciano nello stesso punto. */
-    <div className="min-w-0 border-l border-white/10 px-1.5 first:border-l-0 first:pl-0 last:pr-0 last:text-right">
+       riquadro non c'è, o segnerebbe il bordo interno della card.
+       Ogni blocco è largo quanto il suo contenuto e il testo sta a sinistra,
+       tutti e cinque allo stesso modo: a distanziarli è lo spazio che avanza,
+       diviso in parti uguali. Con cinque colonne di uguale larghezza, invece,
+       l'ultima arrivava al bordo ma il suo numero — corto — restava indietro
+       di mezza colonna. */
+    <div className="border-l border-white/10 pl-3.5 first:border-l-0 first:pl-0">
       <dt className="sr-only">{full}</dt>
       <dd>
         <span className="block text-[15px] font-extrabold leading-tight">{value}</span>
