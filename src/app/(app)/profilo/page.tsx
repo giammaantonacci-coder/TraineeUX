@@ -13,7 +13,7 @@ import {
 } from "@/lib/data";
 import { MASTERY_THRESHOLD, levelMeta, rankForXp } from "@/lib/progression";
 import { nomeDiBattesimo } from "@/lib/labels";
-import { PageHeader, Pill, ProgressBar, ScoreRing } from "@/components/ui";
+import { ACCENT_BG, PageHeader, ProgressBar, ScoreRing } from "@/components/ui";
 import { Bity } from "@/components/Bity";
 import { BellIcon } from "@/components/icons";
 import { ImpostazioniNotifiche } from "@/components/ImpostazioniNotifiche";
@@ -167,11 +167,25 @@ export default async function ProfiloPage() {
              trentasei bordi da guardare per leggere trentasei frasi: il
              raggruppamento lo fa gia' l'intestazione, e la scatola non
              aggiungeva niente se non rumore. */
-          <div className="space-y-7">
+          /* Ogni modulo dentro la sua card, nel suo colore.
+             La scatola torna, ma una per modulo invece di una per voce: nove
+             riquadri bianchi erano nove bordi da attraversare per leggere nove
+             frasi, tre riquadri colorati sono tre blocchi che si distinguono
+             da lontano. Il colore e' quello del modulo, lo stesso che porta
+             nel percorso e sulla home.
+             Il nome sta in una pillola bianca piena e non semitrasparente:
+             sopra quattro tinte diverse, una bianca al settanta per cento
+             cambierebbe colore da una card all'altra. */
+          <div className="space-y-3">
             {perModulo.map((g) => (
-              <div key={g.modulo.id}>
-                <Pill tone={g.modulo.accent}>{g.modulo.title}</Pill>
-                <ul className="mt-3 space-y-4">
+              <div
+                key={g.modulo.id}
+                className={`rounded-[28px] ${ACCENT_BG[g.modulo.accent]} p-5`}
+              >
+                <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold">
+                  {g.modulo.title}
+                </span>
+                <ul className="mt-4 space-y-4">
                   {g.voci.map((c, i) => (
                     <li key={i}>
                       <p className="text-[15px] font-semibold leading-relaxed">
@@ -179,8 +193,12 @@ export default async function ProfiloPage() {
                       </p>
                       {/* "Perché conta" non è più in grassetto scuro: ripetuto
                           a ogni voce era un richiamo che chiedeva attenzione
-                          trentasei volte per dire sempre la stessa cosa. */}
-                      <p className="mt-1 text-[14px] leading-relaxed text-ink-muted">
+                          trentasei volte per dire sempre la stessa cosa.
+                          Sul pastello il grigio delle didascalie perde
+                          contrasto: qui è il nero dell'inchiostro al settanta
+                          per cento, che resta leggibile su tutte e quattro le
+                          tinte. */}
+                      <p className="mt-1 text-[14px] leading-relaxed text-ink/70">
                         <span className="font-semibold">Perché conta: </span>
                         {c.signal}
                       </p>
