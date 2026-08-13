@@ -326,8 +326,13 @@ function MiniStat({
        voce dall'altra invece di lasciarle affiancate a distanza. Sul primo
        riquadro non c'è, o segnerebbe il bordo interno della card; il rientro
        cade sul primo a sinistra e sull'ultimo a destra, così i cinque numeri
-       restano incolonnati con il resto del contenuto. */
-    <div className="min-w-0 border-l border-white/10 px-1.5 first:border-l-0 first:pl-0 last:pr-0">
+       restano incolonnati con il resto del contenuto.
+       L'ultimo allinea il testo a destra. Togliere il rientro non bastava: la
+       colonna arrivava al bordo ma il testo dentro restava a sinistra e
+       finiva una cinquantina di pixel prima di "320 XP", che è l'unica cosa
+       con cui deve incolonnarsi. A sinistra il problema non c'era perché
+       lì testo e colonna cominciano nello stesso punto. */
+    <div className="min-w-0 border-l border-white/10 px-1.5 first:border-l-0 first:pl-0 last:pr-0 last:text-right">
       <dt className="sr-only">{full}</dt>
       <dd>
         <span className="block text-[15px] font-extrabold leading-tight">{value}</span>
