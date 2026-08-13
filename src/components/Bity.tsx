@@ -14,8 +14,8 @@ import type { LevelId } from "@/lib/types";
 /**
  * I primi cinque umori sono anche una scala.
  *
- * neutro → felice → sicuro → fiero → esulta e' una progressione di sicurezza,
- * e la usa la presentazione dei livelli: la faccia dice quanto sei padrone
+ * neutro → felice → sicuro → fiero → trionfante e' una progressione di
+ * sicurezza, e la usa la presentazione dei livelli: la faccia dice quanto sei padrone
  * della materia prima che tu abbia letto il nome del livello. Fuori di li'
  * restano umori qualsiasi, usabili da soli.
  */
@@ -24,6 +24,7 @@ export type BityMood =
   | "felice"
   | "sicuro"
   | "fiero"
+  | "trionfante"
   | "esulta"
   | "curioso"
   | "pensieroso"
@@ -97,6 +98,17 @@ const FACES: Record<BityMood, Face> = {
      uno sotto l'esultanza — qui la sicurezza si vede da come sta, non da cosa
      fa. */
   fiero: { squash: [1.03, 1.05, -3], eyes: "felici", mouth: "sorriso" },
+  /* Il gradino piu' alto di una scala, che e' un'altra cosa dall'esultanza.
+     Ha le stelline e la bocca aperta come "esulta", ma il corpo resta dritto:
+     l'esultanza schiaccia perche' e' un momento — il salto dopo un punteggio
+     alto — mentre qui si sta in fila con altri quattro, e uno schiacciato in
+     mezzo a quattro tondi sembra difettoso, non euforico. */
+  trionfante: {
+    squash: [1, 1, 0],
+    eyes: "felici",
+    mouth: "aperta",
+    sparkles: true,
+  },
   curioso: {
     squash: [0.975, 1.035, -1],
     eyes: "spalancati",

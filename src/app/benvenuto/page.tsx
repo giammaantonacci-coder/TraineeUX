@@ -33,7 +33,7 @@ const SCALA_SICUREZZA: BityMood[] = [
   "felice",
   "sicuro",
   "fiero",
-  "esulta",
+  "trionfante",
 ];
 
 /**
