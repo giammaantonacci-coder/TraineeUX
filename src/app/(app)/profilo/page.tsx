@@ -121,7 +121,7 @@ export default async function ProfiloPage() {
             letta da sola, "serie" non direbbe se e' quella in corso o il
             record, ed e' esattamente il motivo per cui il testo esteso non
             sparisce ma cambia solo canale. */}
-        <dl className="mt-5 grid grid-cols-5 border-t border-white/10 pt-4">
+        <dl className="mt-5 flex justify-between border-t border-white/10 pt-4">
           <MiniStat value={`${doneCount}/${TOTAL_EXERCISES}`} label="esercizi" full="esercizi svolti" />
           <MiniStat value={`${mastered.length}/${MODULES.length}`} label="moduli" full="moduli padroneggiati" />
           <MiniStat value={`${totalAttempts(best)}`} label="tentativi" full="tentativi totali" />
@@ -336,7 +336,7 @@ function MiniStat({
       <dt className="sr-only">{full}</dt>
       <dd>
         <span className="block text-[15px] font-extrabold leading-tight">{value}</span>
-        <span className="block truncate text-[10px] font-semibold leading-tight text-white/50">
+        <span className="block text-[10px] font-semibold leading-tight text-white/50">
           {label}
         </span>
       </dd>
