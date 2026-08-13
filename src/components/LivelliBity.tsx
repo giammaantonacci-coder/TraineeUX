@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bity, type BityMood } from "@/components/Bity";
+import { BITY_MOOD_BY_LEVEL, Bity, type BityMood } from "@/components/Bity";
 import { LEVELS } from "@/lib/progression";
 import type { LevelId } from "@/lib/types";
 
@@ -70,7 +70,20 @@ export function LivelliBity({
         }}
         className="scheda fixed inset-x-0 bottom-0 top-auto m-0 max-h-[88vh] w-full max-w-none overflow-y-auto rounded-t-[28px] border-0 bg-canvas p-0 text-ink backdrop:bg-ink/45 md:inset-auto md:left-1/2 md:top-1/2 md:w-[32rem] md:max-w-[calc(100vw-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[28px]"
       >
-        <div className="p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+        {/* Il focus entra qui e non sulla X.
+            showModal lo mette sul primo elemento raggiungibile, che era il
+            pulsante di chiusura: da tastiera e' giusto, ma il browser disegna
+            l'anello di focus anche quando la scheda si e' aperta con un dito,
+            e restava un riquadro attorno alla X senza che nessuno avesse
+            usato la tastiera. Con autofocus su un contenitore non
+            raggiungibile con Tab, il focus e' comunque dentro la scheda —
+            quindi Tab, Esc e gli screen reader continuano a funzionare — ma
+            non si posa su niente che abbia un anello da mostrare. */}
+        <div
+          autoFocus
+          tabIndex={-1}
+          className="p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] outline-none"
+        >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <h2 className="text-xl font-extrabold tracking-tight">
@@ -111,11 +124,16 @@ export function LivelliBity({
                     qui ? "bg-ink text-white" : "bg-black/[0.03]"
                   }`}
                 >
-                  {/* Un Bity per livello, nel suo colore: la scala si legge
-                      guardando, prima ancora di leggere i nomi. Il seme
-                      sfasa i respiri, che all'unisono sembrerebbero finti. */}
+                  {/* Un Bity per livello, nel suo colore e con la sua faccia:
+                      sono le stesse due cose che cambiano in home salendo di
+                      livello, quindi questa fila e' la legenda di quella
+                      mascotte. L'espressione sale con la scala — neutra,
+                      felice, sicura, fiera, trionfante — e la sicurezza che
+                      cresce si legge prima dei sottotitoli.
+                      Il seme sfasa i respiri, che all'unisono sembrerebbero
+                      finti. */}
                   <Bity
-                    mood={qui ? (svolti === 0 ? "curioso" : "fiero") : "neutro"}
+                    mood={BITY_MOOD_BY_LEVEL[l.id]}
                     level={l.id}
                     size={40}
                     seed={i}
