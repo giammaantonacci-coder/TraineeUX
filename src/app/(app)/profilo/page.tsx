@@ -40,9 +40,16 @@ export default async function ProfiloPage() {
 
   const doneCount = totalExercisesDone(best);
   const reachedLevel = highestLevelReached(best);
-  const capabilities = mastered.flatMap((m) =>
-    m.capabilities.map((c) => ({ ...c, module: m })),
-  );
+  // Raggruppate per modulo, non in fila.
+  //
+  // Ogni modulo ne porta esattamente tre, quindi in fila la stessa etichetta
+  // ricompariva tre volte di seguito: con tutti i moduli chiusi diventavano
+  // trentasei pillole per dodici nomi. L'etichetta e' una proprieta' del
+  // gruppo, e nel gruppo va detta una volta sola.
+  const perModulo = mastered
+    .map((m) => ({ modulo: m, voci: m.capabilities }))
+    .filter((g) => g.voci.length > 0);
+  const quante = perModulo.reduce((n, g) => n + g.voci.length, 0);
 
   return (
     <div className="animate-rise">
@@ -139,7 +146,7 @@ export default async function ProfiloPage() {
           Sono formulate come le scriveresti in un colloquio o in una valutazione:
           cose che sai fare, non cose che hai studiato.
         </p>
-        {capabilities.length === 0 ? (
+        {quante === 0 ? (
           <div className="card-light p-6 text-center">
             <Bity mood="curioso" size={64} className="mx-auto mb-2" float />
             <p className="font-bold">Nessuna capacità sbloccata per ora</p>
@@ -155,20 +162,34 @@ export default async function ProfiloPage() {
             </Link>
           </div>
         ) : (
-          <ul className="space-y-3">
-            {capabilities.map((c, i) => (
-              <li key={i} className="card-light p-5">
-                <Pill tone={c.module.accent}>{c.module.title}</Pill>
-                <p className="mt-3 text-[15px] font-semibold leading-relaxed">
-                  {c.claim}
-                </p>
-                <p className="mt-2 text-[14px] leading-relaxed text-ink-muted">
-                  <span className="font-semibold text-ink">Perché conta: </span>
-                  {c.signal}
-                </p>
-              </li>
+          /* Un gruppo per modulo: l'etichetta in cima, e sotto le sue voci
+             senza riquadro. Trentasei card bianche una sull'altra erano
+             trentasei bordi da guardare per leggere trentasei frasi: il
+             raggruppamento lo fa gia' l'intestazione, e la scatola non
+             aggiungeva niente se non rumore. */
+          <div className="space-y-7">
+            {perModulo.map((g) => (
+              <div key={g.modulo.id}>
+                <Pill tone={g.modulo.accent}>{g.modulo.title}</Pill>
+                <ul className="mt-3 space-y-4">
+                  {g.voci.map((c, i) => (
+                    <li key={i}>
+                      <p className="text-[15px] font-semibold leading-relaxed">
+                        {c.claim}
+                      </p>
+                      {/* "Perché conta" non è più in grassetto scuro: ripetuto
+                          a ogni voce era un richiamo che chiedeva attenzione
+                          trentasei volte per dire sempre la stessa cosa. */}
+                      <p className="mt-1 text-[14px] leading-relaxed text-ink-muted">
+                        <span className="font-semibold">Perché conta: </span>
+                        {c.signal}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </section>
 
