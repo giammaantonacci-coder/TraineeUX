@@ -10,13 +10,6 @@ export const ACCENT_BG: Record<string, string> = {
   butter: "bg-butter",
 };
 
-export const ACCENT_TEXT: Record<string, string> = {
-  mint: "text-mint-deep",
-  sky: "text-sky-deep",
-  blush: "text-blush-deep",
-  butter: "text-ink",
-};
-
 export function Pill({
   children,
   tone = "neutral",

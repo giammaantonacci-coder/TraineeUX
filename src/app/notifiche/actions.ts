@@ -42,6 +42,22 @@ export async function leggiPreferenze(): Promise<PrefNotifiche | null> {
   );
 }
 
+/**
+ * Il fuso arriva dal browser e finisce in una query SQL che ci fa
+ * "now() at time zone": un valore che Postgres non conosce non da' una riga
+ * sbagliata, solleva un errore e fa fallire l'intera selezione dei promemoria
+ * — quelli di tutti, non solo di chi ha il fuso rotto. Il database adesso si
+ * difende da solo, ma un dato che sappiamo essere invalido non va scritto.
+ */
+function fusoValido(tz: string): boolean {
+  try {
+    new Intl.DateTimeFormat("it-IT", { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function salvaPreferenze(
   pref: PrefNotifiche,
 ): Promise<{ ok: boolean; error?: string }> {
@@ -50,6 +66,7 @@ export async function salvaPreferenze(
   if (!Number.isInteger(pref.hour) || pref.hour < 0 || pref.hour > 23) {
     return { ok: false, error: "Ora non valida." };
   }
+  const timezone = fusoValido(pref.timezone) ? pref.timezone : "Europe/Rome";
 
   const supabase = await createClient();
   const { error } = await supabase.from("notification_prefs").upsert(
@@ -57,7 +74,7 @@ export async function salvaPreferenze(
       user_id: userId,
       enabled: pref.enabled,
       hour: pref.hour,
-      timezone: pref.timezone,
+      timezone,
       updated_at: new Date().toISOString(),
     },
     { onConflict: "user_id" },

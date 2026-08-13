@@ -113,7 +113,10 @@ export function rankForXp(xp: number): { current: Rank; next: Rank | null; progr
   const idx = RANKS.indexOf(current);
   const next = RANKS[idx + 1] ?? null;
   const progress = next
-    ? Math.min(100, Math.round(((xp - current.minXp) / (next.minXp - current.minXp)) * 100))
+    ? Math.max(
+        0,
+        Math.min(100, Math.round(((xp - current.minXp) / (next.minXp - current.minXp)) * 100)),
+      )
     : 100;
   return { current, next, progress };
 }

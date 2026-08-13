@@ -27,7 +27,7 @@ const comune = {
 };
 
 /** Quiz: tre risposte fra cui scegliere. */
-export function QuizIcon({ className }: Props) {
+function QuizIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
       <circle cx="5.5" cy="7" r="1.75" />
@@ -39,7 +39,7 @@ export function QuizIcon({ className }: Props) {
 }
 
 /** Critique: il bersaglio che si guarda da vicino. */
-export function CritiqueIcon({ className }: Props) {
+function CritiqueIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
       <circle cx="12" cy="12" r="8" />
@@ -49,7 +49,7 @@ export function CritiqueIcon({ className }: Props) {
 }
 
 /** Scenario: una decisione che si biforca. */
-export function ScenarioIcon({ className }: Props) {
+function ScenarioIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
       <path d="M12 20.5v-4.2" />
@@ -64,7 +64,7 @@ export function ScenarioIcon({ className }: Props) {
 }
 
 /** Brief: si scrive. */
-export function BriefIcon({ className }: Props) {
+function BriefIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>
       <path d="M4.5 19.5 8 18.6 19.1 7.5a2.05 2.05 0 0 0-2.9-2.9L5.1 15.7Z" />
@@ -109,7 +109,6 @@ export function CircleIcon({ className }: Props) {
   );
 }
 
-/** Campanella del centro notifiche. */
 /**
  * Le frecce dei comandi.
  *
@@ -177,6 +176,7 @@ export function UnlockIcon({ className }: Props) {
   );
 }
 
+/** Campanella del centro notifiche. */
 export function BellIcon({ className }: Props) {
   return (
     <svg {...comune} className={className}>

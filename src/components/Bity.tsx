@@ -32,7 +32,7 @@ export type BityMood =
   | "assonnato";
 
 /** La scala, in ordine. Il primo gradino e' il livello d'ingresso. */
-export const SCALA_SICUREZZA: BityMood[] = [
+const SCALA_SICUREZZA: BityMood[] = [
   "neutro",
   "felice",
   "sicuro",
@@ -61,7 +61,7 @@ export function unGradinoSopra(mood: BityMood): BityMood {
 export type BityTint = "mint" | "sky" | "butter" | "blush" | "plum";
 
 /** Ogni livello ha la sua tinta: il colore di Bity dice a che punto sei. */
-export const BITY_TINT_BY_LEVEL: Record<LevelId, BityTint> = {
+const BITY_TINT_BY_LEVEL: Record<LevelId, BityTint> = {
   intermedio: "sky",
   avanzato: "mint",
   senior: "butter",

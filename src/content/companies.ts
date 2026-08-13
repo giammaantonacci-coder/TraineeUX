@@ -143,6 +143,3 @@ export const COMPANIES: Company[] = [
   },
 ];
 
-export const COMPANY_CATEGORIES = [
-  ...new Set(COMPANIES.map((c) => c.category)),
-];
