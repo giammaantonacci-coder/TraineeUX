@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AuthPanel } from "@/components/AuthPanel";
 import { Bity, type BityMood } from "@/components/Bity";
 import { ExerciseIcon, TrophyIcon, UnlockIcon } from "@/components/icons";
+import { ModuloIcon } from "@/components/icone-moduli";
 import { Onboarding, type Passo } from "@/components/Onboarding";
 import { MODULES, TOTAL_EXERCISES } from "@/content";
 import { LEVELS } from "@/lib/progression";
@@ -25,29 +26,6 @@ const ERRORI: Record<string, string> = {
     "Non siamo riusciti a completare l'accesso. Riprova fra poco: se insiste, entra con email e password.",
   "link-non-valido":
     "Questo link di conferma non è più valido: i link scadono, e ognuno si può usare una volta sola. Accedi qui sotto e te ne rimandiamo uno nuovo.",
-};
-
-/**
- * Il nome breve di ogni modulo, per quando ne stanno tre su una riga.
- *
- * Sta qui e non nei contenuti perche' non e' il nome del modulo: e' come lo si
- * chiama quando lo spazio e' quello di un elenco puntato. Nel percorso e nelle
- * card resta il titolo per esteso, che dice di piu'. Un modulo senza forma
- * breve ricade sul titolo intero: si legge lungo, non sparisce.
- */
-const NOME_BREVE: Record<string, string> = {
-  "euristiche-avanzate": "Euristiche",
-  "architettura-informativa": "Architettura informativa",
-  "stati-e-microcopy": "Stati e microcopy",
-  "design-system": "Design system",
-  "ricerca-utente": "Ricerca",
-  accessibilita: "Accessibilità",
-  "metriche-esperimenti": "Metriche",
-  "strategia-prodotto": "Strategia di prodotto",
-  "influenza-e-critique": "Influenza e critique",
-  "scalare-il-design": "Scalare il design",
-  "piattaforma-e-migrazioni": "Piattaforma e migrazioni",
-  "etica-e-ai": "Etica e AI",
 };
 
 /** Da neutro a esultante, un gradino per livello. */
@@ -150,33 +128,25 @@ export default async function BenvenutoPage({
             <Stat value={`${LEVELS.length}`} label="livelli" />
           </dl>
 
-          {/* I dodici temi per nome, ma raggruppati per livello: cinque righe
-              invece di dodici card, un terzo dell'altezza, e si vede anche
-              come sono organizzati — che era l'altra meta' di quello che
-              questa schermata deve far arrivare.
-              I nomi sono in forma breve: per esteso, tre titoli su una riga
-              diventavano quattro righe di testo e il guadagno spariva. */}
-          <ol className="mt-7 space-y-2">
-            {LEVELS.map((level) => {
-              const delLivello = MODULES.filter((m) => m.level === level.id);
-              return (
-                <li key={level.id} className="rounded-2xl bg-surface-muted p-3.5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <p className="text-[14px] font-bold">{level.name}</p>
-                    {/* Expert ne ha uno solo: "1 moduli" è il genere di
-                        dettaglio che fa sembrare tutto il resto approssimato. */}
-                    <p className="shrink-0 text-[12px] font-semibold text-ink-muted">
-                      {delLivello.length}{" "}
-                      {delLivello.length === 1 ? "modulo" : "moduli"}
-                    </p>
-                  </div>
-                  <p className="mt-1 text-[13px] leading-snug text-ink-muted">
-                    {delLivello.map((m) => NOME_BREVE[m.id] ?? m.title).join(" · ")}
-                  </p>
-                </li>
-              );
-            })}
-          </ol>
+          {/* I dodici titoli per esteso, non un riassunto: e' la risposta alla
+              domanda "di cosa parla", e a quella domanda un numero non
+              risponde. Le icone sono le stesse che si ritrovano nel percorso,
+              quindi qui si imparano senza doverle studiare. */}
+          <ul className="mt-7 space-y-1.5">
+            {MODULES.map((m) => (
+              <li key={m.id} className="flex items-center gap-3 rounded-2xl bg-surface-muted p-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white"
+                >
+                  <ModuloIcon moduleId={m.id} className="h-[18px] w-[18px]" />
+                </span>
+                <span className="min-w-0 text-[14px] font-semibold leading-snug">
+                  {m.title}
+                </span>
+              </li>
+            ))}
+          </ul>
         </>
       ),
     },
