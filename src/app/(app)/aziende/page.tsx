@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { COMPANIES } from "@/content/companies";
 import { PageHeader, Pill } from "@/components/ui";
 import { ExternalIcon } from "@/components/icons";
+import { MarchioAzienda } from "@/components/marchi-aziende";
 
 export const metadata: Metadata = { title: "Aziende" };
 
@@ -25,9 +26,15 @@ export default function AziendePage() {
       <ul className="space-y-4">
         {COMPANIES.map((company) => (
           <li key={company.id} className="card-light p-5 md:p-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-xl font-extrabold tracking-tight">{company.name}</h2>
-              <Pill>{company.category}</Pill>
+            {/* Targhetta a sinistra, nome e categoria a destra: la stessa
+                disposizione dell'intestazione di un modulo, dove l'icona apre
+                la riga e le etichette la seguono. */}
+            <div className="flex items-center gap-3">
+              <MarchioAzienda id={company.id} name={company.name} />
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <h2 className="text-xl font-extrabold tracking-tight">{company.name}</h2>
+                <Pill>{company.category}</Pill>
+              </div>
             </div>
 
             <p className="mt-2 text-[15px] leading-relaxed">{company.what}</p>
