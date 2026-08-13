@@ -1,20 +1,27 @@
 import Link from "next/link";
 import { Bity } from "@/components/Bity";
-import { CheckIcon } from "@/components/icons";
+import { CheckIcon, CircleIcon } from "@/components/icons";
 import { Pill, ScoreRing } from "@/components/ui";
-import type { Capability, LevelId } from "@/lib/types";
+import { MASTERY_THRESHOLD } from "@/lib/progression";
+import type { Badge, Capability, LevelId } from "@/lib/types";
 
 /**
  * La schermata che chiude un modulo.
  *
  * Fino a ora l'unico momento di arrivo era la fine di un esercizio, e il
- * modulo — che e' l'unita' vera del percorso — non aveva un suo. Qui si mette
- * insieme quello che si e' ottenuto: il grado di padronanza, i premi che sono
- * scattati, e cosa si sa fare adesso.
+ * modulo — che e' l'unita' vera del percorso — non ne aveva uno suo. Qui si
+ * mette insieme quello che si e' ottenuto: quanto sei andato bene, i premi che
+ * sono scattati, e cosa sai fare adesso.
+ *
+ * Completato non e' padroneggiato, e la schermata non li confonde. Si arriva
+ * qui avendo svolto tutti gli esercizi — il 100% del modulo — che e' una
+ * misura di copertura; le capacita' nel profilo dipendono invece dal
+ * punteggio. Chi finisce tutto restando sotto la soglia merita comunque di
+ * essere arrivato in fondo, e merita anche di sapere cosa gli manca.
  *
  * Riceve tutto gia' calcolato: cosi' la stessa schermata puo' comparire dopo
- * l'ultima consegna o essere raggiunta di nuovo dal percorso, senza che debba
- * sapere da dove arriva.
+ * l'ultima consegna o essere riaperta dal percorso, senza sapere da dove
+ * arriva.
  */
 export function ModuloCompletato({
   titolo,
@@ -36,16 +43,26 @@ export function ModuloCompletato({
   svolti: number;
   totali: number;
   xp: number;
-  premi: { id: string; name: string; description: string; emoji: string }[];
+  premi: Badge[];
   capacita: Capability[];
   prossimo: { id: string; title: string } | null;
 }) {
+  const padroneggiato = punteggio >= MASTERY_THRESHOLD;
+
   return (
     <div className="animate-rise">
       {/* Bity grande e in festa, nel colore del livello: e' l'unico posto dove
-          la mascotte porta la notizia invece di accompagnarla. */}
+          la mascotte porta la notizia invece di accompagnarla. Trionfa se il
+          modulo e' anche padroneggiato, e' fiera se il traguardo e' solo
+          l'averlo finito — la differenza si vede prima di leggere. */}
       <section className="card-dark p-6 text-center md:p-8">
-        <Bity mood="trionfante" level={livello} size={128} pop className="mx-auto" />
+        <Bity
+          mood={padroneggiato ? "trionfante" : "fiero"}
+          level={livello}
+          size={128}
+          pop
+          className="mx-auto"
+        />
         <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-white/50">
           Modulo completato
         </p>
@@ -65,7 +82,11 @@ export function ModuloCompletato({
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-5">
-          <Pill tone="mint">Padroneggiato</Pill>
+          {padroneggiato ? (
+            <Pill tone="mint">Padroneggiato</Pill>
+          ) : (
+            <Pill className="bg-white/10 text-white">Non ancora padroneggiato</Pill>
+          )}
           <Pill className="bg-white/10 text-white">Miglior punteggio {punteggio}%</Pill>
         </div>
       </section>
@@ -92,19 +113,28 @@ export function ModuloCompletato({
       ) : null}
 
       <section className="mt-6">
-        <h2 className="mb-1 text-lg font-bold tracking-tight">Cosa sai fare ora</h2>
+        <h2 className="mb-1 text-lg font-bold tracking-tight">
+          {padroneggiato ? "Cosa sai fare ora" : "Cosa ti stai giocando"}
+        </h2>
         <p className="mb-3 text-sm text-ink-muted">
-          Queste sono attive nel tuo profilo. Sono scritte per essere dette in un
-          colloquio, non per essere ripetute a memoria.
+          {padroneggiato
+            ? "Queste sono attive nel tuo profilo. Sono scritte per essere dette in un colloquio, non per essere ripetute a memoria."
+            : `Hai finito tutti gli esercizi, ma il miglior punteggio è ${punteggio}%. Queste capacità si attivano nel profilo sopra il ${MASTERY_THRESHOLD}%: rifai l'esercizio che ti è riuscito peggio e sono tue.`}
         </p>
         <ul className="space-y-4">
           {capacita.map((c, i) => (
             <li key={i} className="flex items-start gap-3">
               <span
                 aria-hidden="true"
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-mint text-ink"
+                className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+                  padroneggiato ? "bg-mint text-ink" : "bg-black/5 text-ink-muted"
+                }`}
               >
-                <CheckIcon className="h-3.5 w-3.5" />
+                {padroneggiato ? (
+                  <CheckIcon className="h-3.5 w-3.5" />
+                ) : (
+                  <CircleIcon className="h-3 w-3" />
+                )}
               </span>
               <div className="min-w-0">
                 <p className="text-[15px] font-semibold leading-relaxed">{c.claim}</p>

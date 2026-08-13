@@ -80,7 +80,7 @@ export function badgeById(id: string): Badge | undefined {
   return BADGES.find((b) => b.id === id);
 }
 
-interface BadgeContext {
+export interface BadgeContext {
   attempts: Pick<AttemptRow, "exercise_type" | "score" | "max_score" | "module_id">[];
   progress: ModuleProgressRow[];
   streak: number;
@@ -126,4 +126,37 @@ export function earnedBadgeIds(ctx: BadgeContext): string[] {
   if (new Set(attempts.map((a) => a.module_id)).size >= 8) earned.add("ricercatore");
 
   return [...earned];
+}
+
+/**
+ * Quali premi ha portato *questo* modulo.
+ *
+ * I badge sono globali — "5 critique", "50 esercizi", "primo modulo sopra il
+ * 70%" — quindi nessuno di loro porta scritto da dove è arrivato. La risposta
+ * si ottiene per differenza: si ricalcola cosa avresti senza questo modulo, e
+ * quello che manca è merito suo. Vale anche per i premi trasversali, che
+ * finiscono attribuiti al modulo che li ha fatti scattare, ed è giusto così.
+ *
+ * La serie di giorni resta fuori da sé: entra identica nei due calcoli, quindi
+ * si annulla. Un premio di costanza non lo ha vinto un modulo.
+ *
+ * Il risultato è intersecato con i premi davvero posseduti: il ricalcolo parte
+ * dallo stato di oggi e potrebbe "meritare" qualcosa che non è mai stato
+ * consegnato, e questa schermata non è il posto per assegnarlo.
+ */
+export function badgesEarnedFromModule(
+  ctx: BadgeContext,
+  moduleId: string,
+  held: Set<string>,
+): Badge[] {
+  const con = new Set(earnedBadgeIds(ctx));
+  const senza = new Set(
+    earnedBadgeIds({
+      ...ctx,
+      attempts: ctx.attempts.filter((a) => a.module_id !== moduleId),
+      progress: ctx.progress.filter((p) => p.module_id !== moduleId),
+    }),
+  );
+
+  return BADGES.filter((b) => held.has(b.id) && con.has(b.id) && !senza.has(b.id));
 }

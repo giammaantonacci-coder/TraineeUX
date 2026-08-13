@@ -7,7 +7,12 @@ import {
   MODULES,
   getModule,
 } from "@/content";
-import { bestPctPerExercise, getProgressData, moduleBestPct } from "@/lib/data";
+import {
+  bestPctPerExercise,
+  getProgressData,
+  moduleBestPct,
+  moduleIsComplete,
+} from "@/lib/data";
 import { BASE_XP, MASTERY_THRESHOLD, levelMeta } from "@/lib/progression";
 import { ACCENT_BG, Pill, Prose, ScoreRing } from "@/components/ui";
 import { ModuloIcon } from "@/components/icone-moduli";
@@ -42,6 +47,7 @@ export default async function ModulePage({
   const bestPct = bestPctPerExercise(data.best);
   const moduleBest = moduleBestPct(data.best, mod.id);
   const mastered = moduleBest >= MASTERY_THRESHOLD;
+  const completo = moduleIsComplete(data.best, mod.id, mod.exercises.length);
   const level = levelMeta(mod.level);
 
   return (
@@ -87,6 +93,30 @@ export default async function ModulePage({
           {mod.tagline}
         </p>
       </header>
+
+      {/* Il riepilogo di fine modulo non è una schermata usa e getta: chi l'ha
+          già vista deve poterci tornare, per rileggere cosa sa fare o per
+          mostrarla. Compare solo a modulo chiuso, e da qui, perché è il posto
+          dove si viene a vedere come si sta andando. */}
+      {completo ? (
+        <Link
+          href={`/percorso/${mod.id}/completato`}
+          className="tappable mt-4 flex items-center gap-3 rounded-[28px] border border-black/10 bg-white p-5 hover:-translate-y-0.5 active:bg-black/[0.02]"
+        >
+          <span aria-hidden="true" className="text-2xl">
+            🎉
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold">Modulo completato</span>
+            <span className="block text-[14px] leading-snug text-ink-muted">
+              Hai svolto tutti gli esercizi. Rivedi il riepilogo e i premi.
+            </span>
+          </span>
+          <span aria-hidden="true" className="shrink-0 font-bold text-ink-muted">
+            ›
+          </span>
+        </Link>
+      ) : null}
 
       <section className="mt-6 grid gap-3 md:grid-cols-2">
         <div className="card-light p-5">

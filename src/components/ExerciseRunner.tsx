@@ -230,6 +230,31 @@ export function ExerciseRunner({
           </div>
         </div>
 
+        {/* L'esercizio è finito, ma se con questa consegna si è chiuso anche
+            il modulo la notizia grossa è quella, e va data qui — non lasciata
+            trovare per caso tornando indietro. Solo quando si chiude davvero:
+            rifare un esercizio in un modulo già finito non è un traguardo. */}
+        {result.moduleJustCompleted ? (
+          <Link
+            href={`/percorso/${moduleId}/completato`}
+            className="tappable mt-4 flex items-center gap-3 rounded-[28px] bg-mint p-5 hover:-translate-y-0.5"
+          >
+            <span aria-hidden="true" className="text-2xl">
+              🎉
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-bold">Hai completato {moduleTitle}</span>
+              <span className="block text-[14px] leading-snug text-ink-muted">
+                Tutti gli esercizi del modulo sono fatti. Vedi cosa ti sei portato a
+                casa.
+              </span>
+            </span>
+            <span aria-hidden="true" className="shrink-0 font-bold">
+              ›
+            </span>
+          </Link>
+        ) : null}
+
         {newBadges.length > 0 ? (
           <section className="mt-4">
             <h2 className="mb-2 text-lg font-bold tracking-tight">Nuovi premi</h2>
@@ -355,10 +380,24 @@ export function ExerciseRunner({
         ) : null}
 
         <div className="mt-8 flex flex-wrap gap-3">
+          {/* A modulo appena chiuso il posto pieno lo prende la chiusura:
+              "rifai" resta disponibile ma smette di essere la cosa da fare. */}
+          {result.moduleJustCompleted ? (
+            <Link
+              href={`/percorso/${moduleId}/completato`}
+              className="tappable rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white"
+            >
+              Vedi il modulo completato
+            </Link>
+          ) : null}
           <button
             type="button"
             onClick={retry}
-            className="tappable rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white"
+            className={`tappable rounded-full px-6 py-3.5 text-sm font-bold ${
+              result.moduleJustCompleted
+                ? "border border-black/10 bg-white"
+                : "bg-ink text-white"
+            }`}
           >
             Rifai l&apos;esercizio
           </button>

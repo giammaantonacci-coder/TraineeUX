@@ -2,7 +2,14 @@ import "server-only";
 import { createClient } from "./supabase/server";
 import { MODULES } from "@/content";
 import { LEVEL_ORDER } from "./progression";
-import type { BadgeRow, ExerciseType, LevelId, ProfileRow } from "./types";
+import type {
+  AttemptRow,
+  BadgeRow,
+  ExerciseType,
+  LevelId,
+  ModuleProgressRow,
+  ProfileRow,
+} from "./types";
 
 /**
  * Ogni schermata è un server component che interroga Supabase, quindi il numero
@@ -148,6 +155,67 @@ export async function getProfileData(): Promise<ProfileData | null> {
 }
 
 /* ------------------------------------------------------------------ */
+/* Livello 4 — la chiusura di un modulo                                */
+/* ------------------------------------------------------------------ */
+
+export interface ModuleCompletionData {
+  profile: ProfileRow | null;
+  best: ExerciseBest[];
+  /** tutti i tentativi, non i migliori: servono a ricostruire i premi */
+  attempts: AttemptForBadges[];
+  progress: ModuleProgressRow[];
+  badges: BadgeRow[];
+}
+
+export type AttemptForBadges = Pick<
+  AttemptRow,
+  "module_id" | "exercise_type" | "score" | "max_score" | "xp_awarded"
+>;
+
+/**
+ * La schermata di fine modulo, che è l'unica a chiedere così tanto.
+ *
+ * Legge i tentativi grezzi e non solo i migliori perché deve rispondere a due
+ * domande che l'aggregato non sa: quanti XP ha fruttato questo modulo, e quali
+ * premi sono arrivati da qui e non da altrove. È una pagina che si apre una
+ * volta per modulo, quindi il peso in più si paga volentieri.
+ */
+export async function getModuleCompletionData(): Promise<ModuleCompletionData | null> {
+  const supabase = await createClient();
+  const user = await currentUser(supabase);
+  if (!user) return null;
+
+  const [profileRes, bestRes, attemptRes, progressRes, badgeRes] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("exercise_best")
+      .select("module_id, exercise_id, exercise_type, best_pct, tentativi, ultimo_tentativo")
+      .eq("user_id", user.id),
+    supabase
+      .from("attempts")
+      .select("module_id, exercise_type, score, max_score, xp_awarded")
+      .eq("user_id", user.id),
+    supabase.from("module_progress").select("*").eq("user_id", user.id),
+    supabase.from("badges").select("badge_id, earned_at").eq("user_id", user.id),
+  ]);
+
+  return {
+    profile: (profileRes.data as ProfileRow | null) ?? null,
+    best: (bestRes.data as ExerciseBest[] | null) ?? [],
+    attempts: (attemptRes.data as AttemptForBadges[] | null) ?? [],
+    progress: (progressRes.data as ModuleProgressRow[] | null) ?? [],
+    badges: (badgeRes.data as BadgeRow[] | null) ?? [],
+  };
+}
+
+/** XP effettivamente maturati dentro un modulo, tentativi ripetuti compresi. */
+export function moduleXp(attempts: AttemptForBadges[], moduleId: string): number {
+  return attempts
+    .filter((a) => a.module_id === moduleId)
+    .reduce((sum, a) => sum + (a.xp_awarded ?? 0), 0);
+}
+
+/* ------------------------------------------------------------------ */
 /* Derivate                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -166,6 +234,23 @@ export function moduleBestPct(best: ExerciseBest[], moduleId: string): number {
 
 export function exercisesDoneInModule(best: ExerciseBest[], moduleId: string): number {
   return best.filter((b) => b.module_id === moduleId).length;
+}
+
+/**
+ * Un modulo è completo quando è al 100%: tutti i suoi esercizi svolti almeno
+ * una volta.
+ *
+ * È cosa diversa da "padroneggiato", che guarda il punteggio e non la
+ * copertura. Si può finire tutto restando sotto la soglia — in quel caso il
+ * modulo è chiuso ma le capacità nel profilo non si accendono, e la schermata
+ * di fine modulo lo dice invece di far finta di niente.
+ */
+export function moduleIsComplete(
+  best: ExerciseBest[],
+  moduleId: string,
+  totalExercises: number,
+): boolean {
+  return totalExercises > 0 && exercisesDoneInModule(best, moduleId) >= totalExercises;
 }
 
 export function totalExercisesDone(best: ExerciseBest[]): number {

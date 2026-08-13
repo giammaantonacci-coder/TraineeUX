@@ -18,6 +18,10 @@ export interface SubmitResult {
   totalXp?: number;
   streak?: number;
   newBadgeIds?: string[];
+  /** tutti gli esercizi del modulo sono stati svolti almeno una volta */
+  moduleCompleted?: boolean;
+  /** il modulo si è chiuso proprio con questa consegna */
+  moduleJustCompleted?: boolean;
 }
 
 export async function submitExercise(
@@ -64,6 +68,8 @@ export async function submitExercise(
   const stats = (data ?? {}) as {
     total_xp?: number;
     streak?: number;
+    module_completed?: boolean;
+    module_just_completed?: boolean;
   };
 
   const newBadgeIds = await syncBadges(supabase, userId, stats.streak ?? 0);
@@ -73,6 +79,7 @@ export async function submitExercise(
   revalidatePath("/oggi");
   revalidatePath("/percorso");
   revalidatePath(`/percorso/${moduleId}`);
+  revalidatePath(`/percorso/${moduleId}/completato`);
   revalidatePath("/profilo");
 
   return {
@@ -82,6 +89,8 @@ export async function submitExercise(
     totalXp: stats.total_xp,
     streak: stats.streak,
     newBadgeIds,
+    moduleCompleted: stats.module_completed ?? false,
+    moduleJustCompleted: stats.module_just_completed ?? false,
   };
 }
 
