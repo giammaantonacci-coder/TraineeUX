@@ -68,7 +68,16 @@ export function LivelliBity({
         onClick={(e) => {
           if (e.target === scheda.current) setAperta(false);
         }}
-        className="scheda fixed inset-x-0 bottom-0 top-auto m-0 max-h-[88vh] w-full max-w-none overflow-y-auto rounded-t-[28px] border-0 bg-canvas p-0 text-ink backdrop:bg-ink/45 md:inset-auto md:left-1/2 md:top-1/2 md:w-[32rem] md:max-w-[calc(100vw-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[28px]"
+        /* Galleggia, non è attaccata al bordo.
+           Prima era un foglio incollato in basso, arrotondato solo sopra: la
+           forma di un cassetto che esce dal telefono. Qui è una scheda che sta
+           per conto suo — margine su tutti e quattro i lati, angoli tondi
+           ovunque, e un'ombra profonda che la stacca dal fondo scuro.
+           Il centraggio è con i margini automatici e non con una
+           trasformazione: la trasformazione è una proprietà sola, e servendo a
+           tenerla al centro non sarebbe più disponibile per l'animazione di
+           entrata. Così restano indipendenti. */
+        className="scheda fixed inset-x-4 inset-y-9 m-auto h-fit max-h-[calc(100dvh-4.5rem)] max-w-[32rem] overflow-y-auto rounded-[28px] border-0 bg-canvas p-0 text-ink shadow-[0_4px_16px_rgba(15,17,23,0.10),0_40px_80px_-32px_rgba(15,17,23,0.65)] backdrop:bg-ink/45"
       >
         {/* Il focus entra qui e non sulla X.
             showModal lo mette sul primo elemento raggiungibile, che era il
@@ -79,19 +88,15 @@ export function LivelliBity({
             raggiungibile con Tab, il focus e' comunque dentro la scheda —
             quindi Tab, Esc e gli screen reader continuano a funzionare — ma
             non si posa su niente che abbia un anello da mostrare. */}
-        <div
-          autoFocus
-          tabIndex={-1}
-          className="p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] outline-none"
-        >
+        <div autoFocus tabIndex={-1} className="p-5 outline-none">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <h2 className="text-xl font-extrabold tracking-tight">
                 I cinque livelli
               </h2>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Bity prende il colore del livello più alto in cui hai messo piede.
-                Non serve averlo finito: basta averlo cominciato.
+                Bity prende il colore del livello più alto in cui hai messo
+                piede. Basta averlo cominciato.
               </p>
             </div>
             <button
