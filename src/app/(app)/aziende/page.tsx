@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { COMPANIES } from "@/content/companies";
 import { PageHeader, Pill } from "@/components/ui";
+import { ExternalIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "Aziende" };
 
@@ -50,18 +51,21 @@ export default function AziendePage() {
                 href={company.site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tappable rounded-full bg-ink px-4 py-2 text-white"
+                className="tappable inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-white"
               >
-                Sito ↗<span className="sr-only"> — si apre in una nuova finestra</span>
+                Sito
+                <ExternalIcon className="h-4 w-4 shrink-0" />
+                <span className="sr-only"> — si apre in una nuova finestra</span>
               </a>
               {company.blog ? (
                 <a
                   href={company.blog.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="tappable rounded-full bg-black/5 px-4 py-2"
+                  className="tappable inline-flex items-center gap-1.5 rounded-full bg-black/5 px-4 py-2"
                 >
-                  {company.blog.label} ↗
+                  {company.blog.label}
+                  <ExternalIcon className="h-4 w-4 shrink-0" />
                   <span className="sr-only"> — si apre in una nuova finestra</span>
                 </a>
               ) : null}

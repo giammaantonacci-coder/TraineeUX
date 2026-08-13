@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Pill } from "@/components/ui";
+import { ExternalIcon } from "@/components/icons";
 
 /**
  * Filtro e lista degli articoli.
@@ -131,8 +132,9 @@ export function ListaNews({
                     {a.summary}
                   </p>
                 ) : null}
-                <p className="mt-3 text-[13px] font-semibold text-ink-muted">
-                  Apri su {a.host} ↗
+                <p className="mt-3 flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted">
+                  Apri su {a.host}
+                  <ExternalIcon className="h-[15px] w-[15px] shrink-0" />
                   <span className="sr-only"> — si apre in una nuova finestra</span>
                 </p>
               </a>

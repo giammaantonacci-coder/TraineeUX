@@ -135,6 +135,24 @@ export function ChevronRightIcon({ className }: Props) {
   );
 }
 
+/**
+ * Il collegamento che esce dall'app.
+ *
+ * Era il carattere ↗, cioè un'emoji: su iOS viene resa a colori, con il suo
+ * riquadro azzurro, e in mezzo a un testo nero sembrava un pezzo di
+ * interfaccia di qualcun altro. Disegnata, prende il colore del testo accanto
+ * e sta sulla stessa griglia delle altre.
+ */
+export function ExternalIcon({ className }: Props) {
+  return (
+    <svg {...comune} className={className}>
+      <path d="M9 5H6.2A2.2 2.2 0 0 0 4 7.2v10.6A2.2 2.2 0 0 0 6.2 20h10.6a2.2 2.2 0 0 0 2.2-2.2V15" />
+      <path d="M14 4h6v6" />
+      <path d="M20 4 11.5 12.5" />
+    </svg>
+  );
+}
+
 /** Progressi e premi: la coppa. */
 export function TrophyIcon({ className }: Props) {
   return (
