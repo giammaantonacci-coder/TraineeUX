@@ -304,7 +304,18 @@ export function levelInProgress(best: ExerciseBest[], threshold: number): LevelI
 }
 
 export function highestLevelReached(best: ExerciseBest[]): LevelId {
-  const done = new Set(best.map((b) => b.module_id));
+  return levelFromModuleIds(best.map((b) => b.module_id));
+}
+
+/**
+ * Il livello raggiunto conoscendo solo quali moduli sono stati toccati.
+ *
+ * La classifica degli amici passa di qui: del giro arrivano gli id dei moduli
+ * e i punteggi, non le righe di exercise_best — quelle sono di chi le ha
+ * fatte, e restano dove sono.
+ */
+export function levelFromModuleIds(moduleIds: string[]): LevelId {
+  const done = new Set(moduleIds);
   let reached: LevelId = "intermedio";
   for (const level of LEVEL_ORDER) {
     if (MODULES.some((m) => m.level === level && done.has(m.id))) reached = level;

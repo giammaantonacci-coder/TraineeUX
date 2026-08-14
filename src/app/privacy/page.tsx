@@ -67,6 +67,12 @@ export default function PrivacyPage() {
             Il fuso serve a mandare il promemoria alle diciannove tue, non alle
             diciannove del server.
           </Voce>
+          <Voce cosa="Amici e cartoline">
+            Chi hai nel giro, chi ti ci ha messo e le cartoline scambiate, con
+            mittente e data. Il codice invito è generato a caso e non contiene
+            niente di te. Un&apos;amicizia la crei tu e la sciogli tu, e
+            sciogliendola sparisce da tutte e due le parti.
+          </Voce>
           <Voce cosa="Dispositivi per le notifiche">
             Quando accendi i promemoria, il browser genera un indirizzo di
             recapito e due chiavi. Non identificano te né il dispositivo: sono la
@@ -88,6 +94,33 @@ export default function PrivacyPage() {
           contratto, articolo 6.1.b del GDPR. Le notifiche sono trattate sul tuo
           consenso, articolo 6.1.a: le accendi tu e le puoi spegnere quando vuoi
           dal Profilo, senza perdere nient&apos;altro.
+        </p>
+        <p className="mt-3">
+          Anche il giro di amici è sul tuo consenso: nessuno entra senza che tu
+          gli abbia dato il codice o abbia usato il suo, e uscirne è un tocco.
+        </p>
+      </Sezione>
+
+      <Sezione titolo="Quello che vedono i tuoi amici">
+        <p>
+          Chi è nel tuo giro vede quattro cose: il{" "}
+          <strong className="font-bold text-ink">nome</strong> che hai scelto, il{" "}
+          <strong className="font-bold text-ink">livello</strong> a cui sei
+          arrivato, gli <strong className="font-bold text-ink">XP</strong> — di
+          sempre e della settimana in corso — e la tua{" "}
+          <strong className="font-bold text-ink">serie</strong> di giorni.
+        </p>
+        <p className="mt-3">
+          Non vede nient&apos;altro. Non la tua email, non le risposte che hai
+          scritto, non i punteggi dei singoli esercizi, non quando sei stato
+          attivo l&apos;ultima volta. Non è una promessa scritta solo qui: nel
+          database un profilo resta leggibile soltanto dal suo proprietario, e ai
+          tuoi amici quei quattro dati arrivano da una funzione che espone quelli
+          e basta.
+        </p>
+        <p className="mt-3">
+          Non esiste una classifica pubblica e non esiste un modo di cercarti:
+          senza il tuo codice, nessuno può aggiungerti.
         </p>
       </Sezione>
 

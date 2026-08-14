@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 const ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/percorso", label: "Percorso", icon: PathIcon },
+  { href: "/amici", label: "Amici", icon: FriendsIcon },
   { href: "/news", label: "News", icon: NewsIcon },
   { href: "/profilo", label: "Profilo", icon: ProfileIcon },
 ];
@@ -134,7 +135,15 @@ export function BottomNav() {
               quei due passaggi erano il "si sposta e poi si riempie". Con le
               colonne fisse la geometria si ricava dall'indice, la pillola deve
               solo traslare, e il movimento è uno solo. */}
-          <ul className="relative grid grid-cols-4 rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl">
+          {/* Le colonne e la larghezza della pillola vengono dal numero di
+              voci e non da una classe scritta a mano: Tailwind non genera
+              classi costruite a runtime, quindi una grid-cols-N ricavata da
+              ITEMS.length non esisterebbe nel foglio di stile e la barra si
+              spezzerebbe alla prima voce aggiunta. */}
+          <ul
+            style={{ gridTemplateColumns: `repeat(${ITEMS.length}, minmax(0, 1fr))` }}
+            className="relative grid rounded-full border border-black/[0.07] bg-white/[0.92] p-1.5 shadow-[0_2px_6px_rgba(15,17,23,0.05),0_18px_40px_-24px_rgba(15,17,23,0.75)] backdrop-blur-xl"
+          >
             {/* La pillola scura scorre da una colonna all'altra. La larghezza
                 toglie il padding del contenitore, così un passo di traslazione
                 è esattamente una colonna. Fuori dalle quattro sezioni sparisce
@@ -142,10 +151,13 @@ export function BottomNav() {
                 e riappare da lì al primo tocco. */}
             <li
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-0.75rem)/4)] rounded-full bg-ink transition-[transform,opacity] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`pointer-events-none absolute inset-y-1.5 left-1.5 rounded-full bg-ink transition-[transform,opacity] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 attivo < 0 ? "opacity-0" : "opacity-100"
               }`}
-              style={{ transform: `translateX(${Math.max(0, attivo) * 100}%)` }}
+              style={{
+                width: `calc((100% - 0.75rem) / ${ITEMS.length})`,
+                transform: `translateX(${Math.max(0, attivo) * 100}%)`,
+              }}
             />
 
             {ITEMS.map((item, i) => {
@@ -266,6 +278,35 @@ function PathIcon({ className }: IconProps) {
       />
       <circle cx="7" cy="4" r="2" stroke="currentColor" strokeWidth="1.8" />
       <circle cx="17" cy="20" r="2" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+/**
+ * Due persone, una dietro l'altra.
+ *
+ * Quella sul retro è tagliata dal bordo invece di essere disegnata intera:
+ * a ventidue pixel due figure complete diventano quattro cerchi indistinti,
+ * mentre una spalla che sbuca da dietro si legge subito come "un'altra
+ * persona". È anche il motivo per cui non si confonde con l'icona del
+ * profilo, che di persone ne ha una sola e centrata.
+ */
+function FriendsIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="10" cy="8.5" r="3.3" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M4 19.5c0-3 2.7-5 6-5s6 2 6 5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M16.4 5.6a3.3 3.3 0 0 1 0 5.9M17.6 14.9c1.6.7 2.7 2.1 2.7 4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

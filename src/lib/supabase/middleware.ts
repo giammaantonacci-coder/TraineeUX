@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./config";
+import { COOKIE_INVITO, FORMA_CODICE } from "../invito";
 
 /**
  * Il manifest e il service worker sono elencati anche qui, oltre che esclusi
@@ -94,7 +95,28 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/benvenuto";
     url.search = "";
-    return NextResponse.redirect(url);
+    const risposta = NextResponse.redirect(url);
+
+    // Un invito arriva quasi sempre a qualcuno che l'app non ce l'ha ancora:
+    // e' il caso normale, non quello raro. Il codice sopravvive qui, in un
+    // cookie, perche' il viaggio da qui al giro di amici passa per la pagina
+    // di benvenuto, l'iscrizione, la conferma e il ritorno in home — e a ogni
+    // tappa l'indirizzo di partenza si perde. Senza, chi si iscrive per unirsi
+    // a un amico si ritrova dentro da solo, senza sapere che gli mancava un
+    // passaggio.
+    const invito = pathname.startsWith("/amici")
+      ? request.nextUrl.searchParams.get("codice")
+      : null;
+    if (invito && FORMA_CODICE.test(invito)) {
+      risposta.cookies.set(COOKIE_INVITO, invito.toUpperCase(), {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
+    return risposta;
   }
 
   if (user && (pathname === "/benvenuto" || pathname === "/login")) {

@@ -153,6 +153,8 @@ export interface ProfileRow {
   longest_streak: number;
   last_active_date: string | null;
   created_at: string;
+  /** Il codice da dare a un amico perché ti aggiunga. Otto caratteri. */
+  friend_code: string | null;
 }
 
 export interface ModuleProgressRow {
