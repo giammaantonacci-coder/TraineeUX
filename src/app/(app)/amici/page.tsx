@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDatiAmici } from "@/lib/amici";
+import { anteprimaInvito, getDatiAmici } from "@/lib/amici";
 import { COOKIE_INVITO, FORMA_CODICE } from "@/lib/invito";
 import { nomeDiBattesimo } from "@/lib/labels";
 import { CARTOLINE, cartolina, cartolineSbloccate, prossimaCartolina } from "@/content/regali";
@@ -33,6 +33,10 @@ export default async function AmiciPage({
   const grezzo = params.codice ?? barattolo.get(COOKIE_INVITO)?.value ?? null;
   const invito = grezzo && FORMA_CODICE.test(grezzo) ? grezzo.toUpperCase() : null;
 
+  // Chi c'è dietro il codice si chiede adesso, non al momento di accettare:
+  // la domanda va fatta con un nome dentro.
+  const chi = invito ? await anteprimaInvito(invito) : null;
+
   const io = dati.classifica.find((r) => r.sonoIo);
   const amici = dati.classifica.filter((r) => !r.sonoIo);
   const nuove = dati.ricevute.filter((r) => !r.visto).length;
@@ -55,7 +59,7 @@ export default async function AmiciPage({
         }
       />
 
-      {invito ? <ConfermaInvito codice={invito} /> : null}
+      {invito ? <ConfermaInvito codice={invito} chi={chi} /> : null}
 
       {/* Senza amici l'invito è la schermata; con amici è una card fra le
           altre, sotto la cosa per cui si è tornati. */}

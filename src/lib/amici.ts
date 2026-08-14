@@ -143,3 +143,34 @@ export async function getDatiAmici(): Promise<DatiAmici | null> {
     mandateOggi: (oggiRes.data as number | null) ?? 0,
   };
 }
+
+export interface AnteprimaInvito {
+  nome: string;
+  sonoIo: boolean;
+  giaAmico: boolean;
+}
+
+/**
+ * Chi c'è dietro un codice, prima di accettare.
+ *
+ * Il nome arrivava già da aggiungi_amico, ma solo dopo aver creato
+ * l'amicizia — cioè dopo la decisione. Qui si legge senza scrivere niente,
+ * così la domanda che si fa a chi apre un invito è «vuoi entrare nel giro di
+ * Chiara» e non «vuoi entrare nel giro di H6DVNG97».
+ *
+ * Torna null se il codice non è di nessuno: quello non è un errore da
+ * mostrare rosso, è un invito scaduto o copiato male.
+ */
+export async function anteprimaInvito(codice: string): Promise<AnteprimaInvito | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("anteprima_invito", { p_codice: codice });
+  const riga = (
+    data as { nome: string | null; sono_io: boolean; gia_amico: boolean }[] | null
+  )?.[0];
+  if (!riga) return null;
+  return {
+    nome: riga.nome?.trim() || "Un designer",
+    sonoIo: riga.sono_io,
+    giaAmico: riga.gia_amico,
+  };
+}

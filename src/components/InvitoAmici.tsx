@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { aggiungiAmico } from "@/app/(app)/amici/actions";
+import { aggiungiAmico, scordaInvito } from "@/app/(app)/amici/actions";
 
 /**
  * Il proprio codice, e il modo per farlo arrivare a qualcuno.
@@ -151,17 +151,65 @@ export function CampoCodice() {
  * L'invito appena arrivato.
  *
  * Compare in cima solo quando un codice è davvero in mano — dal link o dal
- * cookie sopravvissuto all'iscrizione — e sparisce appena si decide. Il
- * nome dell'altro non lo sappiamo prima di chiedere al database, quindi il
- * bottone non lo promette.
+ * cookie sopravvissuto all'iscrizione — e sparisce appena si decide.
+ *
+ * Chi invita si presenta con il nome, e il codice resta sotto come conferma:
+ * «vuoi entrare nel giro di Chiara» è una domanda a cui si può rispondere,
+ * «vuoi entrare nel giro di H6DVNG97» chiedeva di fidarsi di otto caratteri.
+ * Il nome arriva dalla pagina, che lo ha già chiesto al database senza creare
+ * niente — così il bottone «Accetta» compare solo dove accettare ha un senso.
  */
-export function ConfermaInvito({ codice }: { codice: string }) {
+export function ConfermaInvito({
+  codice,
+  chi,
+}: {
+  codice: string;
+  chi: { nome: string; sonoIo: boolean; giaAmico: boolean } | null;
+}) {
   const [esito, setEsito] = useState<{ ok: boolean; testo: string } | null>(null);
   const [chiusa, setChiusa] = useState(false);
   const [inCorso, avvia] = useTransition();
   const router = useRouter();
 
   if (chiusa) return null;
+
+  // I tre casi in cui non c'è niente da accettare. Sono in tono minore, senza
+  // il verde dell'invito: non è successo niente di bello, è solo un vicolo
+  // cieco da cui si esce leggendo una riga.
+  if (!chi || chi.sonoIo || chi.giaAmico) {
+    return (
+      <div className="mb-6 rounded-[28px] bg-black/[0.04] p-5">
+        <p className="text-[15px] font-bold leading-snug">
+          {!chi
+            ? "Questo invito non porta a nessuno"
+            : chi.sonoIo
+              ? "Questo è il tuo codice"
+              : `${chi.nome} è già nel tuo giro`}
+        </p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">
+          {!chi
+            ? "Il codice è scaduto o copiato male. Fattelo rimandare da chi ti ha invitato."
+            : chi.sonoIo
+              ? "È quello che mandi tu agli altri. Per entrare in un giro ti serve il codice di qualcun altro."
+              : "Lo trovi qui sotto in classifica."}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            // Anche il cookie va tolto, non solo il parametro: un invito
+            // arrivato di lì sopravvive all'indirizzo, e senza questo
+            // tornerebbe a proporsi a ogni visita.
+            setChiusa(true);
+            void scordaInvito();
+            router.replace("/amici");
+          }}
+          className="tappable mt-3 rounded-full bg-ink px-5 py-2.5 text-[13px] font-bold text-white"
+        >
+          Ho capito
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-6 rounded-[28px] bg-mint p-5">
@@ -172,12 +220,13 @@ export function ConfermaInvito({ codice }: { codice: string }) {
       ) : (
         <>
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink/50">
-            Ti hanno invitato
+            Ti ha invitato
           </p>
-          <p className="mt-1 text-[17px] font-extrabold leading-snug">
-            Qualcuno ti vuole nel suo giro
+          <p className="mt-1 text-[20px] font-extrabold leading-snug">{chi.nome}</p>
+          <p className="mt-0.5 text-[14px] leading-relaxed text-ink/70">
+            Vi ritrovate in classifica insieme, e potete mandarvi cartoline.
           </p>
-          <p className="mt-1 font-mono text-sm font-bold tracking-[0.18em] text-ink/70">
+          <p className="mt-2.5 font-mono text-[13px] font-bold tracking-[0.18em] text-ink/50">
             {codice}
           </p>
           <div className="mt-4 flex gap-2">
@@ -191,8 +240,8 @@ export function ConfermaInvito({ codice }: { codice: string }) {
                     ok: r.ok,
                     testo: r.ok
                       ? r.eraGiaAmico
-                        ? `${r.nome} era già nel tuo giro.`
-                        : `Fatto: ${r.nome} è nel tuo giro.`
+                        ? `${chi.nome} era già nel tuo giro.`
+                        : `Fatto: ${chi.nome} è nel tuo giro.`
                       : (r.errore ?? "Non ha funzionato."),
                   });
                   // Il codice esce dall'indirizzo: restando lì, ricaricare la
@@ -207,7 +256,11 @@ export function ConfermaInvito({ codice }: { codice: string }) {
             </button>
             <button
               type="button"
-              onClick={() => setChiusa(true)}
+              onClick={() => {
+                setChiusa(true);
+                void scordaInvito();
+                router.replace("/amici");
+              }}
               className="tappable rounded-full px-4 py-3 text-sm font-bold text-ink/60"
             >
               No, grazie
