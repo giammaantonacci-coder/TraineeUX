@@ -72,31 +72,14 @@ function confronta(a: RigaPanoramica, b: RigaPanoramica): number {
 }
 
 
-export async function getDatiAmici(): Promise<DatiAmici | null> {
-  const supabase = await createClient();
-
-  let userId: string | null = null;
-  try {
-    const { data } = await supabase.auth.getClaims();
-    userId = data?.claims?.sub ?? null;
-  } catch {
-    return null;
-  }
-  if (!userId) return null;
-
-  const [profiloRes, panoramicaRes, regaliRes, oggiRes] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-    supabase.rpc("amici_panoramica"),
-    supabase.rpc("regali_ricevuti"),
-    // Il conteggio del giorno serve solo a scrivere quante ne restano, ma il
-    // taglio della giornata lo dà il database: rifarlo qui voleva dire
-    // riscrivere l'ora legale italiana a mano, e sbagliarla per metà anno.
-    supabase.rpc("cartoline_mandate_oggi"),
-  ]);
-
-  const profile = (profiloRes.data as ProfileRow | null) ?? null;
-  const righe = (panoramicaRes.data as RigaPanoramica[] | null) ?? [];
-
+/**
+ * Da righe grezze a classifica: ordine, livello e posizioni.
+ *
+ * Sta in una funzione sua perché la usano in due — la pagina degli amici e
+ * l'anteprima in Home — e «primo» deve voler dire la stessa cosa nelle due
+ * schermate. Ricopiarla avrebbe retto fino al primo cambio di criterio.
+ */
+function costruisciClassifica(righe: RigaPanoramica[]): RigaClassifica[] {
   const ordinate = [...righe].sort(confronta);
   const classifica: RigaClassifica[] = ordinate.map((r, i) => {
     // La parità condivide la posizione: due amici fermi entrambi a zero sono
@@ -122,6 +105,35 @@ export async function getDatiAmici(): Promise<DatiAmici | null> {
   for (let i = 1; i < classifica.length; i++) {
     if (classifica[i].posizione === 0) classifica[i].posizione = classifica[i - 1].posizione;
   }
+  return classifica;
+}
+
+export async function getDatiAmici(): Promise<DatiAmici | null> {
+  const supabase = await createClient();
+
+  let userId: string | null = null;
+  try {
+    const { data } = await supabase.auth.getClaims();
+    userId = data?.claims?.sub ?? null;
+  } catch {
+    return null;
+  }
+  if (!userId) return null;
+
+  const [profiloRes, panoramicaRes, regaliRes, oggiRes] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    supabase.rpc("amici_panoramica"),
+    supabase.rpc("regali_ricevuti"),
+    // Il conteggio del giorno serve solo a scrivere quante ne restano, ma il
+    // taglio della giornata lo dà il database: rifarlo qui voleva dire
+    // riscrivere l'ora legale italiana a mano, e sbagliarla per metà anno.
+    supabase.rpc("cartoline_mandate_oggi"),
+  ]);
+
+  const profile = (profiloRes.data as ProfileRow | null) ?? null;
+  const classifica = costruisciClassifica(
+    (panoramicaRes.data as RigaPanoramica[] | null) ?? [],
+  );
 
   const ricevute = (
     (regaliRes.data as
@@ -172,5 +184,52 @@ export async function anteprimaInvito(codice: string): Promise<AnteprimaInvito |
     nome: riga.nome?.trim() || "Un designer",
     sonoIo: riga.sono_io,
     giaAmico: riga.gia_amico,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* L'anteprima in Home                                                 */
+/* ------------------------------------------------------------------ */
+
+export interface AnteprimaAmici {
+  classifica: RigaClassifica[];
+  /** Cartoline arrivate e mai aperte. */
+  nuove: number;
+  /** L'ultima arrivata, se ce n'è una da guardare. */
+  ultima: { giftId: string; daNome: string } | null;
+}
+
+/**
+ * Il giro, ridotto a quello che serve alla Home.
+ *
+ * Una chiamata sola: questa è la schermata che si apre venti volte al giorno,
+ * e tre andate e ritorni per una card in fondo alla pagina sarebbero tre di
+ * troppo. La classifica arriva già ordinata dallo stesso codice della pagina
+ * degli amici, quindi il primo in Home è il primo anche là.
+ *
+ * Torna null solo se la sessione non c'è: un errore di rete non deve far
+ * cadere la Home per una sezione secondaria — sparisce la card, resta tutto
+ * il resto.
+ */
+export async function getAnteprimaAmici(): Promise<AnteprimaAmici | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("anteprima_amici");
+  if (error || !data) return null;
+
+  const grezzo = data as {
+    classifica: RigaPanoramica[];
+    cartoline_nuove: number;
+    ultima: { gift_id: string; da_nome: string | null } | null;
+  };
+
+  return {
+    classifica: costruisciClassifica(grezzo.classifica ?? []),
+    nuove: grezzo.cartoline_nuove ?? 0,
+    ultima: grezzo.ultima
+      ? {
+          giftId: grezzo.ultima.gift_id,
+          daNome: grezzo.ultima.da_nome?.trim() || "Un amico",
+        }
+      : null,
   };
 }

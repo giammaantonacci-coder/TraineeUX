@@ -4,6 +4,7 @@ import {
   EXERCISE_TYPE_LABEL,
   MODULES,
 } from "@/content";
+import { getAnteprimaAmici } from "@/lib/amici";
 import {
   bestPctPerExercise,
   getProgressData,
@@ -27,12 +28,15 @@ import {
 } from "@/components/Bity";
 import { ExerciseIcon, FlameIcon } from "@/components/icons";
 import { LivelliBity } from "@/components/LivelliBity";
+import { AnteprimaAmici } from "@/components/AnteprimaAmici";
 import { ModuloIcon } from "@/components/icone-moduli";
 import { nomeDiBattesimo } from "@/lib/labels";
 import type { Exercise, LevelId, Module } from "@/lib/types";
 
 export async function SchermataOggi() {
-  const data = await getProgressData();
+  // In parallelo: il giro di amici e' una sezione in fondo, e messa in fila
+  // avrebbe aggiunto la sua andata e ritorno all'attesa di tutto il resto.
+  const [data, giro] = await Promise.all([getProgressData(), getAnteprimaAmici()]);
   if (!data) redirect("/benvenuto");
 
   const { profile, best } = data;
@@ -213,6 +217,20 @@ export async function SchermataOggi() {
           />
         </Link>
       </section>
+
+      {/* In fondo, e sempre nello stesso posto.
+          Prima viene il proprio percorso e poi quello degli altri: la Home
+          serve a decidere se allenarsi oggi, e la classifica e' il contorno.
+          Spostarla in cima quando arriva una cartolina l'avrebbe resa piu'
+          visibile una volta e introvabile tutte le altre — una sezione che
+          cambia posto e' una sezione che si cerca ogni volta.
+          Sparisce se la lettura non riesce: e' un contorno, e non deve poter
+          far cadere la schermata. */}
+      {giro ? (
+        <div className="mt-8">
+          <AnteprimaAmici dati={giro} />
+        </div>
+      ) : null}
     </div>
   );
 }
