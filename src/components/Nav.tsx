@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
@@ -53,23 +53,48 @@ function useActiveIndex(): [number, number, (i: number) => void] {
 }
 
 /**
- * Barra compatta mentre si scorre verso il basso, distesa tornando su.
+ * Forma della barra, e se il passaggio va animato.
  *
- * Scorrendo verso il basso si sta leggendo, e la barra è solo ingombro: perde
- * le etichette e si abbassa. Scorrendo verso l'alto si sta cercando dove
- * andare, ed è il momento in cui i nomi servono davvero.
+ * Compatta mentre si scorre verso il basso, distesa tornando su. Scorrendo
+ * verso il basso si sta leggendo, e la barra è solo ingombro: perde le
+ * etichette e si abbassa. Scorrendo verso l'alto si sta cercando dove andare,
+ * ed è il momento in cui i nomi servono davvero. La soglia evita che il
+ * movimento parta per una carezza sullo schermo, e vicino alla cima la barra
+ * resta sempre distesa: lì non c'è niente da guadagnare, e il cambio di forma
+ * si leggerebbe come un tremolio.
  *
- * La soglia evita che il movimento parta per una carezza sullo schermo, e
- * vicino alla cima la barra resta sempre distesa: lì non c'è niente da
- * guadagnare, e il cambio di forma si leggerebbe come un tremolio.
+ * Il secondo valore è la correzione di un difetto vero: toccando una voce
+ * mentre la barra era rimpicciolita, il tocco sembrava rispondere in ritardo.
+ *
+ * Il motivo non era la navigazione ma quello che le si sovrapponeva. Andando
+ * su una nuova schermata si riparte dall'alto, la barra si distende, e la sua
+ * distensione è un'animazione che rifà il layout a ogni fotogramma dentro un
+ * contenitore sfocato — misurata, costava undici layout e una cinquantina di
+ * millisecondi in più, spesi esattamente mentre React montava la pagina nuova.
+ * Due lavori pesanti nello stesso istante, e a rimetterci era quello che si
+ * guarda.
+ *
+ * Quando la forma cambia perché si sta navigando, quindi, non si anima: la
+ * barra è già distesa quando la schermata nuova compare. Non si perde niente —
+ * in quel momento sta cambiando tutto lo schermo, e una barra che si allarga
+ * per trecento millisecondi sopra una pagina che arriva è rumore, non
+ * movimento. Scorrendo, invece, l'animazione resta: lì è l'unica cosa che si
+ * muove ed è il suo motivo di esistere.
+ *
+ * A riaccenderla non serve niente di esplicito: il primo scorrimento rimette
+ * "animata" nello stesso aggiornamento in cui cambia la forma, e il browser fa
+ * partire la transizione lo stesso — verificato campionando la larghezza a ogni
+ * fotogramma subito dopo un tocco. C'era un doppio requestAnimationFrame a
+ * ripristinarla, ed era un disegno in più proprio durante la navigazione: il
+ * momento che si stava cercando di alleggerire.
  */
-function useCompatta(): boolean {
-  const [compatta, setCompatta] = useState(false);
+function useBarra(): [compatta: boolean, animata: boolean, distendi: () => void] {
+  const [stato, setStato] = useState({ compatta: false, animata: true });
   const pathname = usePathname();
 
   // Cambiando schermata si riparte dall'alto, quindi anche dalla forma distesa:
   // senza, la barra restava rimpicciolita su una pagina appena aperta.
-  useEffect(() => setCompatta(false), [pathname]);
+  useEffect(() => setStato({ compatta: false, animata: false }), [pathname]);
 
   useEffect(() => {
     let ultimo = Math.max(0, window.scrollY);
@@ -85,13 +110,15 @@ function useCompatta(): boolean {
         inAttesa = false;
         const y = Math.max(0, window.scrollY);
         const delta = y - ultimo;
+        const metti = (c: boolean) =>
+          setStato((s) => (s.compatta === c && s.animata ? s : { compatta: c, animata: true }));
         if (y < 48) {
-          setCompatta(false);
+          metti(false);
           ultimo = y;
           return;
         }
         if (Math.abs(delta) < SOGLIA) return;
-        setCompatta(delta > 0);
+        metti(delta > 0);
         ultimo = y;
       });
     }
@@ -100,12 +127,22 @@ function useCompatta(): boolean {
     return () => window.removeEventListener("scroll", suScorrimento);
   }, []);
 
-  return compatta;
+  const distendi = useCallback(
+    () => setStato({ compatta: false, animata: false }),
+    [],
+  );
+
+  return [stato.compatta, stato.animata, distendi];
 }
 
 export function BottomNav() {
   const [attivo, reale, prevedi] = useActiveIndex();
-  const compatta = useCompatta();
+  const [compatta, animata, distendi] = useBarra();
+  // La forma si anima solo quando a cambiarla e' lo scorrimento. Le proprieta'
+  // elencate sono due sole, e sono le uniche che qui rifanno il layout.
+  const moto = animata
+    ? "transition-[width,height] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+    : "transition-none";
 
   return (
     <>
@@ -125,9 +162,7 @@ export function BottomNav() {
             il movimento sarebbe sembrato partire in ritardo. */}
         <nav
           aria-label="Navigazione principale"
-          className={`mx-auto max-w-sm transition-[width] duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            compatta ? "w-[72%]" : "w-full"
-          }`}
+          className={`mx-auto max-w-sm ${moto} ${compatta ? "w-[72%]" : "w-full"}`}
         >
           {/* Quattro colonne uguali. Prima l'etichetta compariva solo sulla voce
               attiva, quindi le larghezze cambiavano a ogni passaggio: la pillola
@@ -178,27 +213,50 @@ export function BottomNav() {
                        da compatta l'etichetta è alta zero pixel, e il nome
                        accessibile non deve rimpicciolirsi con lei. */
                     aria-label={item.label}
-                    onClick={() => prevedi(i)}
-                    className={`tappable flex flex-col items-center rounded-full transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      compatta ? "gap-0 py-2" : "gap-1 py-2"
-                    } ${i === attivo ? "text-white" : "text-ink-muted"}`}
+                    onClick={() => {
+                      prevedi(i);
+                      // Distende senza animare: la barra deve essere gia' larga
+                      // quando la schermata nuova arriva, non mentre arriva.
+                      distendi();
+                    }}
+                    /* Solo il colore in transizione. Con "transition-all" il
+                       browser sorvegliava ogni proprieta' animabile, e lo
+                       spazio fra icona ed etichetta — che rifa' il layout —
+                       si animava insieme a tutto il resto senza che servisse.
+                       Lo spazio ora e' fisso: a barra stretta l'etichetta e'
+                       alta zero, e quattro pixel di aria in piu' non si
+                       vedono. */
+                    className={`tappable flex flex-col items-center gap-1 rounded-full py-2 transition-colors duration-200 ${
+                      i === attivo ? "text-white" : "text-ink-muted"
+                    }`}
                   >
                     {/* L'icona rimpicciolisce con la barra: lasciandola a 22px
                         dentro una barra più stretta e più bassa sarebbe
                         diventata la cosa più grande rimasta, e la barra
                         compatta avrebbe pesato più di quella distesa. */}
-                    <Icon
-                      className={`shrink-0 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        compatta ? "h-5 w-5" : "h-[22px] w-[22px]"
-                      } ${i === attivo ? "scale-110" : "scale-100"}`}
-                    />
+                    {/* L'icona rimpicciolisce con una trasformazione e non
+                        cambiando misura: scalare non tocca il layout — se ne
+                        occupa il compositore — mentre animare width e height
+                        rifaceva la geometria della barra a ogni fotogramma,
+                        cinque volte, una per voce.
+                        I due fattori si moltiplicano invece di sovrascriversi:
+                        la voce attiva resta piu' grande anche da compatta. */}
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        transform: `scale(${((compatta ? 0.91 : 1) * (i === attivo ? 1.1 : 1)).toFixed(3)})`,
+                      }}
+                      className="block shrink-0 transition-transform duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    >
+                      <Icon className="h-[22px] w-[22px]" />
+                    </span>
                     {/* Il nome resta lì dove serve: si legge a barra ferma o
                         risalendo, e si ritira scorrendo verso il basso, dove
                         l'unica cosa che conta è vedere la pagina. L'altezza è
                         animata invece che nascosta di colpo, così la barra si
                         abbassa in un movimento solo insieme all'etichetta. */}
                     <span
-                      className={`overflow-hidden text-[11px] font-bold leading-none transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                      className={`overflow-hidden text-[11px] font-bold leading-none ${moto} ${
                         compatta ? "h-0 opacity-0" : "h-[11px] opacity-100"
                       }`}
                     >
