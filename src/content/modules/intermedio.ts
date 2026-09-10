@@ -308,7 +308,7 @@ export const intermedioModules: Module[] = [
           "Tre decisioni. Ogni scelta ha una conseguenza — la vedrai solo alla fine.",
         minutes: 8,
         setup:
-          "Sei il designer di prodotto di una startup B2B SaaS da 40 persone. Il fondatore, che ha un background da designer, torna da una conferenza e propone di sostituire la navigazione laterale standard con un menù radiale attivato da un gesto. Sostiene che 'ci distinguerà e ridurrà i click'. Il team di sviluppo ha stimato tre settimane. Il rinnovo dei contratti enterprise è tra due mesi.",
+          "Sei il designer di prodotto di una startup B2B SaaS da 40 persone. Il fondatore, ex designer, torna da una conferenza e vuole sostituire la navigazione laterale con un menù radiale attivato da un gesto: dice che 'ci distinguerà e ridurrà i click'. Gli sviluppatori hanno stimato tre settimane. Il rinnovo dei contratti enterprise è tra due mesi.",
         steps: [
           {
             id: "s1",
@@ -434,7 +434,7 @@ export const intermedioModules: Module[] = [
               },
             ],
             debrief:
-              "Il risultato migliore non è avere ragione: è che il problema venga risolto e che la persona che aveva torto resti disponibile a portarti la prossima idea. 'Prima questo, misuriamo, poi riapriamo' è una formula che funziona perché non chiude nulla — sposta soltanto l'ordine, e l'ordine giusto quasi sempre rende la seconda domanda irrilevante.",
+              "Il risultato migliore non è avere ragione: è che il problema venga risolto e che chi aveva torto resti disponibile a portarti la prossima idea. 'Prima questo, misuriamo, poi riapriamo' funziona perché non chiude nulla: sposta solo l'ordine, e l'ordine giusto di solito rende la seconda domanda inutile.",
           },
         ],
       },

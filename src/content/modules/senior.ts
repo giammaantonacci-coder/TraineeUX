@@ -221,7 +221,7 @@ export const seniorModules: Module[] = [
         description: "Tre decisioni su una metrica che sta portando fuori strada.",
         minutes: 9,
         setup:
-          "Sei senior product designer su un'app di apprendimento linguistico. Sei mesi fa il team crescita ha adottato come metrica nord 'sessioni giornaliere per utente attivo'. Da allora sono state introdotte: notifiche più frequenti, una serie di 'streak' con perdita a mezzanotte, e lezioni spezzate in unità più brevi. La metrica è passata da 1,8 a 3,1 sessioni. Nello stesso periodo: la ritenzione a 90 giorni è scesa dal 31% al 24%, le disinstallazioni dopo la rottura di uno streak sono aumentate, e le recensioni negative citano 'ansia' e 'pressione'. Il team crescita presenta i risultati come un successo. La riunione trimestrale è tra una settimana.",
+          "Sei senior product designer su un'app per imparare le lingue. Sei mesi fa il team crescita ha adottato come metrica nord le 'sessioni giornaliere per utente attivo'. Da allora ha introdotto notifiche più frequenti, una serie di 'streak' che si perde a mezzanotte, e lezioni spezzate in unità più brevi. La metrica è salita da 1,8 a 3,1 sessioni. Ma nello stesso periodo la ritenzione a 90 giorni è scesa dal 31% al 24%, le disinstallazioni dopo uno streak rotto sono aumentate, e le recensioni negative parlano di 'ansia' e 'pressione'. Il team crescita presenta tutto come un successo. La riunione trimestrale è tra una settimana.",
         steps: [
           {
             id: "s1",
@@ -635,7 +635,7 @@ export const seniorModules: Module[] = [
         description: "Tre decisioni su come cambiare una direzione già annunciata.",
         minutes: 9,
         setup:
-          "Sei lead designer di un prodotto B2B per la gestione delle spese aziendali. La roadmap del prossimo semestre, già annunciata ai clienti, contiene tre progetti grandi: integrazione con 5 nuovi ERP, un modulo di analisi predittiva, e il ridisegno dell'app mobile. La tua ricerca degli ultimi due mesi mostra che l'80% dell'insoddisfazione dei clienti si concentra su un punto che non è in roadmap: la riconciliazione delle ricevute, che richiede in media 6 ore a settimana per l'amministrazione e genera il 70% dei ticket. Il VP Product ha costruito la roadmap sulle richieste del team vendite.",
+          "Sei lead designer di un prodotto B2B per la gestione delle spese aziendali. La roadmap del prossimo semestre, già annunciata ai clienti, ha tre progetti grandi: integrazione con 5 nuovi ERP, un modulo di analisi predittiva, e il ridisegno dell'app mobile. La tua ricerca degli ultimi due mesi dice altro: l'80% dell'insoddisfazione si concentra su un punto che non è in roadmap, la riconciliazione delle ricevute. Costa all'amministrazione 6 ore a settimana e genera il 70% dei ticket. Il VP Product ha costruito la roadmap sulle richieste del team vendite.",
         steps: [
           {
             id: "s1",

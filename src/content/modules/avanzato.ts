@@ -298,7 +298,7 @@ export const avanzatoModules: Module[] = [
         description: "Tre decisioni sul rilancio di un sistema in stallo.",
         minutes: 8,
         setup:
-          "Sei entrato da due mesi come design system lead in un'azienda da 300 persone, 6 team di prodotto, 12 designer. Il design system esiste da 18 mesi, ha 40 componenti, ed è usato in modo pieno solo da 1 team su 6. Gli altri lo usano come riferimento visivo e reimplementano tutto. La direzione ti ha chiesto di 'aumentare l'adozione' e valuta di sciogliere il team se non succede entro sei mesi.",
+          "Sei entrato da due mesi come design system lead in un'azienda da 300 persone: 6 team di prodotto, 12 designer. Il design system esiste da 18 mesi, ha 40 componenti, e lo usa davvero solo 1 team su 6. Gli altri lo tengono come riferimento visivo e reimplementano tutto. La direzione ti ha chiesto di 'aumentare l'adozione', e valuta di sciogliere il team se non succede entro sei mesi.",
         steps: [
           {
             id: "s1",
@@ -340,7 +340,7 @@ export const avanzatoModules: Module[] = [
               },
             ],
             debrief:
-              "La bassa adozione è un problema di ricerca prima che di produzione. Il team di design system è un team di prodotto e i suoi utenti sono gli altri designer e sviluppatori: se non fai ricerca sui tuoi utenti, costruisci per te. È anche il motivo per cui i design system lead con background da ricercatore riescono spesso meglio di quelli con background da UI designer.",
+              "La bassa adozione è un problema di ricerca prima che di produzione. Il team di design system è un team di prodotto, e i suoi utenti sono gli altri designer e sviluppatori: se non fai ricerca su di loro, costruisci per te. È anche perché i design system lead che vengono dalla ricerca spesso riescono meglio di quelli che vengono dall'UI design.",
           },
           {
             id: "s2",
@@ -649,7 +649,7 @@ export const avanzatoModules: Module[] = [
         description: "Tre decisioni su come portare un risultato scomodo.",
         minutes: 8,
         setup:
-          "Sei il ricercatore di un'app fintech. Il VP Product ha spinto per sei mesi una funzione di 'obiettivi di risparmio sociali' (condividere i tuoi obiettivi con gli amici) — è il progetto con cui si è presentato al board. Hai appena chiuso uno studio con 14 partecipanti e un sondaggio su 800 utenti. I risultati: forte rifiuto della condivisione sociale sui dati finanziari (11 su 14 la definiscono invadente), ma emerge con chiarezza un bisogno adiacente e non servito — la gestione di obiettivi condivisi tra partner conviventi, citata spontaneamente da 9 partecipanti. La presentazione al VP è domani.",
+          "Sei il ricercatore di un'app fintech. Il VP Product spinge da sei mesi una funzione di 'obiettivi di risparmio sociali' — condividere i tuoi obiettivi con gli amici — ed è il progetto con cui si è presentato al board. Hai appena chiuso uno studio con 14 partecipanti e un sondaggio su 800 utenti. Il risultato: forte rifiuto della condivisione sociale sui dati finanziari, 11 su 14 la trovano invadente. Ma emerge un bisogno vicino e non servito: gestire obiettivi condivisi tra partner conviventi, citato spontaneamente da 9 partecipanti. La presentazione al VP è domani.",
         steps: [
           {
             id: "s1",

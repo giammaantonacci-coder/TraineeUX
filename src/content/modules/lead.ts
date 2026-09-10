@@ -219,7 +219,7 @@ export const leadModules: Module[] = [
         description: "Tre decisioni di struttura in un anno di crescita.",
         minutes: 9,
         setup:
-          "Sei head of design di un'azienda passata in 14 mesi da 60 a 200 persone. Il team di design è cresciuto da 4 a 11 designer. I problemi visibili: i prodotti stanno divergendo, tre designer si sono lamentati di non sapere cosa ci si aspetta da loro, la qualità è molto variabile tra team, e tu stai lavorando 55 ore a settimana rivedendo lavoro. Il CEO ti chiede un piano per il prossimo anno, in cui l'azienda arriverà a 350 persone.",
+          "Sei head of design di un'azienda passata in 14 mesi da 60 a 200 persone. Il team di design è cresciuto da 4 a 11 designer. I problemi si vedono: i prodotti stanno divergendo, tre designer dicono di non sapere cosa ci si aspetta da loro, la qualità cambia molto da team a team, e tu lavori 55 ore a settimana a rivedere lavoro altrui. Il CEO ti chiede un piano per l'anno prossimo, quando l'azienda arriverà a 350 persone.",
         steps: [
           {
             id: "s1",
@@ -715,7 +715,7 @@ export const leadModules: Module[] = [
               },
             ],
             debrief:
-              "'I nostri clienti sono avversi ai cambiamenti' è quasi sempre una generalizzazione a partire da un evento specifico andato male. Verificarla — quanti, chi, per cosa — trasforma un'obiezione di principio in un vincolo di progettazione, e i vincoli si affrontano. Il passaggio da oppositori a collaudatori è una delle mosse più efficaci disponibili, e funziona perché a nessuno dispiace essere consultato.",
+              "'I nostri clienti sono contrari ai cambiamenti' è quasi sempre una generalizzazione da un singolo caso andato male. Verificarla — quanti, chi, per cosa — trasforma un'obiezione di principio in un vincolo di progetto, e i vincoli si affrontano. Trasformare gli oppositori in collaudatori è una delle mosse più efficaci: funziona perché a nessuno dispiace essere consultato.",
           },
           {
             id: "s3",
