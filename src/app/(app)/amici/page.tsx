@@ -54,7 +54,7 @@ export default async function AmiciPage({
         bity={{ mood: amici.length === 0 ? "curioso" : "felice", level: io?.livello }}
         subtitle={
           amici.length === 0
-            ? "Studiare da soli funziona finché non smetti. Chiama qualcuno: vedete a che punto siete, vi rincorrete in classifica e vi mandate una cartolina quando serve."
+            ? "Studiare da soli funziona finché non smetti. Invita qualcuno: vedete a che punto siete e vi rincorrete in classifica."
             : `Sei ${io?.posizione}° su ${dati.classifica.length} questa settimana. Riparte ogni lunedì.`
         }
       />

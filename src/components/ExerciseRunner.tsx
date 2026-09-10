@@ -173,8 +173,8 @@ export function ExerciseRunner({
             {INSTRUCTIONS[exercise.type]}
           </p>
           <p className="mt-3 text-[14px] leading-relaxed text-ink-muted">
-            Le soluzioni non sono nella pagina: la correzione avviene sul server
-            quando consegni. Non c&apos;è modo di sbirciare, ed è voluto.
+            Le soluzioni non sono in pagina: la correzione arriva quando
+            consegni. Non si può sbirciare, ed è voluto.
           </p>
           <button
             type="button"
@@ -287,8 +287,8 @@ export function ExerciseRunner({
           </h2>
           <p className="mb-3 text-sm text-ink-muted">
             {mastered
-              ? "Hai superato la soglia di padronanza: queste capacità sono ora attive nel tuo profilo."
-              : `Sei al ${grade.scorePct}%. Sopra il ${MASTERY_THRESHOLD}% queste capacità si attivano nel profilo — ecco cosa ti stai giocando.`}
+              ? "Hai passato la soglia di padronanza: queste capacità ora sono attive nel profilo."
+              : `Sei al ${grade.scorePct}%. Sopra il ${MASTERY_THRESHOLD}% queste capacità si attivano nel profilo: ecco cosa ti stai giocando.`}
           </p>
           <ul className="space-y-3">
             {capabilities.map((c, i) => (
@@ -368,7 +368,7 @@ export function ExerciseRunner({
             <h2 className="mb-1 text-lg font-bold tracking-tight">La risposta esperta</h2>
             <p className="mb-3 text-sm text-ink-muted">
               Non è &ldquo;la&rdquo; risposta giusta: è una risposta forte. Confrontala con la
-              tua e cerca le decisioni che non avevi considerato.
+              tua e guarda cosa non avevi considerato.
             </p>
             <div className="card-light p-5 md:p-6">
               <Prose paragraphs={grade.reveal} />
@@ -479,8 +479,8 @@ export function ExerciseRunner({
                 Quali di queste sono difetti reali?
               </legend>
               <p className="mb-4 text-[14px] text-ink-muted">
-                Seleziona solo ciò che è davvero un problema. Ogni distrattore
-                selezionato costa un punto, esattamente come un difetto mancato.
+                Seleziona solo ciò che è davvero un problema. Ogni trappola che
+                segnali costa un punto, come un difetto mancato.
               </p>
               <div className="space-y-2">
                 {exercise.issues.map((issue) => (
@@ -517,8 +517,8 @@ export function ExerciseRunner({
             </p>
           </div>
           <p className="text-[14px] text-ink-muted">
-            Le conseguenze di ogni scelta le vedrai solo alla consegna. Decidi come
-            decideresti davvero, non come pensi che voglia l&apos;esercizio.
+            Le conseguenze le vedi solo alla consegna. Decidi come decideresti
+            davvero, non come pensi voglia l&apos;esercizio.
           </p>
           <ol className="space-y-4">
             {exercise.steps.map((step, i) => (
@@ -596,9 +596,9 @@ export function ExerciseRunner({
                 La tua risposta
               </label>
               <p className="mb-3 text-[14px] text-ink-muted">
-                Scrivi come scriveresti a un collega: punti, non prosa. Nessuno la
-                legge tranne te — l&apos;autovalutazione arriva dopo, con la rubrica
-                davanti.
+                Scrivi come scriveresti a un collega: punti, non prosa. Non la
+                legge nessuno tranne te. L&apos;autovalutazione arriva dopo, con la
+                rubrica davanti.
               </p>
               <textarea
                 id="brief-text"
@@ -629,9 +629,9 @@ export function ExerciseRunner({
             <div className="card-light p-5">
               <h2 className="text-[15px] font-bold">Autovalutazione</h2>
               <p className="mt-1 mb-4 text-[14px] leading-relaxed text-ink-muted">
-                Rileggi quello che hai scritto e assegnati un punteggio per criterio.
-                Sii severo: l&apos;autovalutazione generosa è l&apos;unico modo di
-                rendere inutile questo esercizio.
+                Rileggi quello che hai scritto e datti un voto per ogni criterio.
+                Sii severo: valutarti largo è l&apos;unico modo di rendere inutile
+                l&apos;esercizio.
               </p>
               <ul className="space-y-4">
                 {exercise.rubric.map((r) => (
@@ -821,11 +821,11 @@ function Choice({
 
 const INSTRUCTIONS: Record<PublicExercise["type"], string> = {
   quiz:
-    "Cinque domande a scelta singola. Una risposta è chiaramente la migliore, le altre sono plausibili: sono gli errori che si sentono davvero nelle riunioni. Alla consegna ricevi la spiegazione di ciascuna.",
+    "Cinque domande, una risposta giusta per ognuna. Le altre sono plausibili: sono gli errori che si sentono nelle riunioni. Alla consegna arriva la spiegazione di ciascuna.",
   critique:
-    "Osservi uno schermo reale con una lente precisa e scegli quali osservazioni sono difetti veri. Alcune sono distrattori: segnalarli costa quanto mancare un difetto reale, perché in una critique la credibilità si perde anche così.",
+    "Guardi uno schermo vero con una lente precisa e scegli quali osservazioni sono difetti reali. Alcune sono trappole: segnalarle costa come mancare un difetto vero.",
   scenario:
-    "Una situazione professionale e una serie di decisioni. Ogni opzione ha una conseguenza, che vedrai solo alla fine insieme al debrief. Non ci sono opzioni assurde: sono tutte scelte che qualcuno fa davvero.",
+    "Una situazione di lavoro e qualche decisione. Ogni scelta ha una conseguenza, che vedi alla fine con il debrief. Nessuna opzione è assurda: sono tutte scelte che qualcuno fa davvero.",
   brief:
-    "Un problema aperto da risolvere per iscritto entro il tempo indicato. Poi ti autovaluti con una rubrica dettagliata, e infine confronti la tua risposta con quella di un esperto.",
+    "Un problema aperto da risolvere per iscritto, nel tempo indicato. Poi ti dai un voto con una rubrica, e confronti la tua risposta con quella di un esperto.",
 };

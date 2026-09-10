@@ -25,7 +25,7 @@ export default async function NotifichePage() {
         eyebrow="Notifiche"
         bity={{ mood: daLeggere > 0 ? "curioso" : "felice", tint: "sky" }}
         title="Cosa ti sei perso"
-        subtitle="Qui resta tutto quello che ti è stato notificato, anche se il telefono era spento o il permesso non era attivo."
+        subtitle="Qui resta tutto quello che ti è stato notificato, anche se il telefono era spento o i permessi erano off."
       />
 
       {daLeggere > 0 ? (

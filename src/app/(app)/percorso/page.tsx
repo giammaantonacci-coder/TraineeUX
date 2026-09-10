@@ -33,7 +33,7 @@ export default async function PercorsoPage() {
       <PageHeader
         eyebrow="Percorso"
         title="Dal mestiere al giudizio"
-        subtitle="Cinque livelli, dodici moduli. Ogni livello non aggiunge strumenti: allarga l'ambito su cui decidi. Puoi affrontarli nell'ordine che preferisci, ma i moltiplicatori di XP crescono con il livello."
+        subtitle="Cinque livelli, dodici moduli. Ogni livello non aggiunge strumenti: allarga le decisioni che prendi. Affrontali nell'ordine che vuoi; più sale il livello, più valgono gli XP."
       />
 
       <div className="space-y-10">

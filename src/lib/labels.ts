@@ -58,20 +58,20 @@ export function verdict(scorePct: number): { title: string; body: string } {
   if (scorePct >= 90)
     return {
       title: "Padronanza",
-      body: "Questo livello di precisione è quello che ti si aspetta da un profilo senior sul tema. Passa al modulo successivo.",
+      body: "Precisione da senior. Passa al modulo successivo.",
     };
   if (scorePct >= 70)
     return {
       title: "Solido",
-      body: "Hai il controllo del tema. Rileggi le spiegazioni degli errori: è lì che sta la differenza tra sapere e saper decidere sotto pressione.",
+      body: "Hai il tema in mano. Rileggi le spiegazioni degli errori: è lì che si impara di più.",
     };
   if (scorePct >= 45)
     return {
       title: "In costruzione",
-      body: "Le basi ci sono, il giudizio nei casi ambigui no. Rifai l'esercizio tra qualche giorno: la ripetizione distanziata funziona molto meglio di rifarlo subito.",
+      body: "Le basi ci sono, il giudizio sui casi difficili no. Riprova fra qualche giorno: distanziare i tentativi funziona meglio che rifarli subito.",
     };
   return {
     title: "Da riprendere",
-    body: "Torna alle lezioni del modulo prima di riprovare. Un punteggio basso su un tema significa che serve il concetto, non più tentativi.",
+    body: "Torna alle lezioni prima di riprovare. Un punteggio basso vuol dire che manca il concetto, non i tentativi.",
   };
 }

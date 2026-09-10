@@ -84,7 +84,7 @@ export async function SchermataOggi() {
         <p className="mt-1 text-sm leading-snug text-ink-muted">
           {streak > 0
             ? "Non spezzare la serie oggi."
-            : "Un esercizio oggi vale più di cinque domenica prossima."}
+            : "Un esercizio oggi conta più di cinque la settimana prossima."}
         </p>
         {streak > 0 ? (
           <Link

@@ -144,8 +144,8 @@ export default async function ProfiloPage() {
         </h2>
         <p className="mb-4 text-sm text-ink-muted">
           Le capacità si attivano quando chiudi un modulo sopra il {MASTERY_THRESHOLD}%.
-          Sono formulate come le scriveresti in un colloquio o in una valutazione:
-          cose che sai fare, non cose che hai studiato.
+          Sono scritte come le diresti a un colloquio: cose che sai fare, non cose
+          che hai studiato.
         </p>
         {quante === 0 ? (
           <div className="card-light p-6 text-center">

@@ -24,7 +24,7 @@ const ERRORI: Record<string, string> = {
   "accesso-fallito":
     "Non siamo riusciti a completare l'accesso. Riprova fra poco: se insiste, entra con email e password.",
   "link-non-valido":
-    "Questo link di conferma non è più valido: i link scadono, e ognuno si può usare una volta sola. Accedi qui sotto e te ne rimandiamo uno nuovo.",
+    "Questo link di conferma non è più valido: scadono, e ognuno vale una volta sola. Accedi qui sotto e te ne mandiamo uno nuovo.",
 };
 
 /**
@@ -64,7 +64,7 @@ const MODI: {
     tipo: "brief",
     titolo: "Brief a tempo",
     corpo:
-      "Scrivi la tua proposta col cronometro, poi la confronti con la rubrica e con la risposta di chi quel problema l'ha risolto.",
+      "Scrivi la tua proposta a tempo. Poi la confronti con una rubrica e con la risposta di un esperto.",
   },
 ];
 
@@ -241,7 +241,7 @@ export default async function BenvenutoPage({
             <Vantaggio
               icona={<UnlockIcon className="h-[22px] w-[22px]" />}
               titolo="Capacità sbloccate"
-              corpo="Per ogni modulo padroneggiato vedi cosa puoi fare in concreto sul lavoro, e che segnale di seniority manda."
+              corpo="Per ogni modulo padroneggiato vedi cosa sai fare sul lavoro, e che segnale di seniority manda."
             />
           </div>
         </>
