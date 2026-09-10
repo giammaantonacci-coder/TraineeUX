@@ -57,6 +57,38 @@ export interface PublicBrief {
 
 export type PublicExercise = PublicQuiz | PublicCritique | PublicScenario | PublicBrief;
 
+/**
+ * Mescola un array senza toccare l'originale (Fisher–Yates).
+ *
+ * Serve a rompere una regolarità nei contenuti: nei quiz la risposta giusta è
+ * quasi sempre la seconda — cinquantanove domande su sessanta avevano la
+ * corretta in posizione "b". È un indizio che si nota dopo pochi quiz, e
+ * allena a contare le opzioni invece di leggerle, cioè il contrario di quello
+ * che l'esercizio dovrebbe insegnare.
+ *
+ * Mescolare qui è sicuro perché la correzione è tutta per id: gradeExercise
+ * confronta q.correctId con l'id scelto e cerca le opzioni con .find, non per
+ * posizione. L'ordine visibile e il punteggio sono due cose indipendenti.
+ */
+function mescola<T>(arr: readonly T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/**
+ * La proiezione pubblica di un esercizio, con le opzioni già mescolate.
+ *
+ * Questo è l'unico punto in cui le opzioni passano dal server al client, ed è
+ * qui che vanno mescolate: la pagina dell'esercizio è dinamica, quindi gira a
+ * ogni richiesta e i props partono verso il client già rimescolati — l'HTML
+ * del server e l'idratazione ricevono lo stesso ordine, nessuno scarto. Ogni
+ * nuovo tentativo riparte da un ordine diverso; dentro lo stesso tentativo i
+ * props non cambiano, quindi le opzioni non saltano sotto le dita.
+ */
 export function toPublicExercise(exercise: Exercise): PublicExercise {
   switch (exercise.type) {
     case "quiz":
@@ -69,7 +101,7 @@ export function toPublicExercise(exercise: Exercise): PublicExercise {
         questions: exercise.questions.map((q) => ({
           id: q.id,
           prompt: q.prompt,
-          options: q.options.map((o) => ({ id: o.id, label: o.label })),
+          options: mescola(q.options).map((o) => ({ id: o.id, label: o.label })),
         })),
       };
     case "critique":
@@ -82,7 +114,9 @@ export function toPublicExercise(exercise: Exercise): PublicExercise {
         mockId: exercise.mockId,
         lens: exercise.lens,
         context: exercise.context,
-        issues: exercise.issues.map((i) => ({ id: i.id, label: i.label })),
+        // Anche qui le voci vanno mescolate: sono una lista di caselle, e un
+        // ordine fisso fra difetti veri e distrattori sarebbe lo stesso indizio.
+        issues: mescola(exercise.issues).map((i) => ({ id: i.id, label: i.label })),
       };
     case "scenario":
       return {
@@ -96,7 +130,7 @@ export function toPublicExercise(exercise: Exercise): PublicExercise {
           id: s.id,
           situation: s.situation,
           question: s.question,
-          options: s.options.map((o) => ({ id: o.id, label: o.label })),
+          options: mescola(s.options).map((o) => ({ id: o.id, label: o.label })),
         })),
       };
     case "brief":
